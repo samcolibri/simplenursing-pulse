@@ -129,3 +129,67 @@ export const VERIFIED_SOURCE = {
   verified_at: '2026-05-27',
   coverage: 'Jan-Apr 2026, all 12 months 2025',
 }
+
+// ─── YOUTUBE (verified from XLSX 'YouTube Dashboard (monthly)') ───────────────
+export const YOUTUBE_2026: Record<string, (number | null)[]> = {
+  longform_videos:      M(10, 7, 4, 6),
+  optimizations:        M(1, 9, 3, 3),
+  longform_impressions: M(16978355, 19232669, 19981705, 19709751),
+  longform_views:       M(1394460, 1769039, 1734810, 1640868),
+  yt_search:            M(8287490, 8465627, 8670777, 8436746),
+  suggested_videos:     M(3831732, 5467579, 5418398, 5143370),
+  browse_features:      M(2340918, 2321696, 2903788, 3098702),
+  unique_viewers:       M(590143, 698784, 719732, 654315),
+  new_viewers:          M(350237, 371807, 386185, 358462),
+  watch_time_hrs:       M(127229.3, 170785.3, 167017, 156710.9),
+}
+export const YOUTUBE_2025: Record<string, (number | null)[]> = {
+  longform_impressions: M(16236604, 18107920, 17635938, 15998316),
+  longform_views:       M(1385900, 1679001, 1613193, 1437208),
+  yt_search:            M(7844089, 8342888, 8451042, 7564370),
+  suggested_videos:     M(3251918, 4441717, 4030794, 3451043),
+  browse_features:      M(1886387, 1903444, 1769436, 1969903),
+  unique_viewers:       M(586834, 662374, 640031, 585944),
+  new_viewers:          M(343696, 362585, 360117, 317504),
+  watch_time_hrs:       M(99173.5, 126546.7, 119101.8, 108382.3),
+}
+
+// ─── PODCAST (verified from XLSX 'Podcast' sheet) ─────────────────────────────
+export const PODCAST_2026: Record<string, (number | null)[]> = {
+  buzzsprout_downloads: M(4331, 2164, 2355),
+  spotify_impressions:  M(13002, 11732, 8935),
+  spotify_plays:        M(1244, 708, 596),
+  spotify_streams:      M(824, 519, 552),
+  spotify_followers:    M(202, 68, 63),
+  apple_plays:          M(1700, 1100, 831),
+  apple_unique:         M(303, 198, 205),
+  apple_followers:      M(641, 713, 777),
+  youtube_views:        M(14811, 9317, 9444),
+  ad_revenue:           M(177.69, 92.52, 110.92),
+  hub_sessions:         M(2392, 495, 1328),
+  hub_free_trials:      M(34, 15, 23),
+  episodes_posted:      M(2, 2, 2),
+  short_form_views:     M(2656873, 514768, 544021, 1536013),
+}
+
+// ─── 2026 BUDGET (verified from XLSX '2026 Budget' sheet) ─────────────────────
+export const BUDGET_2026: Record<string, (number | null)[]> = {
+  social_media_shoots: M(0, 2000, 0, 0, 2000, 0, 0, 2000, 0, 0, 2000, 0),
+  podcast:             M(0, 5500, 0, 0, 5500, 0, 0, 5500, 0, 0, 5500, 0),
+  influencers_ugc:     M(5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000),
+  giveaways:           M(0, 1000, 0, 0, 2000, 0, 0, 0, 1000, 0, 0, 2000),
+  f_learning:          M(7500, 7500, 7500, 7500, 7500, 7500, 7500, 7500, 7500, 7500, 7500, 7500),
+  video_editors:       M(750, 750, 750, 750, 750, 750, 750, 750, 750, 750, 750, 750),
+  script_writers:      M(500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500),
+}
+export const BUDGET_ANNUAL_TOTAL = 201000
+export const BUDGET_TO_SPEND = 78167
+
+export function sumMonthly(arr: (number | null)[]): number {
+  return arr.reduce((s: number, v) => s + (v ?? 0), 0)
+}
+
+export function yoyPct(curr: number | null, prev: number | null): number | null {
+  if (curr == null || prev == null || prev === 0) return null
+  return (curr - prev) / prev
+}

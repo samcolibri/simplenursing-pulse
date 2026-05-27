@@ -169,27 +169,7 @@ export default function PulsePage() {
 
   return (
     <div className="min-h-screen bg-gradient-mesh">
-      {/* HEADER */}
-      <header className="sticky top-0 z-30 backdrop-blur-xl bg-[#06060a]/80 border-b border-[var(--border)]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#75c7e6] to-[#fc3467] flex items-center justify-center text-xs font-black text-white">SN</div>
-            <div>
-              <div className="text-sm font-bold tracking-tight leading-tight">SimpleNursing Pulse</div>
-              <div className="text-[10px] text-[var(--text-dim)] hidden sm:block leading-tight">Real-time social intelligence</div>
-            </div>
-          </div>
-          <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-full bg-[var(--bg-card)] border border-[var(--border)]">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#62d070] live-dot" />
-            <span className="text-[10px] sm:text-xs text-[var(--text-muted)]">
-              <span className="hidden sm:inline">Refreshed </span>
-              <span className="text-white font-medium">{timeAgo(meta.data?.fetched_at)}</span>
-            </span>
-          </div>
-        </div>
-      </header>
-
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-10 space-y-8 sm:space-y-12">
+<main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-10 space-y-8 sm:space-y-12">
         {/* HERO */}
         <section className="space-y-3 sm:space-y-4">
           <div className="flex flex-wrap items-center gap-2">
