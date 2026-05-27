@@ -62,14 +62,16 @@ const PLATFORMS = [
   {
     id: 'pinterest',
     label: 'Pinterest',
-    status: 'disconnected' as const,
-    note: 'Pinterest API v5 app with boards:read + pins:read scopes required',
+    status: 'connected' as const,
+    note: 'Connected via Pinterest API v5 · simplenursing_official · boards:read + pins:read + user_accounts:read',
     icon: '📌',
+    badge: 'API v5',
   },
 ]
 
 const API_KEYS = [
   { label: 'APIFY_TOKEN', value: 'apify_api_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', configured: true },
+  { label: 'PINTEREST_ACCESS_TOKEN', value: 'pina_xxxxxxxxxxxxxxxxxxxxxxxx', configured: true },
   { label: 'ANTHROPIC_API_KEY', value: '', configured: false },
   { label: 'META_ACCESS_TOKEN', value: '', configured: false },
   { label: 'META_PIXEL_ID', value: '', configured: false },
@@ -144,7 +146,7 @@ export default function SettingsPage() {
           ))}
 
           {/* Apify account detail */}
-          <div className="px-4 py-3 bg-[#0a0f1a]">
+          <div className="px-4 py-3 bg-[#0a0f1a] border-t border-[#1e2433]">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs text-gray-500">Apify account</p>
@@ -153,6 +155,20 @@ export default function SettingsPage() {
               <div className="text-right">
                 <p className="text-xs text-gray-500">Plan</p>
                 <p className="text-xs text-[#62d070] font-medium">FREE · ~$5/mo credits</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Pinterest account detail */}
+          <div className="px-4 py-3 bg-[#0a0f1a] border-t border-[#1e2433]">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs text-gray-500">Pinterest account</p>
+                <p className="text-sm text-white font-medium">simplenursing_official</p>
+              </div>
+              <div className="text-right">
+                <p className="text-xs text-gray-500">Monthly Views</p>
+                <p className="text-xs text-[#62d070] font-medium">148,882 · 7 boards · 1,651 pins</p>
               </div>
             </div>
           </div>
