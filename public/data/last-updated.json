@@ -1,0 +1,42 @@
+{
+  "fetched_at": "2026-05-27T15:35:42.437Z",
+  "platforms": {
+    "pinterest": {
+      "ok": true,
+      "summary": {
+        "monthly_views": 148882,
+        "impressions": 144717,
+        "saves": 699,
+        "pins": 25,
+        "boards": 7
+      }
+    },
+    "tiktok": {
+      "ok": true,
+      "summary": {
+        "accounts": 4,
+        "own_followers": 1200000
+      }
+    },
+    "instagram": {
+      "ok": true,
+      "summary": {
+        "accounts": 4,
+        "own_followers": 862515
+      }
+    },
+    "hashtags": {
+      "ok": true,
+      "summary": {
+        "count": 0
+      }
+    },
+    "meta": {
+      "ok": true,
+      "summary": {
+        "ok": false,
+        "reason": "Meta business token + IG_BUSINESS_ACCOUNT_ID required"
+      }
+    }
+  }
+}

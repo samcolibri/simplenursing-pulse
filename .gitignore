@@ -7,3 +7,9 @@
 .vercel
 *.tsbuildinfo
 next-env.d.ts
+
+# Build artifacts
+/out/
+.harness-next/
+*.log
+.DS_Store

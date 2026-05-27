@@ -1,0 +1,6 @@
+{
+  "ok": false,
+  "reason": "Meta business token + IG_BUSINESS_ACCOUNT_ID required",
+  "hint": "developers.facebook.com → Business app → Pages + IG connect",
+  "fetched_at": "2026-05-27T15:37:25.047Z"
+}
