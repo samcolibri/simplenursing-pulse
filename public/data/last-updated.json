@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-05-27T16:08:48.787Z",
+  "fetched_at": "2026-05-27T17:49:54.745Z",
   "platforms": {
     "pinterest": {
       "ok": true
@@ -19,7 +19,7 @@
     "insights": {
       "ok": true,
       "viral_posts": 12,
-      "topics": 5
+      "topics": 4
     }
   }
 }

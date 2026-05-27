@@ -46,6 +46,18 @@ const warn = (...a) => console.warn('[warn]', ...a)
 const err = (...a) => console.error('[error]', ...a)
 const sleep = (ms) => new Promise(r => setTimeout(r, ms))
 
+
+const DAYS_BACK = 30
+const CUTOFF = new Date(Date.now() - DAYS_BACK * 24 * 60 * 60 * 1000).toISOString()
+const isRecent = (iso) => iso && iso >= CUTOFF
+function velocity(post) {
+  const t = post.created_at || post.timestamp
+  if (!t) return 0
+  const hoursAgo = Math.max(1, (Date.now() - new Date(t).getTime()) / 3600000)
+  const engagement = (post.views || 0) + (post.likes || 0) * 10 + (post.video_views || 0)
+  return engagement / hoursAgo
+}
+
 async function writeJSON(name, data) {
   const file = path.join(DATA_DIR, name + '.json')
   await fs.writeFile(file, JSON.stringify(data, null, 2))
@@ -151,7 +163,7 @@ function groupByAuthor(items) {
     const author = normaliseTikTokAuthor(item)
     if (!author.handle || author.handle === 'unknown') continue
     if (!map.has(author.handle)) map.set(author.handle, { ...author, recent_posts: [] })
-    if (item.diggCount !== undefined) {
+    if (item.diggCount !== undefined && isRecent(item.createTimeISO)) {
       map.get(author.handle).recent_posts.push({
         id: item.id, url: item.webVideoUrl,
         thumbnail: item.videoMeta?.coverUrl || '',
@@ -168,7 +180,7 @@ function groupByAuthor(items) {
       })
     }
   }
-  for (const v of map.values()) v.recent_posts.sort((a, b) => (b.views || 0) - (a.views || 0))
+  for (const v of map.values()) v.recent_posts.sort((a, b) => velocity(b) - velocity(a))
   return Array.from(map.values())
 }
 
@@ -248,7 +260,7 @@ async function fetchInstagram() {
     bio: p.biography || '', avatar: p.profilePicUrl || '',
     business_category: p.businessCategoryName,
     external_url: p.externalUrl || '',
-    recent_posts: (p.latestPosts || []).slice(0, 8).map(post => ({
+    recent_posts: (p.latestPosts || []).filter(post => isRecent(post.timestamp)).slice(0, 8).map(post => ({
       id: post.id, url: post.url, thumbnail: post.displayUrl || '',
       caption: (post.caption || '').slice(0, 280),
       type: (post.type || '').toLowerCase(),
@@ -307,10 +319,10 @@ async function fetchInstagramHashtags() {
 // ─── Build aggregated "what's working" insights from live data ───────────────
 async function buildInsights(tt, ig, ttTrends) {
   const allPosts = []
-  if (tt?.owned) for (const p of tt.owned.recent_posts) allPosts.push({ platform: 'tiktok', isOwned: true, handle: tt.owned.handle, ...p, score: p.views || 0 })
-  for (const c of (tt?.competitors || [])) for (const p of c.recent_posts) allPosts.push({ platform: 'tiktok', isOwned: false, handle: c.handle, ...p, score: p.views || 0 })
-  if (ig?.owned) for (const p of ig.owned.recent_posts) allPosts.push({ platform: 'instagram', isOwned: true, handle: ig.owned.handle, ...p, score: (p.video_views || 0) + p.likes * 10 })
-  for (const c of (ig?.competitors || [])) for (const p of c.recent_posts) allPosts.push({ platform: 'instagram', isOwned: false, handle: c.handle, ...p, score: (p.video_views || 0) + p.likes * 10 })
+  if (tt?.owned) for (const p of tt.owned.recent_posts) if (isRecent(p.created_at)) allPosts.push({ platform: 'tiktok', isOwned: true, handle: tt.owned.handle, ...p, score: velocity(p) })
+  for (const c of (tt?.competitors || [])) for (const p of c.recent_posts) if (isRecent(p.created_at)) allPosts.push({ platform: 'tiktok', isOwned: false, handle: c.handle, ...p, score: velocity(p) })
+  if (ig?.owned) for (const p of ig.owned.recent_posts) if (isRecent(p.timestamp)) allPosts.push({ platform: 'instagram', isOwned: true, handle: ig.owned.handle, ...p, score: velocity(p) })
+  for (const c of (ig?.competitors || [])) for (const p of c.recent_posts) if (isRecent(p.timestamp)) allPosts.push({ platform: 'instagram', isOwned: false, handle: c.handle, ...p, score: velocity(p) })
 
   const top = allPosts.sort((a, b) => b.score - a.score).slice(0, 12)
 
@@ -334,7 +346,17 @@ async function buildInsights(tt, ig, ttTrends) {
   }
   const topicRanked = Object.entries(topics).sort((a, b) => b[1] - a[1])
 
-  return { top_viral: top, topics: topicRanked, fetched_at: new Date().toISOString() }
+  const ours = allPosts.filter(p => p.isOwned).sort((a, b) => b.score - a.score)
+  const competitors = allPosts.filter(p => !p.isOwned).sort((a, b) => b.score - a.score)
+  return {
+    top_viral: top,
+    ours_top: ours.slice(0, 12),
+    competitor_top: competitors.slice(0, 12),
+    topics: topicRanked,
+    cutoff_date: CUTOFF.slice(0, 10),
+    days_back: DAYS_BACK,
+    fetched_at: new Date().toISOString(),
+  }
 }
 
 // ─── Main ─────────────────────────────────────────────────────────────────────

@@ -19,7 +19,7 @@ export default function ContentPage() {
   const pin = useStaticData('pinterest')
 
   const [platform, setPlatform] = useState('all')
-  const [account, setAccount] = useState('all')
+  const [account, setAccount] = useState('ours')
   const [sort, setSort] = useState('engagement')
   const [view, setView] = useState('grid')
 
@@ -78,7 +78,7 @@ export default function ContentPage() {
         <div className="mono text-[10px] uppercase tracking-widest text-[var(--text-dim)] mb-2">All scraped content</div>
         <h1 className="text-3xl sm:text-4xl font-black tracking-tight">Content library</h1>
         <p className="text-sm text-[var(--text-muted)] mt-2">
-          {stats.total} posts from {stats.ours} our accounts + {stats.competitors} competitor posts · {fmt(stats.totalViews)} total views · live Apify + Pinterest API
+          {stats.total} posts in the last 30 days · {stats.ours} ours + {stats.competitors} competitor · {fmt(stats.totalViews)} aggregate views · live Apify + Pinterest API
         </p>
       </div>
 
