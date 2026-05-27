@@ -1,10 +1,22 @@
 'use client'
 import { useEffect, useMemo, useState } from 'react'
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, AreaChart, Area } from 'recharts'
-import { TrendingUp, TrendingDown, Users, Eye, Heart, Zap, Bell, Pin, MessageCircle, Share2, Bookmark, AlertCircle, RefreshCw, Flame, Sparkles } from 'lucide-react'
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area, Cell, Legend } from 'recharts'
+import {
+  INSTAGRAM_2026, INSTAGRAM_2025,
+  FACEBOOK_2026, FACEBOOK_2025,
+  TIKTOK_2026, TIKTOK_2025,
+  MONTHS, latestMonth, VERIFIED_SOURCE,
+} from '@/lib/excel-data'
 
-const fmt = (n) => n > 0 ? new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 }).format(n) : '0'
-const fmtFull = (n) => (n ?? 0).toLocaleString()
+// ── helpers ───────────────────────────────────────────────────────────────────
+const fmt = (n) => {
+  if (n == null || isNaN(n)) return '—'
+  if (n === 0) return '0'
+  return new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 }).format(n)
+}
+const fmtFull = (n) => n == null ? '—' : Number(n).toLocaleString()
+const fmtPct = (n) => n == null ? '—' : (n * 100).toFixed(1) + '%'
+const fmtMoney = (n) => n == null ? '—' : '$' + Number(n).toLocaleString(undefined, { maximumFractionDigits: 2 })
 const timeAgo = (iso) => {
   if (!iso) return '—'
   const m = Math.floor((Date.now() - new Date(iso).getTime()) / 60000)
@@ -15,24 +27,10 @@ const timeAgo = (iso) => {
 }
 
 const PLATFORM = {
-  tiktok:    { name: 'TikTok',    color: '#75c7e6', glyph: '🎵' },
-  instagram: { name: 'Instagram', color: '#fc3467', glyph: '📷' },
-  facebook:  { name: 'Facebook',  color: '#00709c', glyph: '📘' },
-  pinterest: { name: 'Pinterest', color: '#e60036', glyph: '📌' },
-}
-
-// Excel-derived baseline: 2026 monthly performance (Jan-Apr) — for YoY chart
-const EXCEL_MONTHLY = [
-  { month: 'Jan', tiktok: 16057347, instagram: 6083475, facebook: 12816129, tiktok_25: 5391309, instagram_25: 0, facebook_25: 0 },
-  { month: 'Feb', tiktok: 17222661, instagram: 5621747, facebook: 7760649,  tiktok_25: 7492585, instagram_25: 0, facebook_25: 0 },
-  { month: 'Mar', tiktok: 12398586, instagram: 3603150, facebook: 12580793, tiktok_25: 7944426, instagram_25: 0, facebook_25: 0 },
-  { month: 'Apr', tiktok: 12296014, instagram: 4239995, facebook: 7074880,  tiktok_25: 5348693, instagram_25: 0, facebook_25: 0 },
-]
-
-const EXCEL_LATEST = {
-  tiktok:    { views: 12296014, free_trials: 248, ftcr: 0.020, revenue: 281,   new_follows: 8500,  shares: 5300 },
-  instagram: { reach: 1664455,  views: 4239995,  free_trials: 89,  new_follows: 12500, shares: 5300 },
-  facebook:  { views: 7074880,  follower_views: 0.158, non_follower: 0.842, new_followers: 0 },
+  tiktok:    { name: 'TikTok',    color: '#75c7e6', glow: 'glow-tt',  glyph: '🎵', tag: 'tt' },
+  instagram: { name: 'Instagram', color: '#fc3467', glow: 'glow-ig',  glyph: '📷', tag: 'ig' },
+  facebook:  { name: 'Facebook',  color: '#00709c', glow: 'glow-fb',  glyph: '📘', tag: 'fb' },
+  pinterest: { name: 'Pinterest', color: '#e60036', glow: 'glow-pin', glyph: '📌', tag: 'pin' },
 }
 
 function useStaticData(file) {
@@ -47,320 +45,585 @@ function useStaticData(file) {
   return { data, err, loading: !data && !err }
 }
 
-function PlatformHero({ platform, primary, secondary, tertiary, status }) {
+// ── tiny components ──────────────────────────────────────────────────────────
+function SourceTag({ source }) {
+  const colors = {
+    'apify-live':  'bg-[#62d070]/10 text-[#62d070] border-[#62d070]/30',
+    'pinterest-api': 'bg-[#62d070]/10 text-[#62d070] border-[#62d070]/30',
+    'xlsx': 'bg-[#75c7e6]/10 text-[#75c7e6] border-[#75c7e6]/30',
+    'pending': 'bg-[#fad74f]/10 text-[#fad74f] border-[#fad74f]/30',
+  }
+  const labels = {
+    'apify-live': 'LIVE via Apify',
+    'pinterest-api': 'LIVE via Pinterest API',
+    'xlsx': 'Verified · Excel Apr 2026',
+    'pending': 'Meta API pending',
+  }
+  return (
+    <span className={`mono text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded border ${colors[source] || ''}`}>
+      {labels[source] || source}
+    </span>
+  )
+}
+
+function PlatformCard({ platform, primary, secondary, tertiary, source }) {
   const p = PLATFORM[platform]
   return (
-    <div className="bg-[#0d1117] border border-[#1e2433] rounded-xl p-5 hover:border-opacity-50 transition-all" style={{ borderColor: p.color + '33' }}>
-      <div className="flex items-start justify-between mb-3">
+    <div className={`card-strong p-5 sm:p-6 ${p.glow} fade-up`}>
+      <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <span className="text-xl">{p.glyph}</span>
-          <span className="text-sm font-semibold text-white">{p.name}</span>
+          <span className="text-xl sm:text-2xl">{p.glyph}</span>
+          <span className="text-sm font-semibold tracking-tight">{p.name}</span>
         </div>
-        {status === 'live' && <span className="px-1.5 py-0.5 text-[9px] font-bold rounded uppercase tracking-wider" style={{ background: p.color + '22', color: p.color }}>LIVE</span>}
-        {status === 'pending' && <span className="px-1.5 py-0.5 text-[9px] font-bold rounded uppercase tracking-wider bg-[#fad74f]/20 text-[#fad74f]">PENDING</span>}
+        <SourceTag source={source} />
       </div>
-      <div className="mb-2">
-        <div className="text-3xl font-bold text-white">{primary.value}</div>
-        <div className="text-xs text-gray-500 mt-0.5">{primary.label}</div>
+      <div className="mb-4">
+        <div className="num-xl text-3xl sm:text-4xl text-white">{primary.value}</div>
+        <div className="text-xs text-[var(--text-dim)] mt-1">{primary.label}</div>
       </div>
-      <div className="grid grid-cols-2 gap-2 pt-3 border-t border-[#1e2433]">
+      <div className="grid grid-cols-2 gap-3 pt-4 border-t border-[var(--border)]">
         <div>
-          <div className="text-sm font-semibold text-white">{secondary.value}</div>
-          <div className="text-[10px] text-gray-500 uppercase tracking-wide">{secondary.label}</div>
+          <div className="text-sm sm:text-base font-semibold">{secondary.value}</div>
+          <div className="text-[10px] uppercase tracking-wider text-[var(--text-dim)] mt-0.5">{secondary.label}</div>
         </div>
         <div>
-          <div className="text-sm font-semibold text-white">{tertiary.value}</div>
-          <div className="text-[10px] text-gray-500 uppercase tracking-wide">{tertiary.label}</div>
+          <div className="text-sm sm:text-base font-semibold">{tertiary.value}</div>
+          <div className="text-[10px] uppercase tracking-wider text-[var(--text-dim)] mt-0.5">{tertiary.label}</div>
         </div>
       </div>
     </div>
   )
 }
 
+function SectionHeader({ eyebrow, title, subtitle, right }) {
+  return (
+    <div className="flex items-end justify-between gap-3 mb-4 sm:mb-5">
+      <div>
+        {eyebrow && <div className="mono text-[10px] uppercase tracking-wider text-[var(--text-dim)] mb-1">{eyebrow}</div>}
+        <h2 className="text-lg sm:text-2xl font-bold tracking-tight">{title}</h2>
+        {subtitle && <p className="text-xs sm:text-sm text-[var(--text-muted)] mt-1">{subtitle}</p>}
+      </div>
+      {right}
+    </div>
+  )
+}
+
+// ── main page ────────────────────────────────────────────────────────────────
 export default function PulsePage() {
   const tt = useStaticData('tiktok')
   const ig = useStaticData('instagram')
   const pin = useStaticData('pinterest')
+  const insights = useStaticData('insights')
+  const ttTrends = useStaticData('tiktok_trends')
   const meta = useStaticData('last-updated')
 
-  const allLiveAt = meta.data?.fetched_at
+  // ─── EXCEL data (last verified month — Apr 2026) ────────────────────────────
+  const ig_latest_views = latestMonth(INSTAGRAM_2026.total_views)
+  const ig_latest_reach = latestMonth(INSTAGRAM_2026.accounts_reached)
+  const ig_latest_trials = latestMonth(INSTAGRAM_2026.free_trials)
+  const fb_latest_views = latestMonth(FACEBOOK_2026.views)
+  const fb_latest_reach = latestMonth(FACEBOOK_2026.accounts_reached)
+  const fb_latest_trials = latestMonth(FACEBOOK_2026.free_trials)
+  const tt_latest_views = latestMonth(TIKTOK_2026.views)
+  const tt_latest_engaged = latestMonth(TIKTOK_2026.engaged_audience)
+  const tt_latest_trials = latestMonth(TIKTOK_2026.free_trials)
 
-  // top-line numbers per platform
-  const ttData = tt.data
-  const igData = ig.data
-  const pinData = pin.data
+  const yoyData = MONTHS.map((m, i) => ({
+    month: m,
+    'TT 2026': TIKTOK_2026.views[i],
+    'TT 2025': TIKTOK_2025.views[i],
+    'IG 2026': INSTAGRAM_2026.total_views[i],
+    'IG 2025': INSTAGRAM_2025.accounts_reached[i],
+    'FB 2026': FACEBOOK_2026.views[i],
+  }))
 
-  // compute top viral posts across competitors
-  const viralPosts = useMemo(() => {
-    const all = []
-    if (ttData?.competitors) {
-      for (const c of ttData.competitors) {
-        for (const p of c.recent_posts || []) {
-          all.push({ platform: 'tiktok', handle: c.handle, ...p, score: p.views || 0, primary: p.views, primaryLabel: 'views' })
-        }
-      }
-    }
-    if (ttData?.owned) {
-      for (const p of ttData.owned.recent_posts || []) {
-        all.push({ platform: 'tiktok', handle: ttData.owned.handle, isOwned: true, ...p, score: p.views || 0, primary: p.views, primaryLabel: 'views' })
-      }
-    }
-    if (igData?.competitors) {
-      for (const c of igData.competitors) {
-        for (const p of c.recent_posts || []) {
-          all.push({ platform: 'instagram', handle: c.handle, ...p, score: p.likes || 0, primary: p.likes, primaryLabel: 'likes' })
-        }
-      }
-    }
-    if (igData?.owned) {
-      for (const p of igData.owned.recent_posts || []) {
-        all.push({ platform: 'instagram', handle: igData.owned.handle, isOwned: true, ...p, score: p.likes || 0, primary: p.likes, primaryLabel: 'likes' })
-      }
-    }
-    return all.sort((a, b) => b.score - a.score).slice(0, 8)
-  }, [ttData, igData])
+  const competitorBars = useMemo(() => {
+    const out = []
+    if (tt.data?.owned) out.push({ name: 'SimpleNursing · TT', followers: tt.data.owned.followers, platform: 'tiktok', owned: true })
+    for (const c of (tt.data?.competitors || [])) out.push({ name: (c.display_name || c.handle) + ' · TT', followers: c.followers, platform: 'tiktok', owned: false })
+    if (ig.data?.owned) out.push({ name: 'SimpleNursing · IG', followers: ig.data.owned.followers, platform: 'instagram', owned: true })
+    for (const c of (ig.data?.competitors || [])) out.push({ name: (c.display_name || c.handle) + ' · IG', followers: c.followers, platform: 'instagram', owned: false })
+    return out.sort((a, b) => b.followers - a.followers)
+  }, [tt.data, ig.data])
 
-  // Topic clustering from viral posts
-  const topicClusters = useMemo(() => {
-    const TOPICS = {
-      'NCLEX': /nclex|boards|exam|test/i,
-      'ECG/Cardiac': /ecg|ekg|heart|cardiac|rhythm/i,
-      'Pharm': /pharm|medication|drug|med|nclex pharm/i,
-      'Lab Values': /lab|electrolyte|panel|sodium|potassium/i,
-      'Clinical': /clinical|skill|injection|iv|cath/i,
-      'New Grad': /new grad|first year|residency|nurse|tip/i,
-      'Humor': /humor|funny|joke|haha|lol/i,
-    }
-    const counts = {}
-    for (const post of viralPosts) {
-      for (const [topic, rx] of Object.entries(TOPICS)) {
-        if (rx.test(post.caption || '')) {
-          counts[topic] = (counts[topic] || 0) + (post.score / 1000)
-          break
-        }
-      }
-    }
-    return Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 6)
-  }, [viralPosts])
+  const fundsData = MONTHS.slice(0, 4).map((m, i) => ({
+    month: m,
+    'TikTok': TIKTOK_2026.free_trials[i],
+    'Instagram': INSTAGRAM_2026.free_trials[i],
+    'Facebook': FACEBOOK_2026.free_trials[i],
+  }))
 
-  const competitorFollowers = useMemo(() => {
-    const data = []
-    if (ttData?.owned) data.push({ name: 'SN TikTok', followers: ttData.owned.followers, platform: 'tiktok', owned: true })
-    for (const c of ttData?.competitors || []) data.push({ name: c.display_name || c.handle, followers: c.followers, platform: 'tiktok', owned: false })
-    if (igData?.owned) data.push({ name: 'SN Instagram', followers: igData.owned.followers, platform: 'instagram', owned: true })
-    for (const c of igData?.competitors || []) data.push({ name: c.display_name || c.handle, followers: c.followers, platform: 'instagram', owned: false })
-    return data.sort((a, b) => b.followers - a.followers)
-  }, [ttData, igData])
+  const revenueData = MONTHS.slice(0, 4).map((m, i) => ({
+    month: m,
+    'TikTok GA4': TIKTOK_2026.revenue_ga4[i],
+    'Instagram GA4': INSTAGRAM_2026.revenue_ga4[i],
+    'Facebook GA4': FACEBOOK_2026.revenue_ga4[i],
+  }))
 
-  const loading = tt.loading || ig.loading || pin.loading
+  // top viral alert (most viral non-owned competitor post)
+  const viralAlert = useMemo(() => {
+    if (!insights.data?.top_viral) return null
+    const top = insights.data.top_viral.find(p => !p.isOwned)
+    return top
+  }, [insights.data])
 
   return (
-    <div className="p-6 max-w-screen-2xl mx-auto space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-white">SimpleNursing Pulse</h1>
-          <p className="text-sm text-gray-400 mt-1">Real-time social intelligence across all platforms · Auto-refreshes hourly via GitHub Actions</p>
-        </div>
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-[#0d1117] border border-[#1e2433] rounded-lg">
-            <span className="w-2 h-2 rounded-full bg-[#62d070] live-dot"></span>
-            <span className="text-xs text-gray-400">Last refresh: <span className="text-white font-medium">{timeAgo(allLiveAt)}</span></span>
+    <div className="min-h-screen bg-gradient-mesh">
+      {/* HEADER */}
+      <header className="sticky top-0 z-30 backdrop-blur-xl bg-[#06060a]/80 border-b border-[var(--border)]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#75c7e6] to-[#fc3467] flex items-center justify-center text-xs font-black text-white">SN</div>
+            <div>
+              <div className="text-sm font-bold tracking-tight leading-tight">SimpleNursing Pulse</div>
+              <div className="text-[10px] text-[var(--text-dim)] hidden sm:block leading-tight">Real-time social intelligence</div>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-full bg-[var(--bg-card)] border border-[var(--border)]">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#62d070] live-dot" />
+            <span className="text-[10px] sm:text-xs text-[var(--text-muted)]">
+              <span className="hidden sm:inline">Refreshed </span>
+              <span className="text-white font-medium">{timeAgo(meta.data?.fetched_at)}</span>
+            </span>
           </div>
         </div>
-      </div>
+      </header>
 
-      {/* PLATFORM HERO — all 4 in one row */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-        <PlatformHero
-          platform="tiktok"
-          status={ttData?.owned ? 'live' : 'loading'}
-          primary={{ value: fmt(ttData?.owned?.followers ?? EXCEL_LATEST.tiktok.views), label: ttData?.owned ? 'Followers (live)' : 'Apr views (Excel)' }}
-          secondary={{ value: fmt(EXCEL_LATEST.tiktok.views), label: 'Apr Views' }}
-          tertiary={{ value: ttData?.owned?.posts ? fmt(ttData.owned.posts) : '—', label: 'Posts' }}
-        />
-        <PlatformHero
-          platform="instagram"
-          status={igData?.owned ? 'live' : 'loading'}
-          primary={{ value: fmt(igData?.owned?.followers ?? 862531), label: igData?.owned ? 'Followers (live)' : 'Followers' }}
-          secondary={{ value: fmt(EXCEL_LATEST.instagram.reach), label: 'Apr Reach' }}
-          tertiary={{ value: fmt(igData?.owned?.posts ?? 0), label: 'Posts' }}
-        />
-        <PlatformHero
-          platform="facebook"
-          status="pending"
-          primary={{ value: fmt(EXCEL_LATEST.facebook.views), label: 'Apr Views (Excel)' }}
-          secondary={{ value: Math.round(EXCEL_LATEST.facebook.non_follower * 100) + '%', label: 'Non-follower' }}
-          tertiary={{ value: 'Meta API', label: 'Required' }}
-        />
-        <PlatformHero
-          platform="pinterest"
-          status={pinData ? 'live' : 'loading'}
-          primary={{ value: fmt(pinData?.profile?.monthly_views ?? 148882), label: 'Monthly views (live)' }}
-          secondary={{ value: fmt(pinData?.summary?.impressions ?? 144717), label: '30d Impressions' }}
-          tertiary={{ value: fmt(pinData?.summary?.saves ?? 699), label: '30d Saves' }}
-        />
-      </div>
-
-      {/* WHAT'S WORKING — viral feed */}
-      <div className="bg-[#0d1117] border border-[#1e2433] rounded-xl p-5">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-base font-semibold text-white flex items-center gap-2">
-            <Flame size={16} className="text-[#fc3467]" /> What's Working Today
-          </h2>
-          <span className="text-xs text-gray-500">Top 8 posts ranked by reach · refreshed hourly</span>
-        </div>
-
-        {loading && <div className="text-center text-gray-500 py-8">Loading live posts…</div>}
-        {!loading && (
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
-            {viralPosts.map((post, i) => {
-              const p = PLATFORM[post.platform]
-              return (
-                <a key={i} href={post.url} target="_blank" rel="noreferrer" className="block bg-[#161b22] border border-[#1e2433] rounded-lg overflow-hidden hover:border-opacity-50 transition-all" style={{ borderColor: p.color + (post.isOwned ? '66' : '22') }}>
-                  {post.thumbnail && (
-                    <div className="aspect-video bg-[#0a0a0f] relative overflow-hidden">
-                      <img src={post.thumbnail} alt="" className="w-full h-full object-cover opacity-90" referrerPolicy="no-referrer" />
-                      <span className="absolute top-2 left-2 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase" style={{ background: p.color, color: '#fff' }}>{post.platform}</span>
-                      {post.isOwned && <span className="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-[#62d070] text-[9px] font-bold text-black">OURS</span>}
-                    </div>
-                  )}
-                  <div className="p-3">
-                    <p className="text-xs text-white line-clamp-2 mb-2 min-h-[2.5rem]">{post.caption || post.title || '(no caption)'}</p>
-                    <div className="flex items-center justify-between text-[10px] text-gray-500">
-                      <span>@{post.handle}</span>
-                      <span className="text-white font-semibold">{fmt(post.primary)} {post.primaryLabel}</span>
-                    </div>
-                    <div className="flex items-center gap-3 mt-2 text-[10px] text-gray-500">
-                      {post.likes > 0 && <span className="flex items-center gap-0.5"><Heart size={9}/> {fmt(post.likes)}</span>}
-                      {post.comments > 0 && <span className="flex items-center gap-0.5"><MessageCircle size={9}/> {fmt(post.comments)}</span>}
-                      {post.shares > 0 && <span className="flex items-center gap-0.5"><Share2 size={9}/> {fmt(post.shares)}</span>}
-                    </div>
-                  </div>
-                </a>
-              )
-            })}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-10 space-y-8 sm:space-y-12">
+        {/* HERO */}
+        <section className="space-y-3 sm:space-y-4">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="mono text-[10px] uppercase tracking-widest text-[var(--text-dim)]">Live · auto-refreshed hourly</span>
           </div>
-        )}
-      </div>
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.05]">
+            All four platforms.<br/>
+            <span className="bg-gradient-to-r from-[#75c7e6] via-[#fc3467] to-[#e60036] bg-clip-text text-transparent">One live dashboard.</span>
+          </h1>
+          <p className="text-sm sm:text-base text-[var(--text-muted)] max-w-2xl">
+            Owned + competitor analytics across TikTok, Instagram, Facebook, Pinterest. Apify scrapes update every hour via GitHub Actions. Excel-verified historicals for Jan-Apr 2026.
+          </p>
+        </section>
 
-      {/* TWO COLUMN: Competitive gap + Topic clusters */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <div className="lg:col-span-2 bg-[#0d1117] border border-[#1e2433] rounded-xl p-5">
-          <h2 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
-            <Users size={14} /> Competitive Follower Gap (live from Apify)
-          </h2>
-          <ResponsiveContainer width="100%" height={280}>
-            <BarChart data={competitorFollowers} layout="vertical" margin={{ left: 80 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1e2433" />
-              <XAxis type="number" tick={{ fill: '#6b7280', fontSize: 10 }} tickFormatter={fmt} />
-              <YAxis type="category" dataKey="name" tick={{ fill: '#9ca3af', fontSize: 10 }} width={140} />
-              <Tooltip contentStyle={{ background: '#0d1117', border: '1px solid #1e2433', fontSize: 11 }} formatter={(v) => fmtFull(v)} />
-              <Bar dataKey="followers" radius={[0, 3, 3, 0]}>
-                {competitorFollowers.map((d, i) => (
-                  <Bar key={i} fill={d.owned ? PLATFORM[d.platform].color : PLATFORM[d.platform].color + '66'} />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-          <p className="text-xs text-gray-500 mt-2">Solid bars = SimpleNursing · Translucent = competitors. NurseInTheMaking now leads both IG and TT.</p>
-        </div>
-
-        <div className="bg-[#0d1117] border border-[#1e2433] rounded-xl p-5">
-          <h2 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
-            <Sparkles size={14} className="text-[#fad74f]" /> Trending Topics
-          </h2>
-          <p className="text-xs text-gray-500 mb-3">Auto-extracted from top viral posts</p>
-          <div className="space-y-2">
-            {topicClusters.length === 0 && <p className="text-xs text-gray-600">Crunching live captions…</p>}
-            {topicClusters.map(([topic, score], i) => {
-              const max = topicClusters[0]?.[1] || 1
-              return (
-                <div key={topic}>
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs text-white">{topic}</span>
-                    <span className="text-[10px] text-gray-500">{Math.round(score)}k engagement</span>
-                  </div>
-                  <div className="h-1.5 bg-[#1e2433] rounded-full overflow-hidden">
-                    <div className="h-full rounded-full" style={{ width: `${(score / max) * 100}%`, background: i === 0 ? '#fc3467' : i < 3 ? '#fad74f' : '#75c7e6' }} />
-                  </div>
+        {/* VIRAL ALERT */}
+        {viralAlert && (
+          <a href={viralAlert.url} target="_blank" rel="noreferrer" className="block card-strong p-4 sm:p-5 hover:border-[#fc3467]/40 transition-all fade-up">
+            <div className="flex items-center justify-between flex-wrap gap-2 mb-2">
+              <div className="flex items-center gap-2">
+                <span className="mono text-[10px] uppercase tracking-widest text-[#fc3467] font-bold">🔥 Competitor virality alert</span>
+                <SourceTag source="apify-live" />
+              </div>
+              <span className="text-[11px] text-[var(--text-dim)]">@{viralAlert.handle} · {PLATFORM[viralAlert.platform].name}</span>
+            </div>
+            <div className="flex items-start gap-3 sm:gap-4">
+              {viralAlert.thumbnail && (
+                <img src={viralAlert.thumbnail} alt="" className="w-16 h-20 sm:w-20 sm:h-24 object-cover rounded-lg flex-shrink-0" referrerPolicy="no-referrer" />
+              )}
+              <div className="flex-1 min-w-0">
+                <p className="text-sm sm:text-base text-white line-clamp-2 mb-2">{viralAlert.caption || viralAlert.title}</p>
+                <div className="flex flex-wrap gap-3 sm:gap-4 text-xs">
+                  <div><span className="text-[var(--text-dim)]">Views:</span> <span className="font-bold">{fmt(viralAlert.views)}</span></div>
+                  <div><span className="text-[var(--text-dim)]">Likes:</span> <span className="font-bold">{fmt(viralAlert.likes)}</span></div>
+                  {viralAlert.comments > 0 && <div><span className="text-[var(--text-dim)]">Comments:</span> <span className="font-bold">{fmt(viralAlert.comments)}</span></div>}
                 </div>
-              )
-            })}
+              </div>
+            </div>
+          </a>
+        )}
+
+        {/* PLATFORM HEROES */}
+        <section>
+          <SectionHeader
+            eyebrow="01 · Platform overview"
+            title="Today's snapshot"
+            subtitle="Live followers from Apify · April 2026 monthly metrics from Excel tracker"
+          />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            <PlatformCard
+              platform="tiktok"
+              source={tt.data?.owned ? 'apify-live' : 'pending'}
+              primary={{ value: fmt(tt.data?.owned?.followers), label: 'Followers (live)' }}
+              secondary={{ value: fmt(tt_latest_views?.value), label: `${tt_latest_views?.month} 2026 views` }}
+              tertiary={{ value: fmtFull(tt_latest_trials?.value), label: `${tt_latest_trials?.month} 2026 free trials` }}
+            />
+            <PlatformCard
+              platform="instagram"
+              source={ig.data?.owned ? 'apify-live' : 'pending'}
+              primary={{ value: fmt(ig.data?.owned?.followers), label: 'Followers (live)' }}
+              secondary={{ value: fmt(ig_latest_reach?.value), label: `${ig_latest_reach?.month} 2026 reach` }}
+              tertiary={{ value: fmtFull(ig_latest_trials?.value), label: `${ig_latest_trials?.month} 2026 free trials` }}
+            />
+            <PlatformCard
+              platform="facebook"
+              source="xlsx"
+              primary={{ value: fmt(fb_latest_views?.value), label: `${fb_latest_views?.month} 2026 views` }}
+              secondary={{ value: fmt(fb_latest_reach?.value), label: `${fb_latest_reach?.month} 2026 reach` }}
+              tertiary={{ value: fmtFull(fb_latest_trials?.value), label: `${fb_latest_trials?.month} free trials` }}
+            />
+            <PlatformCard
+              platform="pinterest"
+              source={pin.data ? 'pinterest-api' : 'pending'}
+              primary={{ value: fmt(pin.data?.profile?.monthly_views), label: 'Monthly views (live)' }}
+              secondary={{ value: fmt(pin.data?.summary?.impressions), label: '30d impressions' }}
+              tertiary={{ value: fmt(pin.data?.summary?.saves), label: '30d saves' }}
+            />
           </div>
-        </div>
-      </div>
+        </section>
 
-      {/* YoY view trend (Excel data) */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="bg-[#0d1117] border border-[#1e2433] rounded-xl p-5">
-          <h2 className="text-sm font-semibold text-white mb-3">Monthly Views — 2026 (from Excel tracker)</h2>
-          <ResponsiveContainer width="100%" height={240}>
-            <LineChart data={EXCEL_MONTHLY}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1e2433" />
-              <XAxis dataKey="month" tick={{ fill: '#6b7280', fontSize: 11 }} />
-              <YAxis tick={{ fill: '#6b7280', fontSize: 11 }} tickFormatter={fmt} />
-              <Tooltip contentStyle={{ background: '#0d1117', border: '1px solid #1e2433', fontSize: 11 }} formatter={(v) => fmtFull(v)} />
-              <Legend wrapperStyle={{ fontSize: 10 }} />
-              <Line type="monotone" dataKey="tiktok" stroke="#75c7e6" strokeWidth={2} name="TikTok" dot={{ r: 3 }} />
-              <Line type="monotone" dataKey="instagram" stroke="#fc3467" strokeWidth={2} name="Instagram" dot={{ r: 3 }} />
-              <Line type="monotone" dataKey="facebook" stroke="#00709c" strokeWidth={2} name="Facebook" dot={{ r: 3 }} />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-
-        <div className="bg-[#0d1117] border border-[#1e2433] rounded-xl p-5">
-          <h2 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
-            <Pin size={14} className="text-[#e60036]" /> Pinterest 30-day Trend
-          </h2>
-          {pinData?.daily ? (
-            <ResponsiveContainer width="100%" height={240}>
-              <AreaChart data={pinData.daily.map(d => ({ date: d.date.slice(5), impressions: d.metrics?.IMPRESSION || 0, saves: d.metrics?.SAVE || 0, clicks: d.metrics?.PIN_CLICK || 0 }))}>
-                <defs>
-                  <linearGradient id="impGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#e60036" stopOpacity={0.4} />
-                    <stop offset="100%" stopColor="#e60036" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1e2433" />
-                <XAxis dataKey="date" tick={{ fill: '#6b7280', fontSize: 9 }} />
-                <YAxis tick={{ fill: '#6b7280', fontSize: 10 }} tickFormatter={fmt} />
-                <Tooltip contentStyle={{ background: '#0d1117', border: '1px solid #1e2433', fontSize: 11 }} formatter={(v) => fmtFull(v)} />
-                <Area type="monotone" dataKey="impressions" stroke="#e60036" strokeWidth={2} fill="url(#impGrad)" name="Impressions" />
-              </AreaChart>
-            </ResponsiveContainer>
-          ) : <div className="text-xs text-gray-600 py-8 text-center">Loading…</div>}
-          {pinData?.summary && (
-            <p className="text-xs text-gray-500 mt-2">
-              {pinData.summary.period} · {fmt(pinData.summary.pin_clicks)} pin clicks · {fmt(pinData.summary.outbound_clicks)} outbound · {fmt(pinData.summary.saves)} saves
-            </p>
+        {/* WHAT'S WORKING NOW */}
+        <section>
+          <SectionHeader
+            eyebrow="02 · What's working right now"
+            title="Top viral posts across all 8 tracked accounts"
+            subtitle="Ranked by engagement · auto-refreshed every hour"
+            right={<SourceTag source="apify-live" />}
+          />
+          {insights.loading && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div key={i} className="card skel aspect-[4/5]" />
+              ))}
+            </div>
           )}
-        </div>
-      </div>
+          {insights.data && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
+              {insights.data.top_viral.slice(0, 8).map((post, i) => {
+                const p = PLATFORM[post.platform]
+                return (
+                  <a key={i}
+                    href={post.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="group card overflow-hidden hover:-translate-y-0.5 transition-all fade-up"
+                    style={{ animationDelay: i * 60 + 'ms' }}
+                  >
+                    <div className="aspect-[4/5] sm:aspect-square bg-[var(--bg-card-2)] relative overflow-hidden">
+                      {post.thumbnail ? (
+                        <img src={post.thumbnail} alt="" className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all" referrerPolicy="no-referrer" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-3xl opacity-30">{p.glyph}</div>
+                      )}
+                      <div className="absolute top-2 left-2 flex gap-1">
+                        <span className="mono text-[9px] font-bold uppercase px-1.5 py-0.5 rounded text-white" style={{ background: p.color }}>{post.platform}</span>
+                        {post.isOwned && <span className="mono text-[9px] font-bold uppercase px-1.5 py-0.5 rounded bg-[#62d070] text-black">Ours</span>}
+                      </div>
+                      <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/90 to-transparent">
+                        <div className="num-xl text-lg text-white">{fmt(post.views || post.likes)}</div>
+                        <div className="text-[10px] text-white/70 uppercase mono">{post.views ? 'views' : 'likes'}</div>
+                      </div>
+                    </div>
+                    <div className="p-2.5 sm:p-3">
+                      <p className="text-xs leading-snug line-clamp-2 text-white/90 mb-1.5">{post.caption || post.title || '(no caption)'}</p>
+                      <div className="flex items-center justify-between text-[10px] text-[var(--text-dim)]">
+                        <span className="truncate">@{post.handle}</span>
+                        {post.likes > 0 && post.views > 0 && (
+                          <span className="mono">ER {((post.likes / post.views) * 100).toFixed(1)}%</span>
+                        )}
+                      </div>
+                    </div>
+                  </a>
+                )
+              })}
+            </div>
+          )}
+        </section>
 
-      {/* Status footer */}
-      <div className="bg-[#0a0f1a] border border-[#1e2433] rounded-xl p-4">
-        <h2 className="text-xs uppercase tracking-wider text-gray-500 mb-3">Platform connections</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
-          <ConnectionStatus name="TikTok"    via="Apify" ok={!!ttData?.owned} live={ttData?.fetched_at} />
-          <ConnectionStatus name="Instagram" via="Apify" ok={!!igData?.owned} live={igData?.fetched_at} />
-          <ConnectionStatus name="Facebook"  via="Meta API" ok={false} note="App ID + Business token required" />
-          <ConnectionStatus name="Pinterest" via="API v5" ok={!!pinData?.profile} live={pinData?.fetched_at} />
-        </div>
-        <p className="text-[10px] text-gray-600 mt-3">Data refreshed hourly via GitHub Actions cron (.github/workflows/refresh-data.yml). Built static, served from GitHub Pages.</p>
-      </div>
-    </div>
-  )
-}
+        {/* COMPETITOR LADDER */}
+        <section>
+          <SectionHeader
+            eyebrow="03 · Follower competitive position"
+            title="Where we rank vs direct nursing competitors"
+            subtitle="Live follower counts from Apify · scraped this refresh"
+            right={<SourceTag source="apify-live" />}
+          />
+          <div className="card-strong p-3 sm:p-5">
+            <div className="h-[320px] sm:h-[380px] -mx-2 sm:mx-0">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={competitorBars} layout="vertical" margin={{ left: 0, right: 24 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#1e2433" horizontal={false} />
+                  <XAxis type="number" tick={{ fill: '#6b7280', fontSize: 10 }} tickFormatter={fmt} />
+                  <YAxis type="category" dataKey="name" tick={{ fill: '#9ca3af', fontSize: 10 }} width={130} />
+                  <Tooltip
+                    contentStyle={{ background: '#0d1117', border: '1px solid #2a3142', borderRadius: 8, fontSize: 11 }}
+                    formatter={(v) => [fmtFull(v) + ' followers', '']}
+                    cursor={{ fill: '#ffffff08' }}
+                  />
+                  <Bar dataKey="followers" radius={[0, 4, 4, 0]}>
+                    {competitorBars.map((d, i) => (
+                      <Cell key={i} fill={d.owned ? PLATFORM[d.platform].color : PLATFORM[d.platform].color + '55'} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+            <p className="text-[10px] sm:text-xs text-[var(--text-dim)] mt-2 sm:mt-3">
+              Solid bars = SimpleNursing · Translucent = competitor. NurseInTheMaking currently leads both IG &amp; TT.
+            </p>
+          </div>
+        </section>
 
-function ConnectionStatus({ name, via, ok, live, note }) {
-  return (
-    <div className="flex items-center gap-2">
-      <span className={`w-1.5 h-1.5 rounded-full ${ok ? 'bg-[#62d070] live-dot' : 'bg-[#fad74f]'}`} />
-      <div className="flex-1 min-w-0">
-        <div className="text-white font-medium">{name}</div>
-        <div className="text-[10px] text-gray-500 truncate">{ok ? `${via} · ${timeAgo(live)}` : note || via}</div>
-      </div>
+        {/* YEAR OVER YEAR */}
+        <section>
+          <SectionHeader
+            eyebrow="04 · Year-over-year"
+            title="2026 vs 2025 monthly trajectory"
+            subtitle="Source: Social Performance Tracker (2026).xlsx · verified May 2026"
+            right={<SourceTag source="xlsx" />}
+          />
+          <div className="card-strong p-3 sm:p-5">
+            <div className="h-[280px] sm:h-[340px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={yoyData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#1e2433" />
+                  <XAxis dataKey="month" tick={{ fill: '#6b7280', fontSize: 11 }} />
+                  <YAxis tick={{ fill: '#6b7280', fontSize: 10 }} tickFormatter={fmt} />
+                  <Tooltip
+                    contentStyle={{ background: '#0d1117', border: '1px solid #2a3142', borderRadius: 8, fontSize: 11 }}
+                    formatter={(v) => fmtFull(v)}
+                  />
+                  <Legend wrapperStyle={{ fontSize: 10 }} iconType="line" />
+                  <Line type="monotone" dataKey="TT 2026" stroke="#75c7e6" strokeWidth={2.5} dot={{ r: 3, fill: '#75c7e6' }} />
+                  <Line type="monotone" dataKey="TT 2025" stroke="#75c7e6" strokeWidth={1.5} strokeDasharray="4 4" dot={false} opacity={0.5} />
+                  <Line type="monotone" dataKey="IG 2026" stroke="#fc3467" strokeWidth={2.5} dot={{ r: 3, fill: '#fc3467' }} />
+                  <Line type="monotone" dataKey="FB 2026" stroke="#00709c" strokeWidth={2.5} dot={{ r: 3, fill: '#00709c' }} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+            <p className="text-[10px] sm:text-xs text-[var(--text-dim)] mt-2">Dashed lines = 2025. April 2026 is last fully reported month.</p>
+          </div>
+        </section>
+
+        {/* TOPIC INTELLIGENCE + TIKTOK SOUNDS */}
+        <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+          <div>
+            <SectionHeader
+              eyebrow="05 · Topic intelligence"
+              title="What nursing topics are winning"
+              subtitle="Auto-clustered from live viral captions"
+              right={<SourceTag source="apify-live" />}
+            />
+            <div className="card-strong p-4 sm:p-5">
+              {insights.data?.topics?.length > 0 ? (
+                <div className="space-y-3">
+                  {insights.data.topics.slice(0, 8).map(([topic, score], i) => {
+                    const max = insights.data.topics[0][1]
+                    return (
+                      <div key={topic}>
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="text-sm font-medium">{topic}</span>
+                          <span className="mono text-[10px] text-[var(--text-dim)]">{fmt(score)} eng</span>
+                        </div>
+                        <div className="h-2 bg-[var(--bg-card-2)] rounded-full overflow-hidden">
+                          <div className="h-full rounded-full transition-all" style={{
+                            width: `${(score / max) * 100}%`,
+                            background: i === 0 ? '#fc3467' : i < 3 ? '#fad74f' : '#75c7e6',
+                          }} />
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              ) : (
+                <div className="text-xs text-[var(--text-dim)] py-8 text-center">Awaiting refresh…</div>
+              )}
+            </div>
+          </div>
+
+          <div>
+            <SectionHeader
+              eyebrow="06 · Trending audio"
+              title="TikTok sounds gaining traction"
+              subtitle={"From '" + (ttTrends.data?.queries?.[0] || 'nursing') + "' search · most-viewed first"}
+              right={<SourceTag source="apify-live" />}
+            />
+            <div className="card-strong p-2 sm:p-3 max-h-[420px] overflow-y-auto">
+              {ttTrends.data?.sounds?.length > 0 ? (
+                <div className="space-y-1">
+                  {ttTrends.data.sounds.slice(0, 10).map((s, i) => (
+                    <div key={i} className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-[var(--bg-card-2)] transition-all">
+                      <div className="mono text-[10px] text-[var(--text-dim)] w-5">{i + 1}</div>
+                      <div className="text-base">🎵</div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-xs font-medium text-white truncate">{s.name}</div>
+                        <div className="text-[10px] text-[var(--text-dim)] truncate">{s.author || '—'} · used {s.uses}×</div>
+                      </div>
+                      <div className="text-xs font-semibold mono text-[#75c7e6]">{fmt(s.total_views)}</div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-xs text-[var(--text-dim)] py-8 text-center">No trends loaded yet</div>
+              )}
+            </div>
+          </div>
+        </section>
+
+        {/* PINTEREST 30-DAY */}
+        {pin.data?.daily && (
+          <section>
+            <SectionHeader
+              eyebrow="07 · Pinterest deep dive"
+              title="30-day Pinterest impression curve"
+              subtitle={`${pin.data?.summary?.period} · ${fmt(pin.data?.summary?.impressions)} impressions · ${fmt(pin.data?.summary?.saves)} saves`}
+              right={<SourceTag source="pinterest-api" />}
+            />
+            <div className="card-strong p-3 sm:p-5">
+              <div className="h-[240px] sm:h-[280px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={pin.data.daily.map(d => ({
+                    date: d.date.slice(5),
+                    impressions: d.metrics?.IMPRESSION || 0,
+                    saves: d.metrics?.SAVE || 0,
+                    pin_clicks: d.metrics?.PIN_CLICK || 0,
+                  }))}>
+                    <defs>
+                      <linearGradient id="pinGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#e60036" stopOpacity={0.5} />
+                        <stop offset="100%" stopColor="#e60036" stopOpacity={0} />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#1e2433" />
+                    <XAxis dataKey="date" tick={{ fill: '#6b7280', fontSize: 9 }} />
+                    <YAxis tick={{ fill: '#6b7280', fontSize: 10 }} tickFormatter={fmt} />
+                    <Tooltip
+                      contentStyle={{ background: '#0d1117', border: '1px solid #2a3142', borderRadius: 8, fontSize: 11 }}
+                      formatter={(v) => fmtFull(v)}
+                    />
+                    <Area type="monotone" dataKey="impressions" stroke="#e60036" strokeWidth={2.5} fill="url(#pinGrad)" />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* FUNNEL — EXCEL VERIFIED */}
+        <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+          <div>
+            <SectionHeader
+              eyebrow="08 · Conversion funnel"
+              title="Free trials by platform"
+              subtitle="Jan–Apr 2026 · weekly cohort flow"
+              right={<SourceTag source="xlsx" />}
+            />
+            <div className="card-strong p-3 sm:p-5">
+              <div className="h-[240px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={fundsData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#1e2433" />
+                    <XAxis dataKey="month" tick={{ fill: '#6b7280', fontSize: 11 }} />
+                    <YAxis tick={{ fill: '#6b7280', fontSize: 10 }} />
+                    <Tooltip contentStyle={{ background: '#0d1117', border: '1px solid #2a3142', borderRadius: 8, fontSize: 11 }} />
+                    <Legend wrapperStyle={{ fontSize: 10 }} />
+                    <Bar dataKey="TikTok" fill="#75c7e6" radius={[3, 3, 0, 0]} />
+                    <Bar dataKey="Instagram" fill="#fc3467" radius={[3, 3, 0, 0]} />
+                    <Bar dataKey="Facebook" fill="#00709c" radius={[3, 3, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <SectionHeader
+              eyebrow="09 · Revenue attribution"
+              title="GA4 revenue by platform"
+              subtitle="Jan–Apr 2026 · UTM-attributed sessions"
+              right={<SourceTag source="xlsx" />}
+            />
+            <div className="card-strong p-3 sm:p-5">
+              <div className="h-[240px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={revenueData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#1e2433" />
+                    <XAxis dataKey="month" tick={{ fill: '#6b7280', fontSize: 11 }} />
+                    <YAxis tick={{ fill: '#6b7280', fontSize: 10 }} tickFormatter={(v) => '$' + fmt(v)} />
+                    <Tooltip
+                      contentStyle={{ background: '#0d1117', border: '1px solid #2a3142', borderRadius: 8, fontSize: 11 }}
+                      formatter={(v) => fmtMoney(v)}
+                    />
+                    <Legend wrapperStyle={{ fontSize: 10 }} />
+                    <Bar dataKey="TikTok GA4" fill="#75c7e6" radius={[3, 3, 0, 0]} />
+                    <Bar dataKey="Instagram GA4" fill="#fc3467" radius={[3, 3, 0, 0]} />
+                    <Bar dataKey="Facebook GA4" fill="#00709c" radius={[3, 3, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* PIPELINE TABLE */}
+        <section>
+          <SectionHeader
+            eyebrow="10 · Excel funnel"
+            title="Pipeline at a glance"
+            subtitle="Per-platform 2026 vs 2025 — verified from XLSX"
+            right={<SourceTag source="xlsx" />}
+          />
+          <div className="card-strong overflow-x-auto">
+            <table className="w-full text-xs sm:text-sm">
+              <thead>
+                <tr className="border-b border-[var(--border)]">
+                  <th className="text-left px-3 sm:px-5 py-3 text-[var(--text-dim)] mono text-[10px] uppercase tracking-wider">Metric</th>
+                  <th className="text-right px-3 sm:px-5 py-3 text-[#75c7e6] mono text-[10px] uppercase tracking-wider">TikTok</th>
+                  <th className="text-right px-3 sm:px-5 py-3 text-[#fc3467] mono text-[10px] uppercase tracking-wider">Instagram</th>
+                  <th className="text-right px-3 sm:px-5 py-3 text-[#00709c] mono text-[10px] uppercase tracking-wider">Facebook</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[var(--border)]/50">
+                <tr><td className="px-3 sm:px-5 py-3">Apr 2026 views</td>
+                    <td className="px-3 sm:px-5 py-3 text-right font-semibold">{fmtFull(TIKTOK_2026.views[3])}</td>
+                    <td className="px-3 sm:px-5 py-3 text-right font-semibold">{fmtFull(INSTAGRAM_2026.total_views[3])}</td>
+                    <td className="px-3 sm:px-5 py-3 text-right font-semibold">{fmtFull(FACEBOOK_2026.views[3])}</td></tr>
+                <tr><td className="px-3 sm:px-5 py-3">Apr 2026 engaged audience</td>
+                    <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(TIKTOK_2026.engaged_audience[3])}</td>
+                    <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(INSTAGRAM_2026.accounts_reached[3])}</td>
+                    <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(FACEBOOK_2026.accounts_reached[3])}</td></tr>
+                <tr><td className="px-3 sm:px-5 py-3">Apr 2026 new follows</td>
+                    <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(TIKTOK_2026.new_follows[3])}</td>
+                    <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(INSTAGRAM_2026.new_follows[3])}</td>
+                    <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(FACEBOOK_2026.new_follows[3])}</td></tr>
+                <tr><td className="px-3 sm:px-5 py-3">Apr 2026 free trials</td>
+                    <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(TIKTOK_2026.free_trials[3])}</td>
+                    <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(INSTAGRAM_2026.free_trials[3])}</td>
+                    <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(FACEBOOK_2026.free_trials[3])}</td></tr>
+                <tr><td className="px-3 sm:px-5 py-3">Apr 2026 FTCR</td>
+                    <td className="px-3 sm:px-5 py-3 text-right">{fmtPct(TIKTOK_2026.ftcr[3])}</td>
+                    <td className="px-3 sm:px-5 py-3 text-right">{fmtPct(INSTAGRAM_2026.ftcr[3])}</td>
+                    <td className="px-3 sm:px-5 py-3 text-right">{fmtPct(FACEBOOK_2026.ftcr[3])}</td></tr>
+                <tr><td className="px-3 sm:px-5 py-3">Apr 2026 GA4 revenue</td>
+                    <td className="px-3 sm:px-5 py-3 text-right text-[#62d070]">{fmtMoney(TIKTOK_2026.revenue_ga4[3])}</td>
+                    <td className="px-3 sm:px-5 py-3 text-right text-[#62d070]">{fmtMoney(INSTAGRAM_2026.revenue_ga4[3])}</td>
+                    <td className="px-3 sm:px-5 py-3 text-right text-[#62d070]">{fmtMoney(FACEBOOK_2026.revenue_ga4[3])}</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        {/* FOOTER STATUS */}
+        <footer className="border-t border-[var(--border)] pt-6 sm:pt-8 pb-4 mt-12">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6">
+            {[
+              ['TikTok', PLATFORM.tiktok.color, !!tt.data?.owned, 'Apify', tt.data?.fetched_at],
+              ['Instagram', PLATFORM.instagram.color, !!ig.data?.owned, 'Apify', ig.data?.fetched_at],
+              ['Facebook', PLATFORM.facebook.color, false, 'Meta API needed', null],
+              ['Pinterest', PLATFORM.pinterest.color, !!pin.data?.profile, 'API v5', pin.data?.fetched_at],
+            ].map(([name, color, ok, via, fetchedAt]) => (
+              <div key={name} className="card p-3">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="w-1.5 h-1.5 rounded-full" style={{ background: ok ? '#62d070' : '#fad74f' }} />
+                  <span className="text-xs font-semibold" style={{ color }}>{name}</span>
+                </div>
+                <div className="text-[10px] text-[var(--text-dim)] truncate">{ok ? via + ' · ' + timeAgo(fetchedAt) : via}</div>
+              </div>
+            ))}
+          </div>
+          <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-[var(--text-dim)]">
+            <span>Open-source dashboard · <a href="https://github.com/samcolibri/simplenursing-pulse" className="text-[#75c7e6] hover:underline" target="_blank" rel="noreferrer">samcolibri/simplenursing-pulse</a></span>
+            <span>Excel verified · {VERIFIED_SOURCE.verified_at}</span>
+          </div>
+        </footer>
+      </main>
     </div>
   )
 }

@@ -1,42 +1,25 @@
 {
-  "fetched_at": "2026-05-27T15:47:21.814Z",
+  "fetched_at": "2026-05-27T16:08:48.787Z",
   "platforms": {
     "pinterest": {
-      "ok": true,
-      "summary": {
-        "monthly_views": 148882,
-        "impressions": 144717,
-        "saves": 699,
-        "pins": 25,
-        "boards": 7
-      }
+      "ok": true
     },
     "tiktok": {
-      "ok": true,
-      "summary": {
-        "accounts": 4,
-        "own_followers": 1200000
-      }
+      "ok": true
     },
     "instagram": {
-      "ok": true,
-      "summary": {
-        "accounts": 4,
-        "own_followers": 862517
-      }
+      "ok": true
     },
-    "hashtags": {
-      "ok": true,
-      "summary": {
-        "count": 0
-      }
+    "tiktok_trends": {
+      "ok": true
     },
-    "meta": {
+    "ig_hashtags": {
+      "ok": true
+    },
+    "insights": {
       "ok": true,
-      "summary": {
-        "ok": false,
-        "reason": "Meta business token + IG_BUSINESS_ACCOUNT_ID required"
-      }
+      "viral_posts": 12,
+      "topics": 5
     }
   }
 }
