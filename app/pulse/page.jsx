@@ -246,7 +246,10 @@ export default function PulsePage() {
                 </div>
                 <div className="card p-3 sm:p-4">
                   <div className="text-[10px] uppercase tracking-wider text-[var(--text-dim)] mb-1">Latest post</div>
-                  <div className="num-xl text-base sm:text-xl">{timeAgo(ourPosts.slice().sort((a,b) => new Date(b.created_at||b.timestamp) - new Date(a.created_at||a.timestamp))[0]?.created_at || ourPosts[0]?.timestamp)}</div>
+                  <div className="num-xl text-base sm:text-xl">{(() => {
+                    const sorted = ourPosts.slice().sort((a, b) => new Date(b.created_at || b.timestamp || 0) - new Date(a.created_at || a.timestamp || 0))
+                    return timeAgo(sorted[0]?.created_at || sorted[0]?.timestamp)
+                  })()}</div>
                 </div>
               </div>
 
