@@ -2,12 +2,12 @@ name: Refresh dashboard data (hourly)
 
 on:
   schedule:
-    # Top of every hour, UTC
-    - cron: '5 * * * *'
+    - cron: '5 * * * *'   # 5 minutes past every hour, UTC
   workflow_dispatch: {}
 
 permissions:
   contents: write
+  actions: write          # needed to dispatch deploy workflow
 
 concurrency:
   group: refresh-data
@@ -34,13 +34,22 @@ jobs:
         run: node scripts/fetch-data.mjs
 
       - name: Commit refreshed JSON
+        id: commit
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add public/data/
           if git diff --cached --quiet; then
             echo "No data changes — skipping commit"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
           else
             git commit -m "chore(data): hourly refresh — $(date -u +'%Y-%m-%d %H:%M UTC')"
             git push
+            echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
+
+      - name: Trigger Pages deploy
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy.yml --repo "$GITHUB_REPOSITORY"
