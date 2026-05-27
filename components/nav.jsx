@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { href: '/content',     label: 'Content',     short: 'All posts' },
   { href: '/trends',      label: 'Trends',      short: 'Audio + hashtags' },
   { href: '/budget',      label: 'Budget',      short: '2026 spend' },
+  { href: '/sources',     label: 'Sources',     short: 'Data audit' },
 ]
 
 const base = typeof process !== 'undefined' && process.env.NEXT_PUBLIC_BASE_PATH ? process.env.NEXT_PUBLIC_BASE_PATH : ''

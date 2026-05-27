@@ -217,7 +217,7 @@ function YouTubeView() {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <StatBox label="YTD long-form views" value={fmt(v26)} sub={fmtPct(yoyPct(v26, v25)) + ' YoY 🔥'} color={c} />
+        <StatBox label="YTD long-form views" value={fmt(v26)} sub={fmtPct(yoyPct(v26, v25)) + ' YoY'} color={c} />
         <StatBox label="Apr watch time (hrs)" value={fmt(YOUTUBE_2026.watch_time_hrs[3])} sub={fmtPct(yoyPct(wt26, wt25)) + ' YoY'} />
         <StatBox label="Apr impressions" value={fmt(YOUTUBE_2026.longform_impressions[3])} sub="Long-form only" />
         <StatBox label="Apr unique viewers" value={fmt(YOUTUBE_2026.unique_viewers[3])} sub={fmt(YOUTUBE_2026.new_viewers[3]) + ' new'} />
