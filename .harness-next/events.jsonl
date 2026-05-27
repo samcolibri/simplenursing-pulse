@@ -254,3 +254,9 @@
 {"payload": {"decision": "allow", "kind": "bash", "reason": "no bash policy matched", "task": null, "tool": "Bash", "value": ""}, "session_id": "5741e459", "time": "2026-05-27T16:50:19.791555+00:00", "type": "policy"}
 {"payload": {"decision": "allow", "kind": "bash", "reason": "no bash policy matched", "task": null, "tool": "Bash", "value": ""}, "session_id": "037ae98f", "time": "2026-05-27T16:50:33.942346+00:00", "type": "policy"}
 {"payload": {"decision": "allow", "kind": "bash", "reason": "no bash policy matched", "task": null, "tool": "Bash", "value": ""}, "session_id": "cf1e1807", "time": "2026-05-27T16:51:11.946551+00:00", "type": "policy"}
+{"payload": {"decision": "allow", "kind": "bash", "reason": "no bash policy matched", "task": null, "tool": "Bash", "value": ""}, "session_id": "16279779", "time": "2026-05-27T16:51:26.168037+00:00", "type": "policy"}
+{"payload": {"decision": "allow", "kind": "bash", "reason": "no bash policy matched", "task": null, "tool": "Bash", "value": ""}, "session_id": "0c03f987", "time": "2026-05-27T17:40:46.182909+00:00", "type": "policy"}
+{"payload": {"decision": "allow", "kind": "bash", "reason": "no bash policy matched", "task": null, "tool": "Bash", "value": ""}, "session_id": "51ee30ee", "time": "2026-05-27T17:41:09.884199+00:00", "type": "policy"}
+{"payload": {"decision": "allow", "kind": "bash", "reason": "no bash policy matched", "task": null, "tool": "Bash", "value": ""}, "session_id": "f44d8343", "time": "2026-05-27T17:41:25.307630+00:00", "type": "policy"}
+{"payload": {"decision": "allow", "kind": "bash", "reason": "no bash policy matched", "task": null, "tool": "Bash", "value": ""}, "session_id": "d9739dae", "time": "2026-05-27T17:45:49.091243+00:00", "type": "policy"}
+{"payload": {"decision": "allow", "kind": "bash", "reason": "no bash policy matched", "task": null, "tool": "Bash", "value": ""}, "session_id": "407e8875", "time": "2026-05-27T17:46:08.160794+00:00", "type": "policy"}
