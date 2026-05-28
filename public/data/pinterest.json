@@ -9,9 +9,9 @@
     "profile_image": "https://i.pinimg.com/600x600_R/5b/fe/f3/5bfef39423ce02d51e4ad088eff66cd8.jpg"
   },
   "summary": {
-    "impressions": 139708,
-    "pin_clicks": 8913,
-    "saves": 679,
+    "impressions": 144142,
+    "pin_clicks": 9184,
+    "saves": 700,
     "outbound_clicks": 73,
     "period": "2026-04-28 → 2026-05-27"
   },
@@ -20,9 +20,9 @@
       "date": "2026-04-28",
       "data_status": "READY",
       "metrics": {
+        "OUTBOUND_CLICK": 2,
         "SAVE": 22,
         "IMPRESSION": 4860,
-        "OUTBOUND_CLICK": 2,
         "PIN_CLICK": 283
       }
     },
@@ -30,9 +30,9 @@
       "date": "2026-04-29",
       "data_status": "READY",
       "metrics": {
+        "OUTBOUND_CLICK": 6,
         "SAVE": 27,
         "IMPRESSION": 4857,
-        "OUTBOUND_CLICK": 6,
         "PIN_CLICK": 308
       }
     },
@@ -40,9 +40,9 @@
       "date": "2026-04-30",
       "data_status": "READY",
       "metrics": {
+        "OUTBOUND_CLICK": 2,
         "SAVE": 32,
         "IMPRESSION": 4964,
-        "OUTBOUND_CLICK": 2,
         "PIN_CLICK": 330
       }
     },
@@ -50,9 +50,9 @@
       "date": "2026-05-01",
       "data_status": "READY",
       "metrics": {
+        "OUTBOUND_CLICK": 3,
         "SAVE": 13,
         "IMPRESSION": 4483,
-        "OUTBOUND_CLICK": 3,
         "PIN_CLICK": 288
       }
     },
@@ -60,9 +60,9 @@
       "date": "2026-05-02",
       "data_status": "READY",
       "metrics": {
+        "OUTBOUND_CLICK": 1,
         "SAVE": 23,
         "IMPRESSION": 4256,
-        "OUTBOUND_CLICK": 1,
         "PIN_CLICK": 296
       }
     },
@@ -70,9 +70,9 @@
       "date": "2026-05-03",
       "data_status": "READY",
       "metrics": {
+        "OUTBOUND_CLICK": 3,
         "SAVE": 20,
         "IMPRESSION": 4410,
-        "OUTBOUND_CLICK": 3,
         "PIN_CLICK": 304
       }
     },
@@ -80,9 +80,9 @@
       "date": "2026-05-04",
       "data_status": "READY",
       "metrics": {
+        "OUTBOUND_CLICK": 1,
         "SAVE": 14,
         "IMPRESSION": 5027,
-        "OUTBOUND_CLICK": 1,
         "PIN_CLICK": 303
       }
     },
@@ -90,9 +90,9 @@
       "date": "2026-05-05",
       "data_status": "READY",
       "metrics": {
+        "OUTBOUND_CLICK": 1,
         "SAVE": 30,
         "IMPRESSION": 5538,
-        "OUTBOUND_CLICK": 1,
         "PIN_CLICK": 378
       }
     },
@@ -100,9 +100,9 @@
       "date": "2026-05-06",
       "data_status": "READY",
       "metrics": {
+        "OUTBOUND_CLICK": 1,
         "SAVE": 32,
         "IMPRESSION": 5644,
-        "OUTBOUND_CLICK": 1,
         "PIN_CLICK": 355
       }
     },
@@ -110,9 +110,9 @@
       "date": "2026-05-07",
       "data_status": "READY",
       "metrics": {
+        "OUTBOUND_CLICK": 3,
         "SAVE": 29,
         "IMPRESSION": 5739,
-        "OUTBOUND_CLICK": 3,
         "PIN_CLICK": 357
       }
     },
@@ -120,9 +120,9 @@
       "date": "2026-05-08",
       "data_status": "READY",
       "metrics": {
+        "OUTBOUND_CLICK": 3,
         "SAVE": 26,
         "IMPRESSION": 5587,
-        "OUTBOUND_CLICK": 3,
         "PIN_CLICK": 368
       }
     },
@@ -130,9 +130,9 @@
       "date": "2026-05-09",
       "data_status": "READY",
       "metrics": {
+        "OUTBOUND_CLICK": 0,
         "SAVE": 27,
         "IMPRESSION": 5080,
-        "OUTBOUND_CLICK": 0,
         "PIN_CLICK": 356
       }
     },
@@ -140,9 +140,9 @@
       "date": "2026-05-10",
       "data_status": "READY",
       "metrics": {
+        "OUTBOUND_CLICK": 3,
         "SAVE": 37,
         "IMPRESSION": 4751,
-        "OUTBOUND_CLICK": 3,
         "PIN_CLICK": 351
       }
     },
@@ -150,9 +150,9 @@
       "date": "2026-05-11",
       "data_status": "READY",
       "metrics": {
+        "OUTBOUND_CLICK": 2,
         "SAVE": 23,
         "IMPRESSION": 5784,
-        "OUTBOUND_CLICK": 2,
         "PIN_CLICK": 348
       }
     },
@@ -160,9 +160,9 @@
       "date": "2026-05-12",
       "data_status": "READY",
       "metrics": {
+        "OUTBOUND_CLICK": 2,
         "SAVE": 34,
         "IMPRESSION": 6716,
-        "OUTBOUND_CLICK": 2,
         "PIN_CLICK": 376
       }
     },
@@ -170,9 +170,9 @@
       "date": "2026-05-13",
       "data_status": "READY",
       "metrics": {
+        "OUTBOUND_CLICK": 3,
         "SAVE": 28,
         "IMPRESSION": 6104,
-        "OUTBOUND_CLICK": 3,
         "PIN_CLICK": 339
       }
     },
@@ -180,9 +180,9 @@
       "date": "2026-05-14",
       "data_status": "READY",
       "metrics": {
+        "OUTBOUND_CLICK": 2,
         "SAVE": 40,
         "IMPRESSION": 6225,
-        "OUTBOUND_CLICK": 2,
         "PIN_CLICK": 371
       }
     },
@@ -190,9 +190,9 @@
       "date": "2026-05-15",
       "data_status": "READY",
       "metrics": {
+        "OUTBOUND_CLICK": 2,
         "SAVE": 17,
         "IMPRESSION": 4864,
-        "OUTBOUND_CLICK": 2,
         "PIN_CLICK": 270
       }
     },
@@ -200,9 +200,9 @@
       "date": "2026-05-16",
       "data_status": "READY",
       "metrics": {
+        "OUTBOUND_CLICK": 0,
         "SAVE": 24,
         "IMPRESSION": 4228,
-        "OUTBOUND_CLICK": 0,
         "PIN_CLICK": 260
       }
     },
@@ -210,9 +210,9 @@
       "date": "2026-05-17",
       "data_status": "READY",
       "metrics": {
+        "OUTBOUND_CLICK": 2,
         "SAVE": 21,
         "IMPRESSION": 4478,
-        "OUTBOUND_CLICK": 2,
         "PIN_CLICK": 370
       }
     },
@@ -220,9 +220,9 @@
       "date": "2026-05-18",
       "data_status": "READY",
       "metrics": {
+        "OUTBOUND_CLICK": 1,
         "SAVE": 16,
         "IMPRESSION": 4446,
-        "OUTBOUND_CLICK": 1,
         "PIN_CLICK": 287
       }
     },
@@ -230,9 +230,9 @@
       "date": "2026-05-19",
       "data_status": "READY",
       "metrics": {
+        "OUTBOUND_CLICK": 5,
         "SAVE": 23,
         "IMPRESSION": 4816,
-        "OUTBOUND_CLICK": 5,
         "PIN_CLICK": 311
       }
     },
@@ -240,9 +240,9 @@
       "date": "2026-05-20",
       "data_status": "READY",
       "metrics": {
+        "OUTBOUND_CLICK": 2,
         "SAVE": 23,
         "IMPRESSION": 4692,
-        "OUTBOUND_CLICK": 2,
         "PIN_CLICK": 259
       }
     },
@@ -250,9 +250,9 @@
       "date": "2026-05-21",
       "data_status": "READY",
       "metrics": {
+        "OUTBOUND_CLICK": 5,
         "SAVE": 27,
         "IMPRESSION": 4914,
-        "OUTBOUND_CLICK": 5,
         "PIN_CLICK": 305
       }
     },
@@ -260,9 +260,9 @@
       "date": "2026-05-22",
       "data_status": "READY",
       "metrics": {
+        "OUTBOUND_CLICK": 6,
         "SAVE": 18,
         "IMPRESSION": 4631,
-        "OUTBOUND_CLICK": 6,
         "PIN_CLICK": 342
       }
     },
@@ -270,9 +270,9 @@
       "date": "2026-05-23",
       "data_status": "READY",
       "metrics": {
+        "OUTBOUND_CLICK": 0,
         "SAVE": 20,
         "IMPRESSION": 4125,
-        "OUTBOUND_CLICK": 0,
         "PIN_CLICK": 252
       }
     },
@@ -280,9 +280,9 @@
       "date": "2026-05-24",
       "data_status": "READY",
       "metrics": {
+        "OUTBOUND_CLICK": 3,
         "SAVE": 19,
         "IMPRESSION": 3833,
-        "OUTBOUND_CLICK": 3,
         "PIN_CLICK": 270
       }
     },
@@ -290,20 +290,20 @@
       "date": "2026-05-25",
       "data_status": "READY",
       "metrics": {
+        "OUTBOUND_CLICK": 9,
         "SAVE": 14,
         "IMPRESSION": 4656,
-        "OUTBOUND_CLICK": 9,
         "PIN_CLICK": 276
       }
     },
     {
       "date": "2026-05-26",
-      "data_status": "PROCESSING",
+      "data_status": "READY",
       "metrics": {
-        "IMPRESSION": 0,
         "OUTBOUND_CLICK": 0,
-        "PIN_CLICK": 0,
-        "SAVE": 0
+        "SAVE": 21,
+        "IMPRESSION": 4434,
+        "PIN_CLICK": 271
       }
     },
     {
@@ -617,5 +617,5 @@
       "created_at": "2026-05-20T07:08:50"
     }
   ],
-  "fetched_at": "2026-05-28T08:51:03.394Z"
+  "fetched_at": "2026-05-28T12:39:44.397Z"
 }
