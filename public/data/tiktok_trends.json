@@ -1,223 +1,183 @@
 {
   "sounds": [
     {
-      "name": "midnight sun x midnight sun",
-      "author": "nyaa⁷✧.*",
-      "uses": 1,
-      "total_views": 9500000
-    },
-    {
       "name": "original sound",
-      "author": "NCLEX REVIEW MATERIALS",
-      "uses": 16,
-      "total_views": 7656171
+      "author": "RetroHooping",
+      "uses": 17,
+      "total_views": 5258730
     },
     {
-      "name": "All I Can Say",
-      "author": "Kali Uchis",
+      "name": "الصوت الأصلي",
+      "author": "نغمات رنين",
       "uses": 1,
-      "total_views": 1600000
+      "total_views": 814300
     },
     {
-      "name": "original sound - NurseInTheMaking",
-      "author": "NurseInTheMaking",
+      "name": "Monkeys Spinning Monkeys",
+      "author": "Kevin MacLeod & Kevin The Monkey",
       "uses": 1,
-      "total_views": 1500000
+      "total_views": 506000
     },
     {
-      "name": "suara asli - Template POV/CORE",
-      "author": "cliptemplate",
+      "name": "vlog, chill out, calm daily life(1370843)",
+      "author": "SUNNY HOOD STUDIO",
       "uses": 1,
-      "total_views": 1200000
+      "total_views": 470300
     },
     {
-      "name": "Aesthetic",
-      "author": "Tollan Kim",
+      "name": "NOKIA",
+      "author": "Drake",
       "uses": 1,
-      "total_views": 942100
+      "total_views": 303800
     },
     {
-      "name": "oh child",
-      "author": "kai devega",
+      "name": "Health Care",
+      "author": "DOMANSED",
       "uses": 1,
-      "total_views": 631000
+      "total_views": 268000
     },
     {
-      "name": "original sound - Nurse Hokage",
-      "author": "Nurse Hokage",
+      "name": "suara asli - ergagaerr",
+      "author": "Gaaaeeeerrrrrrrrrrrr",
       "uses": 1,
-      "total_views": 367200
+      "total_views": 267900
     },
     {
-      "name": "suono originale",
-      "author": "𝙎𝙉𝙀𝘼𝙆𝙔𝙃𝙀𝙍𝙊𝟵𝟯",
+      "name": "The Journey",
+      "author": "Sol Rising",
       "uses": 1,
-      "total_views": 353600
+      "total_views": 143200
     },
     {
-      "name": "disfruto",
-      "author": "moiseslyricsss",
+      "name": "Solfeggio of Abundance",
+      "author": "Supplemental Music for People Who Want to Sleep",
       "uses": 1,
-      "total_views": 116400
+      "total_views": 94400
+    },
+    {
+      "name": "Education",
+      "author": "MaxKoMusic",
+      "uses": 1,
+      "total_views": 76000
     }
   ],
   "hashtags": [
     {
-      "name": "nursingstudent",
-      "uses": 18,
-      "total_views": 16245771
-    },
-    {
       "name": "nursingschool",
-      "uses": 15,
-      "total_views": 15297393
+      "uses": 18,
+      "total_views": 6501497
     },
     {
-      "name": "pharmacology",
-      "uses": 6,
-      "total_views": 11505300
+      "name": "nursingstudent",
+      "uses": 16,
+      "total_views": 4925682
     },
     {
-      "name": "studytok",
-      "uses": 3,
-      "total_views": 10018990
-    },
-    {
-      "name": "studymotivation",
-      "uses": 1,
-      "total_views": 9500000
+      "name": "nursingschoolhacks",
+      "uses": 7,
+      "total_views": 4253637
     },
     {
       "name": "nursing",
-      "uses": 9,
-      "total_views": 7851300
-    },
-    {
-      "name": "nursesoftikok",
-      "uses": 1,
-      "total_views": 4600000
-    },
-    {
-      "name": "longtermcare",
-      "uses": 1,
-      "total_views": 4600000
-    },
-    {
-      "name": "nclexprep",
       "uses": 7,
-      "total_views": 3667200
-    },
-    {
-      "name": "nurse",
-      "uses": 6,
-      "total_views": 3574400
+      "total_views": 3239700
     },
     {
       "name": "studentnurse",
+      "uses": 8,
+      "total_views": 2061037
+    },
+    {
+      "name": "nurselife",
       "uses": 4,
-      "total_views": 2953000
-    },
-    {
-      "name": "nursesoftiktok",
-      "uses": 5,
-      "total_views": 2752600
-    },
-    {
-      "name": "rn",
-      "uses": 2,
-      "total_views": 2442100
-    },
-    {
-      "name": "bsn",
-      "uses": 2,
-      "total_views": 2442100
+      "total_views": 1892000
     },
     {
       "name": "futurenurse",
       "uses": 2,
-      "total_views": 2301200
+      "total_views": 1570300
+    },
+    {
+      "name": "nurse",
+      "uses": 6,
+      "total_views": 1267952
+    },
+    {
+      "name": "nursingtips",
+      "uses": 4,
+      "total_views": 1216000
+    },
+    {
+      "name": "futurern",
+      "uses": 2,
+      "total_views": 1107382
+    },
+    {
+      "name": "futurelpn",
+      "uses": 1,
+      "total_views": 1100000
+    },
+    {
+      "name": "nursingstudentsoftiktok",
+      "uses": 1,
+      "total_views": 1100000
+    },
+    {
+      "name": "fyp",
+      "uses": 3,
+      "total_views": 1042100
+    },
+    {
+      "name": "nursesoftiktok",
+      "uses": 3,
+      "total_views": 1036800
+    },
+    {
+      "name": "nurseeducation",
+      "uses": 3,
+      "total_views": 1025306
     }
   ],
   "trending_posts": [
     {
-      "url": "https://www.tiktok.com/@sydneytaul/video/7617668494577896718",
-      "views": 9500000,
-      "likes": 1200000,
-      "author": "sydneytaul",
-      "caption": "someone free me from the clutches of antibacterial drugs please I’m suffering #nursingstudent #nursingschool #pharmacology #studytok #studymotivation ",
-      "thumbnail": "https://p16-common-sign.tiktokcdn.com/tos-useast5-p-0068-tx/oIiKIpiBaOfBR7tDZ073CQpITZivMIA2uZAyHw~tplv-tiktokx-origin.image?dr=14575&x-expires=1780095600&x-signature=kXKZfhMakCTEbuChU9%2FsPGOQQgQ%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=my",
-      "music": "midnight sun x midnight sun",
-      "created_at": "2026-03-16T02:04:40.000Z"
-    },
-    {
-      "url": "https://www.tiktok.com/@thenurselizzzy/video/7623517810945199391",
-      "views": 4600000,
-      "likes": 436900,
-      "author": "thenurselizzzy",
-      "caption": "Documentation tips 101 📝 \n#nursing #nursesoftikok #longtermcare ",
-      "thumbnail": "https://p16-common-sign.tiktokcdn.com/tos-useast8-p-0068-tx2/oEFCeZv8eZiTXIAcBkBJjE3MAQxIqer0w6mJAB~tplv-tiktokx-origin.image?dr=14575&x-expires=1780095600&x-signature=EAPlayz89KPpKeOoNXqaRvrVqXE%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=my3",
+      "url": "https://www.tiktok.com/@victoreeeya/video/7507322513790127391",
+      "views": 1100000,
+      "likes": 31700,
+      "author": "victoreeeya",
+      "caption": "Nursing school sux LOL #nursingschool #nursingschoolhacks #nursing #futurenurse #futurern #futurelpn #nursingstudentsoftiktok #nursingstudent ",
+      "thumbnail": "https://p16-common-sign.tiktokcdn.com/tos-useast8-p-0068-tx2/oUh1iBLLIAVfmSBE0EXiWkyScEARATinovBD5f~tplv-tiktokx-origin.image?dr=14575&x-expires=1780113600&x-signature=ErTyNzFjmYwb9gFQDNPYUmmmxaM%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=my2",
       "music": "original sound",
-      "created_at": "2026-03-31T20:23:00.000Z"
+      "created_at": "2025-05-22T17:25:45.000Z"
     },
     {
-      "url": "https://www.tiktok.com/@leslieee.mmm/video/7506510025314077994",
-      "views": 1600000,
-      "likes": 129500,
-      "author": "leslieee.mmm",
-      "caption": "just finished my junior year of nursing school and all of these are importabt to know✨ #nursingschool #studentnurse #nursingstudent #studytips #nursingschoolstudytips ",
-      "thumbnail": "https://p19-common-sign.tiktokcdn-us.com/tos-useast5-i-photomode-tx/e9dc8a30acd7482e864aa01982ffecac~tplv-photomode-image.jpeg?dr=9616&x-expires=1780095600&x-signature=%2BwdqxBV9B9kIb%2FrDZBkJISHEsbQ%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=9b759fb9&idc=useast8&ftpl=1",
-      "music": "All I Can Say",
-      "created_at": "2025-05-20T12:53:55.000Z"
-    },
-    {
-      "url": "https://www.tiktok.com/@nurseinthemakingkristine/video/7475092644268395822",
-      "views": 1500000,
-      "likes": 110500,
+      "url": "https://www.tiktok.com/@nurseinthemakingkristine/video/7413391751056067870",
+      "views": 910300,
+      "likes": 46800,
       "author": "nurseinthemakingkristine",
-      "caption": "Antihypertensive Basics 🫀💉💊\n\n#pharmacology #futurenurse #nursingnotes #nursinglesson #pharmlesson #nclexprep #nurseinthemaking #BSN #RN #LPN",
-      "thumbnail": "https://p19-common-sign.tiktokcdn.com/tos-useast5-p-0068-tx/okuvSE7IDG8yNB3PgEfUAgBuiFgeQnDEI2FRm8~tplv-tiktokx-origin.image?dr=14575&x-expires=1780095600&x-signature=DdyW4uMDRJH%2BrEgLVPR%2Btp%2FWddo%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=my",
-      "music": "original sound - NurseInTheMaking",
-      "created_at": "2025-02-24T20:57:45.000Z"
-    },
-    {
-      "url": "https://www.tiktok.com/@nurse.alexrn/video/7528883673312070942",
-      "views": 1200000,
-      "likes": 60700,
-      "author": "nurse.alexrn",
-      "caption": "Best tip for nurses, never push potassium #nursesoftiktok #nurselife #nurse #nursetok #nursingstudent ",
-      "thumbnail": "https://p16-common-sign.tiktokcdn.com/tos-useast8-p-0068-tx2/osEG6JQ34Dv2gcDjFAfEFdAUFeQ8exjnQe7h7R~tplv-tiktokx-origin.image?dr=14575&x-expires=1780095600&x-signature=vK7UkI2b1HJlYxb1n70L1SuKUzs%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=my3",
-      "music": "suara asli - Template POV/CORE",
-      "created_at": "2025-07-19T19:54:13.000Z"
-    },
-    {
-      "url": "https://www.tiktok.com/@stephbegg/video/7119369075301600555",
-      "views": 942100,
-      "likes": 77300,
-      "author": "stephbegg",
-      "caption": "NCLEX TIP!!! #fyp #foryou #nursingstudent #nursing #nursingschool #nclex #nclextips #rn #bsn #study #studyhacks #hospital #nclexprep #etsy #healthcare #BigInkEnergy",
-      "thumbnail": "https://p16-common-sign.tiktokcdn.com/tos-useast5-p-0068-tx/c4052af53a2f4b84a21e557fe4beafab~tplv-tiktokx-origin.image?dr=14575&x-expires=1780095600&x-signature=7an%2FowBni363zdfZAMZ8r8%2FY588%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=my2",
-      "music": "Aesthetic",
-      "created_at": "2022-07-12T06:28:09.000Z"
-    },
-    {
-      "url": "https://www.tiktok.com/@simplymadern/video/7093172319887166762",
-      "views": 801200,
-      "likes": 22900,
-      "author": "simplymadern",
-      "caption": "GI NCLEX prep today! #nurse #FORDfortheBuilders #nursing #nursingschool #nursingstudent #nclex #nclexprep #nclexrn #nclextips #bsnrn #markklimek #saunders #kaplan #hesi #ati #finalsweek #futurenurse #",
-      "thumbnail": "https://p16-common-sign.tiktokcdn.com/tos-useast5-p-0068-tx/da0a63863a60491aa9d8347765bb4566_1651507883~tplv-tiktokx-dmt-logom:tos-useast5-p-0000-tx/095cb8ed49ab43479b382d2865c668a7.image?dr=14573&x-expires=1780095600&x-signature=SD%2BEoawTBdIuTrZP3cGwbUegRvU%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=my2",
+      "caption": "EKGs are hard…..use this worksheet to help!⚡️🫀\n\n#EKGs #nursingschool #nursingschoolhacks\n #nursingschoolbelike #NursingStudentProbs  #BSN ",
+      "thumbnail": "https://p16-common-sign.tiktokcdn.com/tos-useast8-p-0068-tx2/o8KA44qPAPPCN7qzIbQAiaR9KiIEEBihJzEcfB~tplv-tiktokx-origin.image?dr=14575&x-expires=1780113600&x-signature=71TGmV0SJjy66RWJLQQca055LKw%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=my2",
       "music": "original sound",
-      "created_at": "2022-05-02T16:11:18.000Z"
+      "created_at": "2024-09-11T14:26:43.000Z"
     },
     {
-      "url": "https://www.tiktok.com/@liv.merrills/video/7633752846235684118",
-      "views": 631000,
-      "likes": 40800,
-      "author": "liv.merrills",
-      "caption": "The stuff everyone presumes you already know when you start, so knowing them helped me feel a bit more prepared 🫶\n\n#studentnurse #placement #ehu #nurse #nhs ",
-      "thumbnail": "https://p16-common-sign.tiktokcdn.com/tos-no1a-i-photomode-no/48555a15535f477ea01fc13c48c27fd1~tplv-photomode-image.jpeg?dr=14555&x-expires=1780095600&x-signature=si5%2FrWTzHIxpK6La9HC0fkG%2BL6w%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=9b759fb9&idc=my3&ftpl=1",
-      "music": "oh child",
-      "created_at": "2026-04-28T10:20:00.000Z"
+      "url": "https://www.tiktok.com/@deardoctor04/video/7574823234562968839",
+      "views": 814300,
+      "likes": 18900,
+      "author": "deardoctor04",
+      "caption": "Here are the most important normal ranges every nurse and medical student should know! From blood pressure to hemoglobin levels, this quick guide will help you stay sharp and confident in clinical pra",
+      "thumbnail": "https://p16-common-sign.tiktokcdn.com/tos-alisg-i-photomode-sg/eba874dcbcc943bfb6d357894ade16fd~tplv-photomode-image.jpeg?dr=14555&x-expires=1780113600&x-signature=6EWV9NZS%2F8LwYn%2BXwgEE6rR%2FtFE%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=9b759fb9&idc=my2&ftpl=1",
+      "music": "الصوت الأصلي",
+      "created_at": "2025-11-20T15:02:54.000Z"
+    },
+    {
+      "url": "https://www.tiktok.com/@victoreeeya/video/7548138671392804127",
+      "views": 799500,
+      "likes": 21200,
+      "author": "victoreeeya",
+      "caption": "Nursing school is so hard #nursingschool #nursingschoolhacks ",
+      "thumbnail": "https://p16-common-sign.tiktokcdn.com/tos-useast8-p-0068-tx2/oAQAQFEhRwjwArDoUFu4faeS2w0EOENAV5FIB0~tplv-tiktokx-origin.image?dr=14575&x-expires=1780113600&x-signature=jaPTSTo%2FAVCGGO%2Bt6Bvc9MOjN9U%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=my2",
+      "music": "original sound",
+      "created_at": "2025-09-09T17:13:39.000Z"
     },
     {
       "url": "https://www.tiktok.com/@nursingwithprim/video/7457183202604535072",
@@ -225,39 +185,79 @@
       "likes": 20000,
       "author": "nursingwithprim",
       "caption": "Student nurse Tips: How to measure a manual blood pressure \n\nThis is a skill that gets better with time, so keep practicing and experience it more during placement - \n\nGood luck I know you can do it ☺",
-      "thumbnail": "https://p16-common-sign.tiktokcdn.com/tos-useast2a-p-0037-euttp/oYenenL8eINLMBsQAgGAlAAvn2lAUdexGRG0IH~tplv-tiktokx-origin.image?dr=14575&x-expires=1780095600&x-signature=doWjITCT81KakHUrLfklpVAOuy4%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=my3",
+      "thumbnail": "https://p16-common-sign.tiktokcdn.com/tos-useast2a-p-0037-euttp/oYenenL8eINLMBsQAgGAlAAvn2lAUdexGRG0IH~tplv-tiktokx-origin.image?dr=14575&x-expires=1780113600&x-signature=AVBBIZ82A%2BcLlz5XREmBSPbCPYc%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=my2",
       "music": "original sound",
       "created_at": "2025-01-07T14:39:36.000Z"
     },
     {
-      "url": "https://www.tiktok.com/@paigeslayton_/video/7426486946597276970",
-      "views": 497100,
-      "likes": 29800,
-      "author": "paigeslayton_",
-      "caption": "Nurse smarter, not harder 🤓 heres how to back-prime your secondary line! #nursetok #nursesoftiktok #nursehack #nursetips #tipoftheday #nursingschool #nursingstudent #newgradnurse #newnurse #hack #tut",
-      "thumbnail": "https://p16-common-sign.tiktokcdn.com/tos-useast5-p-0068-tx/ab8bfae2a2b14864af9d2b6be45a27f4_1729113741~tplv-tiktokx-origin.image?dr=14575&x-expires=1780095600&x-signature=gfKiUP1TXqQjIB4gxHqvJ77fvP4%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=my3",
+      "url": "https://www.tiktok.com/@nursepolik/video/7360054992167832837",
+      "views": 506000,
+      "likes": 27900,
+      "author": "nursepolik",
+      "caption": "👃✨ Pre-insertion tip: Always visually check those nostrils for clear passage before inserting! 🌬️ \n📝 Make sure there's an order for NG insertion \n👉 Don't forget to lay a towel or blue pad on the p",
+      "thumbnail": "https://p16-common-sign.tiktokcdn.com/tos-maliva-p-0068/93b502f2a1d345409b1e05c41f7e4173_1713646346~tplv-tiktokx-origin.image?dr=14575&x-expires=1780113600&x-signature=IAwNpu%2BJqQN0emXcteNSEaz46UQ%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=my2",
+      "music": "Monkeys Spinning Monkeys",
+      "created_at": "2024-04-20T20:52:24.000Z"
+    },
+    {
+      "url": "https://www.tiktok.com/@books2bedside/video/7534757013373390135",
+      "views": 470300,
+      "likes": 33100,
+      "author": "books2bedside",
+      "caption": "Dosage calculations aren’t optional - they’re essential.\n\nMedication errors remain one of the most common issues in healthcare, and strong calculation skills are key to preventing them. That’s why mas",
+      "thumbnail": "https://p19-common-sign.tiktokcdn-us.com/tos-useast5-i-photomode-tx/e5ba130ac52249babdaf306612a53bf7~tplv-photomode-image.jpeg?dr=9616&x-expires=1780113600&x-signature=buzMlzhShUooJChU7W5P%2FUb7CUo%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=9b759fb9&idc=useast5&ftpl=1",
+      "music": "vlog, chill out, calm daily life(1370843)",
+      "created_at": "2025-08-04T15:46:22.000Z"
+    },
+    {
+      "url": "https://www.tiktok.com/@studentnursedale/video/7570464088464166158",
+      "views": 448700,
+      "likes": 32600,
+      "author": "studentnursedale",
+      "caption": "active recall is absolutely key for these exams \n\n#nursingstudent #nursingschool #nursingstudytips #studentnurse #nursingschoolhacks ",
+      "thumbnail": "https://p16-common-sign.tiktokcdn.com/tos-useast5-p-0068-tx/oImppYEEAAA4ARAOgEFvDsSDafepsR7EDECAPI~tplv-tiktokx-origin.image?dr=14575&x-expires=1780113600&x-signature=pvCjagZ161d3p3Bj1xLTTgcSQ9w%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=my2",
       "music": "original sound",
-      "created_at": "2024-10-16T21:22:20.000Z"
+      "created_at": "2025-11-08T21:07:39.000Z"
     },
     {
       "url": "https://www.tiktok.com/@makaylasieb/video/7483116672547572998",
-      "views": 428000,
+      "views": 428100,
       "likes": 68400,
       "author": "makaylasieb",
       "caption": "Genuinely wish I knew these things hahahah🩺🩺#whatyoushouldknowbeforenursingschool #nursingschoollife #nursingschool #studentnurse #creatorsearchinsights ",
-      "thumbnail": "https://p16-common-sign.tiktokcdn.com/tos-maliva-p-0068/ogoZbewIeXjMDQ0IHCLPAXzGgQSMXC9versIxp~tplv-tiktokx-origin.image?dr=14575&x-expires=1780095600&x-signature=0NnsctOvNgQHpVpvJrn4Qc3UNOI%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=my3",
+      "thumbnail": "https://p16-common-sign.tiktokcdn.com/tos-maliva-p-0068/ogoZbewIeXjMDQ0IHCLPAXzGgQSMXC9versIxp~tplv-tiktokx-origin.image?dr=14575&x-expires=1780113600&x-signature=%2BmGFhThRFpZu9CnS8rB212eJveo%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=my2",
       "music": "original sound",
       "created_at": "2025-03-18T11:54:38.000Z"
     },
     {
-      "url": "https://www.tiktok.com/@nursehokagenotes/video/7352110291443846406",
-      "views": 367200,
-      "likes": 19100,
-      "author": "nursehokagenotes",
-      "caption": "💊Test Yourself\n#pharmacology #quiz #nursing #nursingstudents",
-      "thumbnail": "https://p16-common-sign.tiktokcdn.com/tos-maliva-p-85c255/oMkHkEeIDfcKeE8qAEfVT9BoEFA7NYFAN1OGIH~tplv-tiktokx-origin.image?dr=14575&x-expires=1780095600&x-signature=UcWTXA5Kx%2FvoxT6nh7u6VwBn8qE%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=my",
-      "music": "original sound - Nurse Hokage",
-      "created_at": "2024-03-30T11:02:55.000Z"
+      "url": "https://www.tiktok.com/@thesmartnurse001/video/7637778304476384533",
+      "views": 344300,
+      "likes": 13300,
+      "author": "thesmartnurse001",
+      "caption": "Nursing is not for the weak\n#nursingstudent #nursingschool #fyppppppppppppppppppppppp #nursingtips ",
+      "thumbnail": "https://p16-common-sign.tiktokcdn.com/tos-alisg-p-0037/oYQGiwnAaxC1ujKeGGIkffLPaXCFZAeHI1Rnws~tplv-tiktokx-origin.image?dr=14575&x-expires=1780113600&x-signature=hxjrqxHjCvKP1e1kNBK2uZLEbxI%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=my2",
+      "music": "original sound",
+      "created_at": "2026-05-09T06:40:54.000Z"
+    },
+    {
+      "url": "https://www.tiktok.com/@doseofalexx/video/7501122602610609454",
+      "views": 303800,
+      "likes": 22000,
+      "author": "doseofalexx",
+      "caption": "Many of you still had questions about what I used to study so here you go!!🫶🏻 both of these resources are linked in my bio and completely free!!📚✨ #nclex #nclexrn #nclexprep #nclextips #nclexstudyi",
+      "thumbnail": "https://p16-common-sign.tiktokcdn-us.com/tos-useast5-i-photomode-tx/4cc319d787564d908eca97fcf4b41ba8~tplv-photomode-image.jpeg?dr=9616&x-expires=1780113600&x-signature=C7ZjOwpyGh0JMG6VlYIPYretQVg%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=9b759fb9&idc=useast5&ftpl=1",
+      "music": "NOKIA",
+      "created_at": "2025-05-06T00:27:13.000Z"
+    },
+    {
+      "url": "https://www.tiktok.com/@nclex.review1/video/7624753728028937485",
+      "views": 268000,
+      "likes": 5285,
+      "author": "nclex.review1",
+      "caption": "#nclexprep #nursingstudent #nursing #nclextips #fyp \n\nThis is a priority NCLEX question — think: What is happening? What can kill the patient first?\n\nKey Clues:\n\t•\tRestlessness → early sign of hypoxia",
+      "thumbnail": "https://p16-common-sign.tiktokcdn-us.com/tos-useast5-i-photomode-tx/ed372bdbcf5d4771ba17129c47bc1ed2~tplv-photomode-image.jpeg?dr=9616&x-expires=1780113600&x-signature=JOT%2FJtcmFWlAc9eJNGiKw0284VI%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=9b759fb9&idc=useast5&ftpl=1",
+      "music": "Health Care",
+      "created_at": "2026-04-04T04:19:06.000Z"
     }
   ],
   "queries": [
@@ -266,5 +266,5 @@
     "nursing school hacks",
     "pharmacology nursing"
   ],
-  "fetched_at": "2026-05-27T23:26:27.925Z"
+  "fetched_at": "2026-05-28T04:24:57.381Z"
 }

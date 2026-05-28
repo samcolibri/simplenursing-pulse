@@ -9,31 +9,21 @@
     "profile_image": "https://i.pinimg.com/600x600_R/5b/fe/f3/5bfef39423ce02d51e4ad088eff66cd8.jpg"
   },
   "summary": {
-    "impressions": 144717,
-    "pin_clicks": 9196,
-    "saves": 699,
-    "outbound_clicks": 76,
-    "period": "2026-04-27 → 2026-05-26"
+    "impressions": 139708,
+    "pin_clicks": 8913,
+    "saves": 679,
+    "outbound_clicks": 73,
+    "period": "2026-04-28 → 2026-05-27"
   },
   "daily": [
-    {
-      "date": "2026-04-27",
-      "data_status": "READY",
-      "metrics": {
-        "OUTBOUND_CLICK": 3,
-        "PIN_CLICK": 283,
-        "SAVE": 20,
-        "IMPRESSION": 5009
-      }
-    },
     {
       "date": "2026-04-28",
       "data_status": "READY",
       "metrics": {
         "OUTBOUND_CLICK": 2,
         "PIN_CLICK": 283,
-        "SAVE": 22,
-        "IMPRESSION": 4860
+        "IMPRESSION": 4860,
+        "SAVE": 22
       }
     },
     {
@@ -42,8 +32,8 @@
       "metrics": {
         "OUTBOUND_CLICK": 6,
         "PIN_CLICK": 308,
-        "SAVE": 27,
-        "IMPRESSION": 4857
+        "IMPRESSION": 4857,
+        "SAVE": 27
       }
     },
     {
@@ -52,8 +42,8 @@
       "metrics": {
         "OUTBOUND_CLICK": 2,
         "PIN_CLICK": 330,
-        "SAVE": 32,
-        "IMPRESSION": 4964
+        "IMPRESSION": 4964,
+        "SAVE": 32
       }
     },
     {
@@ -62,8 +52,8 @@
       "metrics": {
         "OUTBOUND_CLICK": 3,
         "PIN_CLICK": 288,
-        "SAVE": 13,
-        "IMPRESSION": 4483
+        "IMPRESSION": 4483,
+        "SAVE": 13
       }
     },
     {
@@ -72,8 +62,8 @@
       "metrics": {
         "OUTBOUND_CLICK": 1,
         "PIN_CLICK": 296,
-        "SAVE": 23,
-        "IMPRESSION": 4256
+        "IMPRESSION": 4256,
+        "SAVE": 23
       }
     },
     {
@@ -82,8 +72,8 @@
       "metrics": {
         "OUTBOUND_CLICK": 3,
         "PIN_CLICK": 304,
-        "SAVE": 20,
-        "IMPRESSION": 4410
+        "IMPRESSION": 4410,
+        "SAVE": 20
       }
     },
     {
@@ -92,8 +82,8 @@
       "metrics": {
         "OUTBOUND_CLICK": 1,
         "PIN_CLICK": 303,
-        "SAVE": 14,
-        "IMPRESSION": 5027
+        "IMPRESSION": 5027,
+        "SAVE": 14
       }
     },
     {
@@ -102,8 +92,8 @@
       "metrics": {
         "OUTBOUND_CLICK": 1,
         "PIN_CLICK": 378,
-        "SAVE": 30,
-        "IMPRESSION": 5538
+        "IMPRESSION": 5538,
+        "SAVE": 30
       }
     },
     {
@@ -112,8 +102,8 @@
       "metrics": {
         "OUTBOUND_CLICK": 1,
         "PIN_CLICK": 355,
-        "SAVE": 32,
-        "IMPRESSION": 5644
+        "IMPRESSION": 5644,
+        "SAVE": 32
       }
     },
     {
@@ -122,8 +112,8 @@
       "metrics": {
         "OUTBOUND_CLICK": 3,
         "PIN_CLICK": 357,
-        "SAVE": 29,
-        "IMPRESSION": 5739
+        "IMPRESSION": 5739,
+        "SAVE": 29
       }
     },
     {
@@ -132,8 +122,8 @@
       "metrics": {
         "OUTBOUND_CLICK": 3,
         "PIN_CLICK": 368,
-        "SAVE": 26,
-        "IMPRESSION": 5587
+        "IMPRESSION": 5587,
+        "SAVE": 26
       }
     },
     {
@@ -142,8 +132,8 @@
       "metrics": {
         "OUTBOUND_CLICK": 0,
         "PIN_CLICK": 356,
-        "SAVE": 27,
-        "IMPRESSION": 5080
+        "IMPRESSION": 5080,
+        "SAVE": 27
       }
     },
     {
@@ -152,8 +142,8 @@
       "metrics": {
         "OUTBOUND_CLICK": 3,
         "PIN_CLICK": 351,
-        "SAVE": 37,
-        "IMPRESSION": 4751
+        "IMPRESSION": 4751,
+        "SAVE": 37
       }
     },
     {
@@ -162,8 +152,8 @@
       "metrics": {
         "OUTBOUND_CLICK": 2,
         "PIN_CLICK": 348,
-        "SAVE": 23,
-        "IMPRESSION": 5784
+        "IMPRESSION": 5784,
+        "SAVE": 23
       }
     },
     {
@@ -172,8 +162,8 @@
       "metrics": {
         "OUTBOUND_CLICK": 2,
         "PIN_CLICK": 376,
-        "SAVE": 34,
-        "IMPRESSION": 6716
+        "IMPRESSION": 6716,
+        "SAVE": 34
       }
     },
     {
@@ -182,8 +172,8 @@
       "metrics": {
         "OUTBOUND_CLICK": 3,
         "PIN_CLICK": 339,
-        "SAVE": 28,
-        "IMPRESSION": 6104
+        "IMPRESSION": 6104,
+        "SAVE": 28
       }
     },
     {
@@ -192,8 +182,8 @@
       "metrics": {
         "OUTBOUND_CLICK": 2,
         "PIN_CLICK": 371,
-        "SAVE": 40,
-        "IMPRESSION": 6225
+        "IMPRESSION": 6225,
+        "SAVE": 40
       }
     },
     {
@@ -202,8 +192,8 @@
       "metrics": {
         "OUTBOUND_CLICK": 2,
         "PIN_CLICK": 270,
-        "SAVE": 17,
-        "IMPRESSION": 4864
+        "IMPRESSION": 4864,
+        "SAVE": 17
       }
     },
     {
@@ -212,8 +202,8 @@
       "metrics": {
         "OUTBOUND_CLICK": 0,
         "PIN_CLICK": 260,
-        "SAVE": 24,
-        "IMPRESSION": 4228
+        "IMPRESSION": 4228,
+        "SAVE": 24
       }
     },
     {
@@ -222,8 +212,8 @@
       "metrics": {
         "OUTBOUND_CLICK": 2,
         "PIN_CLICK": 370,
-        "SAVE": 21,
-        "IMPRESSION": 4478
+        "IMPRESSION": 4478,
+        "SAVE": 21
       }
     },
     {
@@ -232,8 +222,8 @@
       "metrics": {
         "OUTBOUND_CLICK": 1,
         "PIN_CLICK": 287,
-        "SAVE": 16,
-        "IMPRESSION": 4446
+        "IMPRESSION": 4446,
+        "SAVE": 16
       }
     },
     {
@@ -242,8 +232,8 @@
       "metrics": {
         "OUTBOUND_CLICK": 5,
         "PIN_CLICK": 311,
-        "SAVE": 23,
-        "IMPRESSION": 4816
+        "IMPRESSION": 4816,
+        "SAVE": 23
       }
     },
     {
@@ -252,8 +242,8 @@
       "metrics": {
         "OUTBOUND_CLICK": 2,
         "PIN_CLICK": 259,
-        "SAVE": 23,
-        "IMPRESSION": 4692
+        "IMPRESSION": 4692,
+        "SAVE": 23
       }
     },
     {
@@ -262,8 +252,8 @@
       "metrics": {
         "OUTBOUND_CLICK": 5,
         "PIN_CLICK": 305,
-        "SAVE": 27,
-        "IMPRESSION": 4914
+        "IMPRESSION": 4914,
+        "SAVE": 27
       }
     },
     {
@@ -272,8 +262,8 @@
       "metrics": {
         "OUTBOUND_CLICK": 6,
         "PIN_CLICK": 342,
-        "SAVE": 18,
-        "IMPRESSION": 4631
+        "IMPRESSION": 4631,
+        "SAVE": 18
       }
     },
     {
@@ -282,8 +272,8 @@
       "metrics": {
         "OUTBOUND_CLICK": 0,
         "PIN_CLICK": 252,
-        "SAVE": 20,
-        "IMPRESSION": 4125
+        "IMPRESSION": 4125,
+        "SAVE": 20
       }
     },
     {
@@ -292,8 +282,8 @@
       "metrics": {
         "OUTBOUND_CLICK": 3,
         "PIN_CLICK": 270,
-        "SAVE": 19,
-        "IMPRESSION": 3833
+        "IMPRESSION": 3833,
+        "SAVE": 19
       }
     },
     {
@@ -302,12 +292,22 @@
       "metrics": {
         "OUTBOUND_CLICK": 9,
         "PIN_CLICK": 276,
-        "SAVE": 14,
-        "IMPRESSION": 4656
+        "IMPRESSION": 4656,
+        "SAVE": 14
       }
     },
     {
       "date": "2026-05-26",
+      "data_status": "PROCESSING",
+      "metrics": {
+        "IMPRESSION": 0,
+        "OUTBOUND_CLICK": 0,
+        "PIN_CLICK": 0,
+        "SAVE": 0
+      }
+    },
+    {
+      "date": "2026-05-27",
       "data_status": "PROCESSING",
       "metrics": {
         "IMPRESSION": 0,
@@ -617,5 +617,5 @@
       "created_at": "2026-05-20T06:32:45"
     }
   ],
-  "fetched_at": "2026-05-27T23:24:31.416Z"
+  "fetched_at": "2026-05-28T04:23:29.298Z"
 }
