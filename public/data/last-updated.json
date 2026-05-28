@@ -1,26 +1,23 @@
 {
-  "fetched_at": "2026-05-28T22:02:46.302Z",
+  "fetched_at": "2026-05-28T23:39:10.961Z",
   "platforms": {
     "pinterest": {
       "ok": false,
       "reason": "Pinterest 401: {\"code\":2,\"message\":\"Authentication failed.\",\"status\":\"failure\"}"
     },
     "tiktok": {
-      "ok": true
+      "ok": false,
+      "reason": "Apify start 403: {\n  \"error\": {\n    \"type\": \"platform-feature-disabled\",\n    \"message\": \"Monthly usage hard limit exceeded\"\n  }\n}"
     },
     "instagram": {
-      "ok": true
+      "ok": false,
+      "reason": "Apify start 403: {\n  \"error\": {\n    \"type\": \"platform-feature-disabled\",\n    \"message\": \"Monthly usage hard limit exceeded\"\n  }\n}"
     },
     "tiktok_trends": {
       "ok": true
     },
     "ig_hashtags": {
       "ok": true
-    },
-    "insights": {
-      "ok": true,
-      "viral_posts": 12,
-      "topics": 5
     }
   }
 }
