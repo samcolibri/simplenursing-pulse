@@ -26,6 +26,7 @@ const PLATFORM = {
   instagram: { name: 'Instagram', color: '#fc3467', glow: 'glow-ig',  glyph: '📷' },
   facebook:  { name: 'Facebook',  color: '#00709c', glow: 'glow-fb',  glyph: '📘' },
   pinterest: { name: 'Pinterest', color: '#e60036', glow: 'glow-pin', glyph: '📌' },
+  youtube:   { name: 'YouTube',   color: '#ff0000', glow: 'glow-yt',  glyph: '▶' },
 }
 
 const base = process.env.NEXT_PUBLIC_BASE_PATH || ''
@@ -160,6 +161,7 @@ export default function PulsePage() {
   const tt = useStaticData('tiktok')
   const ig = useStaticData('instagram')
   const pin = useStaticData('pinterest')
+  const yt = useStaticData('youtube')
   const insights = useStaticData('insights')
   const meta = useStaticData('last-updated')
 
@@ -412,6 +414,35 @@ export default function PulsePage() {
                 </ResponsiveContainer>
               </div>
             </div>
+          </section>
+        )}
+
+        {/* SECTION 4.5 — YOUTUBE */}
+        {yt && (
+          <section>
+            <div className="flex items-end justify-between mb-4 sm:mb-5 flex-wrap gap-2">
+              <div>
+                <div className="mono text-[10px] uppercase tracking-wider mb-1" style={{ color: '#ff0000' }}>04.5 · youtube</div>
+                <h2 className="text-xl sm:text-2xl font-bold">YouTube — last 30 days</h2>
+                <p className="text-xs sm:text-sm text-[var(--text-muted)] mt-1">
+                  {yt.videos?.length || 0} videos · {yt.channel ? fmtFull(yt.channel.subscribers) + ' subscribers' : ''}
+                  {yt.channel ? ' · ' + fmt(yt.channel.total_views) + ' total channel views' : ''}
+                </p>
+              </div>
+              <SourceBadge label="YouTube Data API" color="#ff0000" />
+            </div>
+
+            {(!yt.videos || yt.videos.length === 0) && (
+              <div className="card-strong p-8 text-center">
+                <div className="text-sm text-[var(--text-muted)]">No YouTube videos in the last 30 days.</div>
+              </div>
+            )}
+
+            {yt.videos && yt.videos.length > 0 && (
+              <div className="card-strong rounded-xl divide-y divide-[var(--border)]/50">
+                {yt.videos.map((v, i) => <PostRow key={v.id || i} post={v} isOwned={true} />)}
+              </div>
+            )}
           </section>
         )}
 

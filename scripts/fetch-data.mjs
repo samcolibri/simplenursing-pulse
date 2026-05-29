@@ -20,9 +20,11 @@ const DATA_DIR = path.join(ROOT, 'public', 'data')
 
 const APIFY = process.env.APIFY_TOKEN
 const PINTEREST = process.env.PINTEREST_ACCESS_TOKEN
+const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY
 
 const APIFY_BASE = 'https://api.apify.com/v2'
 const PINTEREST_BASE = 'https://api.pinterest.com/v5'
+const YOUTUBE_CHANNEL_ID = 'UCUxQWmWk1_Hk9iDRKvhH29Q'
 
 const OWNED = {
   instagram: 'simplenursing.com_',
@@ -352,6 +354,63 @@ async function fetchInstagramHashtags() {
   } catch (e) { warn('IG hashtags failed:', e.message); return { error: e.message, hashtags: [] } }
 }
 
+// ─── YouTube ─────────────────────────────────────────────────────────────────
+async function fetchYouTube() {
+  if (!YOUTUBE_API_KEY) { warn('Skipping YouTube — no YOUTUBE_API_KEY'); return null }
+  log('YouTube…')
+  const publishedAfter = new Date(Date.now() - DAYS_BACK * 24 * 60 * 60 * 1000).toISOString()
+
+  // Search for recent uploads
+  const searchUrl = 'https://www.googleapis.com/youtube/v3/search?channelId=' + YOUTUBE_CHANNEL_ID + '&part=id,snippet&type=video&order=date&maxResults=50&publishedAfter=' + encodeURIComponent(publishedAfter) + '&key=' + YOUTUBE_API_KEY
+  const searchRes = await fetch(searchUrl)
+  if (!searchRes.ok) throw new Error('YouTube search ' + searchRes.status + ': ' + (await searchRes.text()).slice(0, 200))
+  const searchData = await searchRes.json()
+  const videoIds = (searchData.items || []).map(item => item.id?.videoId).filter(Boolean)
+
+  let videos = []
+  if (videoIds.length) {
+    const statsUrl = 'https://www.googleapis.com/youtube/v3/videos?id=' + videoIds.join(',') + '&part=statistics,snippet,contentDetails&key=' + YOUTUBE_API_KEY
+    const statsRes = await fetch(statsUrl)
+    if (!statsRes.ok) throw new Error('YouTube videos ' + statsRes.status)
+    const statsData = await statsRes.json()
+    videos = (statsData.items || []).map(v => ({
+      id: v.id,
+      url: 'https://www.youtube.com/watch?v=' + v.id,
+      title: v.snippet?.title || '',
+      caption: (v.snippet?.title || '').slice(0, 280),
+      description: (v.snippet?.description || '').slice(0, 200),
+      thumbnail: v.snippet?.thumbnails?.medium?.url || '',
+      views: parseInt(v.statistics?.viewCount || 0),
+      likes: parseInt(v.statistics?.likeCount || 0),
+      comments: parseInt(v.statistics?.commentCount || 0),
+      created_at: v.snippet?.publishedAt || '',
+      duration: v.contentDetails?.duration || '',
+      platform: 'youtube',
+      handle: 'simplenursing',
+      isOwned: true,
+    })).sort((a, b) => b.views - a.views)
+  }
+
+  let channel = null
+  try {
+    const chanUrl = 'https://www.googleapis.com/youtube/v3/channels?id=' + YOUTUBE_CHANNEL_ID + '&part=statistics,snippet&key=' + YOUTUBE_API_KEY
+    const chanRes = await fetch(chanUrl)
+    if (chanRes.ok) {
+      const chanData = await chanRes.json()
+      const ch = chanData.items?.[0]
+      if (ch) channel = {
+        title: ch.snippet?.title || 'SimpleNursing',
+        subscribers: parseInt(ch.statistics?.subscriberCount || 0),
+        total_views: parseInt(ch.statistics?.viewCount || 0),
+        video_count: parseInt(ch.statistics?.videoCount || 0),
+      }
+    }
+  } catch (e) { warn('YouTube channel stats failed:', e.message) }
+
+  log('YouTube: ' + videos.length + ' videos in last ' + DAYS_BACK + ' days')
+  return { videos, channel, fetched_at: new Date().toISOString() }
+}
+
 // ─── Build aggregated "what's working" insights from live data ───────────────
 async function buildInsights(tt, ig, ttTrends, igHashtags) {
   // Collect all posts, deduplicated by ID
@@ -450,6 +509,7 @@ async function main() {
     ['instagram', fetchInstagram],
     ['tiktok_trends', fetchTikTokTrends],
     ['ig_hashtags', fetchInstagramHashtags],
+    ['youtube', fetchYouTube],
   ]
 
   const datasets = {}
