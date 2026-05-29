@@ -18,14 +18,8 @@ const timeAgo = (iso) => {
   const d = Math.floor(h / 24); if (d < 7) return d + 'd ago'
   return Math.floor(d / 7) + 'w ago'
 }
-const hoursSince = (iso) => iso ? Math.max(1, (Date.now() - new Date(iso).getTime()) / 3600000) : null
-const fmtVelocity = (post) => {
-  const t = post.created_at || post.timestamp
-  const h = hoursSince(t)
-  if (!h) return '—'
-  const eng = (post.views || 0) + (post.likes || 0) * 10
-  return fmt(eng / h) + '/hr'
-}
+
+
 
 const PLATFORM = {
   tiktok:    { name: 'TikTok',    color: '#75c7e6', glow: 'glow-tt',  glyph: '🎵' },
@@ -140,40 +134,24 @@ const COMP_DISPLAY = {
   'nursingstudybyally': 'NursingStudyByAlly',
 }
 
-function PostCard({ post, isOwned }) {
+function PostRow({ post, isOwned }) {
   const platform = post.platform || 'tiktok'
   const p = PLATFORM[platform] || PLATFORM.tiktok
   const t = post.created_at || post.timestamp
+  const views = post.views || post.likes || 0
   return (
-    <a href={post.url} target="_blank" rel="noreferrer" className="block card overflow-hidden group hover:-translate-y-0.5 transition-all">
-      <div className="aspect-[4/5] bg-[var(--bg-card-2)] relative overflow-hidden">
-        {post.thumbnail ? (
-          <img src={post.thumbnail} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-all" referrerPolicy="no-referrer" />
-        ) : <div className="w-full h-full flex items-center justify-center text-3xl opacity-30">{p.glyph}</div>}
-        <div className="absolute top-2 left-2 right-2 flex items-start justify-between gap-1">
-          <span className="mono text-[9px] uppercase font-bold px-1.5 py-0.5 rounded text-white" style={{ background: p.color }}>{platform}</span>
-          {isOwned && <span className="mono text-[9px] uppercase font-bold px-1.5 py-0.5 rounded bg-[#62d070] text-black">Ours</span>}
-        </div>
-        <div className="absolute top-2 left-2 mt-7">
-          <span className="text-[9px] mono px-1.5 py-0.5 rounded bg-black/80 text-white">{timeAgo(t)}</span>
-        </div>
-        <div className="absolute bottom-0 left-0 right-0 p-2.5 bg-gradient-to-t from-black/95 to-transparent">
-          <div className="flex items-baseline justify-between">
-            <div>
-              <div className="num-xl text-xl">{fmt(post.views || post.likes)}</div>
-              <div className="text-[9px] text-white/70 uppercase mono">{post.views ? 'views' : 'likes'}</div>
-            </div>
-            <div className="text-right">
-              <div className="num-xl text-sm text-[#75c7e6]">{fmtVelocity(post)}</div>
-              <div className="text-[9px] text-white/60 uppercase mono">velocity</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="p-2.5">
-        <p className="text-[11px] leading-snug line-clamp-2 text-white/90 mb-1 min-h-[2rem]">{post.caption || post.title || '(no caption)'}</p>
-        <div className="text-[10px] text-[var(--text-dim)] truncate">@{post.handle}</div>
-      </div>
+    <a href={post.url} target="_blank" rel="noreferrer"
+      className="flex items-center gap-3 sm:gap-4 px-3 sm:px-4 py-2.5 rounded-lg hover:bg-[var(--bg-card-2)] transition-colors group border border-transparent hover:border-[var(--border)]">
+      <span className="mono text-[9px] uppercase font-bold px-1.5 py-0.5 rounded shrink-0 w-16 text-center"
+        style={{ background: p.color + '20', color: p.color, border: '1px solid ' + p.color + '40' }}>
+        {platform}
+      </span>
+      <span className="text-[11px] text-[var(--text-dim)] shrink-0 w-32 truncate">@{post.handle}</span>
+      <span className="text-xs text-white/80 flex-1 truncate min-w-0">{post.caption || post.title || '(no caption)'}</span>
+      <span className="num-xl text-sm font-semibold tabular-nums shrink-0" style={{ color: p.color }}>{fmt(views)}</span>
+      <span className="mono text-[9px] uppercase text-[var(--text-dim)] shrink-0 hidden sm:inline">{post.views ? 'views' : 'likes'}</span>
+      <span className="text-[10px] text-[var(--text-dim)] shrink-0 hidden sm:inline">{timeAgo(t)}</span>
+      <span className="text-[var(--text-dim)] group-hover:text-white transition-colors shrink-0 text-xs">↗</span>
     </a>
   )
 }
@@ -327,8 +305,8 @@ export default function PulsePage() {
                   <div className="num-xl text-base sm:text-xl">{ourQuickStats?.latest}</div>
                 </div>
               </div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-                {displayOurPosts.slice(0, 20).map((p, i) => <PostCard key={p.id || i} post={p} isOwned={true} />)}
+              <div className="card-strong rounded-xl divide-y divide-[var(--border)]/50">
+                {displayOurPosts.slice(0, 20).map((p, i) => <PostRow key={p.id || i} post={p} isOwned={true} />)}
               </div>
             </>
           )}
@@ -378,8 +356,8 @@ export default function PulsePage() {
                     </div>
                     {displayCompPosts.length === 0
                       ? <div className="card-strong p-6 text-center text-sm text-[var(--text-muted)]">No posts in that date range for this account.</div>
-                      : <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-                          {displayCompPosts.map((p, idx) => <PostCard key={p.id || idx} post={p} isOwned={false} />)}
+                      : <div className="card-strong rounded-xl divide-y divide-[var(--border)]/50">
+                          {displayCompPosts.map((p, idx) => <PostRow key={p.id || idx} post={p} isOwned={false} />)}
                         </div>
                     }
                   </div>
