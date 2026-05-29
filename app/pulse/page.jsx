@@ -186,20 +186,54 @@ export default function PulsePage() {
   const meta = useStaticData('last-updated')
 
   const [activeComp, setActiveComp] = useState(0)
+  const [dateFrom, setDateFrom] = useState('')
+  const [dateTo, setDateTo] = useState('')
 
   const M = 3 // April 2026 index in Excel arrays
   const ourPosts = insights?.ours_top || []
   const competitorsByAccount = insights?.competitors_by_account || []
 
+  const displayOurPosts = useMemo(() => {
+    let posts = ourPosts
+    if (dateFrom || dateTo) {
+      posts = posts.filter(p => {
+        const d = (p.created_at || p.timestamp || '').slice(0, 10)
+        if (!d) return false
+        if (dateFrom && d < dateFrom) return false
+        if (dateTo && d > dateTo) return false
+        return true
+      })
+    }
+    return [...posts].sort((a, b) => (b.views || b.likes || 0) - (a.views || a.likes || 0))
+  }, [ourPosts, dateFrom, dateTo])
+
+  const displayCompPosts = useMemo(() => {
+    const c = competitorsByAccount[activeComp]
+    if (!c) return []
+    let posts = c.top_posts || []
+    if (dateFrom || dateTo) {
+      posts = posts.filter(p => {
+        const d = (p.created_at || p.timestamp || '').slice(0, 10)
+        if (!d) return true // keep posts with no date
+        if (dateFrom && d < dateFrom) return false
+        if (dateTo && d > dateTo) return false
+        return true
+      })
+    }
+    return posts
+  }, [competitorsByAccount, activeComp, dateFrom, dateTo])
+
+  const hasDateFilter = dateFrom || dateTo
+
   const ourQuickStats = useMemo(() => {
-    if (!ourPosts.length) return null
-    const sorted = [...ourPosts].sort((a, b) => new Date(b.created_at || b.timestamp || 0) - new Date(a.created_at || a.timestamp || 0))
+    if (!displayOurPosts.length) return null
+    const sorted = [...displayOurPosts].sort((a, b) => new Date(b.created_at || b.timestamp || 0) - new Date(a.created_at || a.timestamp || 0))
     return {
-      count: ourPosts.length,
-      bestViews: Math.max(...ourPosts.map(p => p.views || p.likes || 0)),
+      count: displayOurPosts.length,
+      bestViews: Math.max(...displayOurPosts.map(p => p.views || p.likes || 0)),
       latest: timeAgo(sorted[0]?.created_at || sorted[0]?.timestamp),
     }
-  }, [ourPosts])
+  }, [displayOurPosts])
 
   return (
     <div className="min-h-screen bg-gradient-mesh">
@@ -216,9 +250,32 @@ export default function PulsePage() {
             <span className="bg-gradient-to-r from-[#75c7e6] via-[#fc3467] to-[#e60036] bg-clip-text text-transparent">at SimpleNursing right now.</span>
           </h1>
           <p className="text-sm sm:text-base text-[var(--text-muted)] max-w-2xl">
-            Last 30 days of activity, ranked by velocity (engagement per hour). Refreshes every hour. No historical lifetime views skewing the feed.
+            Last 30 days of posts, ranked by views. Refreshes every hour.
           </p>
         </section>
+
+        {/* DATE RANGE FILTER */}
+        <div className="flex flex-wrap items-center gap-3 p-3 sm:p-4 card-strong rounded-xl">
+          <span className="mono text-[10px] uppercase tracking-wider text-[var(--text-dim)]">Filter posts by date</span>
+          <div className="flex items-center gap-2">
+            <input type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)}
+              className="bg-[var(--bg-card-2)] border border-[var(--border)] rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-[#75c7e6]" />
+            <span className="text-[var(--text-dim)] text-xs">to</span>
+            <input type="date" value={dateTo} onChange={e => setDateTo(e.target.value)}
+              className="bg-[var(--bg-card-2)] border border-[var(--border)] rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-[#75c7e6]" />
+          </div>
+          {hasDateFilter && (
+            <button onClick={() => { setDateFrom(''); setDateTo('') }}
+              className="text-xs px-3 py-1.5 rounded-lg border border-[var(--border)] text-[var(--text-muted)] hover:border-[#fc3467]/50 hover:text-[#fc3467] transition-all">
+              Clear · show all 30 days
+            </button>
+          )}
+          {hasDateFilter && (
+            <span className="mono text-[10px] text-[#75c7e6]">
+              {displayOurPosts.length} of {ourPosts.length} posts match
+            </span>
+          )}
+        </div>
 
         {/* SECTION 1 — PLATFORM KPI CARDS */}
         <section>
@@ -241,19 +298,19 @@ export default function PulsePage() {
             <div>
               <div className="mono text-[10px] uppercase tracking-wider text-[#62d070] mb-1">02 · @simplenursing only</div>
               <h2 className="text-xl sm:text-2xl font-bold">Our recent posts — what we put out</h2>
-              <p className="text-xs sm:text-sm text-[var(--text-muted)] mt-1">{ourPosts.length} posts in the last 30 days · ranked by velocity</p>
+              <p className="text-xs sm:text-sm text-[var(--text-muted)] mt-1">{displayOurPosts.length} posts{hasDateFilter ? ' in selected range' : ' in the last 30 days'} · highest views first</p>
             </div>
             <SourceBadge label="LIVE · Apify" color="#62d070" />
           </div>
 
-          {ourPosts.length === 0 && (
+          {displayOurPosts.length === 0 && (
             <div className="card-strong p-8 text-center">
-              <div className="text-sm text-[var(--text-muted)]">No SimpleNursing posts found in the last 30 days.</div>
-              <div className="text-xs text-[var(--text-dim)] mt-2">Hourly refresh will populate this after the next run.</div>
+              <div className="text-sm text-[var(--text-muted)]">{hasDateFilter ? 'No posts in that date range.' : 'No SimpleNursing posts found in the last 30 days.'}</div>
+              <div className="text-xs text-[var(--text-dim)] mt-2">{hasDateFilter ? 'Try widening the date range.' : 'Hourly refresh will populate this after the next run.'}</div>
             </div>
           )}
 
-          {ourPosts.length > 0 && (
+          {displayOurPosts.length > 0 && (
             <>
               <div className="grid grid-cols-3 gap-3 mb-4">
                 <div className="card p-3 sm:p-4">
@@ -271,7 +328,7 @@ export default function PulsePage() {
                 </div>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-                {ourPosts.slice(0, 20).map((p, i) => <PostCard key={p.id || i} post={p} isOwned={true} />)}
+                {displayOurPosts.slice(0, 20).map((p, i) => <PostCard key={p.id || i} post={p} isOwned={true} />)}
               </div>
             </>
           )}
@@ -317,10 +374,14 @@ export default function PulsePage() {
                     <div className="flex items-center gap-3 mb-3">
                       <span className="text-sm font-semibold">{name}</span>
                       {c.followers != null && <span className="mono text-[10px] text-[var(--text-dim)]">{fmtFull(c.followers)} followers</span>}
+                      {hasDateFilter && <span className="mono text-[10px] text-[#75c7e6]">{displayCompPosts.length} posts in range</span>}
                     </div>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-                      {(c.top_posts || []).map((p, idx) => <PostCard key={p.id || idx} post={p} isOwned={false} />)}
-                    </div>
+                    {displayCompPosts.length === 0
+                      ? <div className="card-strong p-6 text-center text-sm text-[var(--text-muted)]">No posts in that date range for this account.</div>
+                      : <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                          {displayCompPosts.map((p, idx) => <PostCard key={p.id || idx} post={p} isOwned={false} />)}
+                        </div>
+                    }
                   </div>
                 )
               })()}
