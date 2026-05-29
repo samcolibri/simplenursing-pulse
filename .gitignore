@@ -13,3 +13,4 @@ next-env.d.ts
 .harness-next/
 *.log
 .DS_Store
+scripts/airtable-tables.json

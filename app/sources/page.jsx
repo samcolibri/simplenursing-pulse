@@ -188,7 +188,7 @@ export default function SourcesPage() {
       </Section>
 
       {/* SOURCE 5: AIRTABLE */}
-      <Section num="05 · airtable brain" title="Airtable — agent memory · auto-sync" source="Base appZ8hLqv6SSvnsig · 8 tables · upserted every hourly fetch" badge="auto-sync · hourly">
+      <Section num="05 · airtable brain" title="Airtable — agent memory · auto-sync" source="8 tables · upserted every hourly fetch · key in GitHub Secrets" badge="auto-sync · hourly">
         <div className="grid sm:grid-cols-2 gap-4">
           <div>
             <div className="text-[10px] mono uppercase text-[var(--text-dim)] mb-1">Tables</div>
@@ -202,7 +202,10 @@ export default function SourcesPage() {
             <Row label="Fetch_Log" value="every run logged with counts" />
           </div>
           <div>
-            <div className="text-[10px] mono uppercase text-[var(--text-dim)] mb-1">Agent capabilities</div>
+            <div className="text-[10px] mono uppercase text-[var(--text-dim)] mb-1">Access</div>
+            <Row label="API key" value="GitHub Secrets only — never in code" green />
+            <Row label="Base access" value="Private · write-protected" green />
+            <div className="text-[10px] mono uppercase text-[var(--text-dim)] mb-1 mt-3">Agent capabilities</div>
             <Row label="Historical FTCR by platform + month" value="✓" green />
             <Row label="Competitor trend tracking across runs" value="✓" green />
             <Row label="Topic velocity week-over-week" value="✓" green />
