@@ -66,8 +66,16 @@ const CANONICAL_HANDLE = {
 }
 function canonicalKey(handle) { return CANONICAL_HANDLE[handle.toLowerCase()] || handle.toLowerCase() }
 
-const NURSING_HASHTAGS = ['nursingstudent', 'nclex', 'nursetok', 'nursingschool', 'futurenurse', 'studentnurse']
-const TIKTOK_SEARCH_QUERIES = ['nursing tips', 'nclex prep', 'nursing school hacks', 'pharmacology nursing']
+const NURSING_HASHTAGS = [
+  'nursingstudent', 'nclex', 'nursetok', 'nursingschool',
+  'futurenurse', 'studentnurse', 'nclexprep', 'nursinglife',
+  'nursingstudentlife', 'nursingtips',
+]
+const TIKTOK_SEARCH_QUERIES = [
+  'nursing tips', 'nclex prep', 'nursing school hacks', 'pharmacology nursing',
+  'nursing student life', 'nursing school studying', 'nursing school advice',
+  'nclex study tips', 'nursing school struggles', 'how to pass nursing school',
+]
 
 const log = (...a) => console.log('[fetch]', ...a)
 const warn = (...a) => console.warn('[warn]', ...a)
@@ -217,7 +225,7 @@ async function fetchTikTok() {
   log('TikTok profiles…')
   const items = await apifyRunSync('clockworks~free-tiktok-scraper', {
     profiles: [OWNED.tiktok, ...COMPETITORS.tiktok],
-    resultsPerPage: 30, shouldDownloadVideos: false,
+    resultsPerPage: 60, shouldDownloadVideos: false,
     shouldDownloadCovers: false, shouldDownloadSubtitles: false,
   })
   const accounts = groupByAuthor(items)
@@ -231,7 +239,7 @@ async function fetchTikTokTrends() {
   log('TikTok search trends (full Apify power)…')
   try {
     const items = await apifyRunSync('clockworks~tiktok-scraper', {
-      searchQueries: TIKTOK_SEARCH_QUERIES, resultsPerPage: 8,
+      searchQueries: TIKTOK_SEARCH_QUERIES, resultsPerPage: 20,
       shouldDownloadVideos: false, shouldDownloadCovers: false,
     }, 360000)
     const sounds = new Map()
@@ -309,33 +317,33 @@ async function fetchInstagramHashtags() {
   if (!APIFY) return null
   log('Instagram hashtag scrape (full Apify power)…')
   try {
-    const items = await apifyRunSync('apify~instagram-hashtag-scraper', {
-      hashtags: NURSING_HASHTAGS, resultsLimit: 5,
+    const directUrls = NURSING_HASHTAGS.map(h => `https://www.instagram.com/explore/tags/${h}/`)
+    const items = await apifyRunSync('apify~instagram-scraper', {
+      directUrls,
+      resultsType: 'posts',
+      resultsLimit: 12,
     }, 360000)
     const tagData = new Map()
     for (const item of (items || [])) {
-      const tag = item.hashtag || item.name
-      if (!tag) continue
-      if (!tagData.has(tag)) {
-        tagData.set(tag, {
-          hashtag: tag,
-          post_count: item.postsCount || item.topPostsCount || 0,
-          top_posts: [],
-        })
-      }
+      const url = item.url || ''
+      const tagMatch = url.match(/explore\/tags\/([^/]+)/)
+      const tag = item.hashtag || item.name || (tagMatch && tagMatch[1]) || 'nursing'
+      if (!tagData.has(tag)) tagData.set(tag, { hashtag: tag, post_count: 0, top_posts: [] })
       const entry = tagData.get(tag)
-      if (item.url) {
+      const postUrl = item.url || item.shortCode && `https://www.instagram.com/p/${item.shortCode}/`
+      if (postUrl) {
         entry.top_posts.push({
-          url: item.url,
-          thumbnail: item.displayUrl || '',
-          likes: item.likesCount || 0,
-          comments: item.commentsCount || 0,
-          caption: (item.caption || '').slice(0, 200),
-          owner: item.ownerUsername,
+          url: postUrl,
+          thumbnail: item.displayUrl || item.thumbnailUrl || '',
+          likes: item.likesCount || item.likes || 0,
+          comments: item.commentsCount || item.comments || 0,
+          caption: (item.caption || item.description || '').slice(0, 200),
+          owner: item.ownerUsername || item.username,
           type: (item.type || '').toLowerCase(),
         })
       }
     }
+    log('IG hashtag scraper raw items:', (items || []).length, '→', tagData.size, 'tags')
     const hashtags = Array.from(tagData.values()).map(t => ({
       ...t,
       top_posts: t.top_posts.sort((a, b) => b.likes - a.likes).slice(0, 5),
@@ -345,7 +353,7 @@ async function fetchInstagramHashtags() {
 }
 
 // ─── Build aggregated "what's working" insights from live data ───────────────
-async function buildInsights(tt, ig, ttTrends) {
+async function buildInsights(tt, ig, ttTrends, igHashtags) {
   // Collect all posts, deduplicated by ID
   const seenIds = new Set()
   const allPosts = []
@@ -389,10 +397,14 @@ async function buildInsights(tt, ig, ttTrends) {
     .filter(c => c.top_posts.length > 0)
     .sort((a, b) => (b.followers || 0) - (a.followers || 0))
 
-  // Topic clustering — use broader nursing search data from TikTok trends, not just our posts
+  // Topic clustering — pull from 3 sources: our+competitor posts, TikTok nursing search, IG nursing hashtag top posts
+  const igNichePosts = (igHashtags?.hashtags || []).flatMap(h =>
+    (h.top_posts || []).map(p => ({ caption: p.caption, views: p.likes, score: p.likes }))
+  )
   const topicPosts = [
     ...allPosts,
     ...(ttTrends?.trending_posts || []),
+    ...igNichePosts,
   ]
   const TOPICS = {
     'NCLEX Prep': /nclex|boards|licensing exam|nursing exam|pass rates|kaplan|uworld|archer/i,
@@ -459,7 +471,7 @@ async function main() {
 
   // Build insights from live data
   if (datasets.tiktok && datasets.instagram) {
-    const insights = await buildInsights(datasets.tiktok, datasets.instagram, datasets.tiktok_trends)
+    const insights = await buildInsights(datasets.tiktok, datasets.instagram, datasets.tiktok_trends, datasets.ig_hashtags)
     await writeJSON('insights', insights)
     results.platforms.insights = { ok: true, viral_posts: insights.top_viral.length, topics: insights.topics.length }
   }
