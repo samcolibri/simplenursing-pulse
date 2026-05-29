@@ -2,9 +2,21 @@
   "sounds": [
     {
       "name": "original sound",
-      "author": "Rayna BSN, RN",
-      "uses": 117,
-      "total_views": 41061137
+      "author": "Lauren Marin",
+      "uses": 113,
+      "total_views": 47128579
+    },
+    {
+      "name": "Pretty Little Baby",
+      "author": "Connie Francis",
+      "uses": 1,
+      "total_views": 43500000
+    },
+    {
+      "name": "midnight sun x midnight sun",
+      "author": "nyaa⁷✧.*",
+      "uses": 1,
+      "total_views": 9500000
     },
     {
       "name": "Can You Hear The Music",
@@ -13,16 +25,10 @@
       "total_views": 4700000
     },
     {
-      "name": "Messa da Requiem: II. Dies irae",
-      "author": "Daniel Barenboim & Chicago Symphony Orchestra",
+      "name": "Cruel Summer",
+      "author": "Taylor Swift",
       "uses": 1,
-      "total_views": 2600000
-    },
-    {
-      "name": "Dont you quit",
-      "author": "Motivation Channel",
-      "uses": 1,
-      "total_views": 2000000
+      "total_views": 1800000
     },
     {
       "name": "Full House",
@@ -39,8 +45,8 @@
     {
       "name": "original sound - NurseInTheMaking",
       "author": "NurseInTheMaking",
-      "uses": 1,
-      "total_views": 1500000
+      "uses": 2,
+      "total_views": 1503657
     },
     {
       "name": "Raindance",
@@ -49,115 +55,139 @@
       "total_views": 1500000
     },
     {
-      "name": "LoveHate Thing (feat. Sam Dew)",
-      "author": "Wale",
-      "uses": 2,
-      "total_views": 1044700
-    },
-    {
-      "name": "som original",
-      "author": "Music⚡",
-      "uses": 3,
-      "total_views": 950900
+      "name": "Aesthetic",
+      "author": "Tollan Kim",
+      "uses": 1,
+      "total_views": 942200
     }
   ],
   "hashtags": [
     {
       "name": "nursingschool",
-      "uses": 104,
-      "total_views": 50796498
+      "uses": 84,
+      "total_views": 51940047
     },
     {
       "name": "nursingstudent",
-      "uses": 132,
-      "total_views": 45958276
+      "uses": 118,
+      "total_views": 48198544
     },
     {
-      "name": "nursing",
-      "uses": 54,
-      "total_views": 21193855
+      "name": "lifehack",
+      "uses": 1,
+      "total_views": 43500000
     },
     {
-      "name": "fyp",
-      "uses": 39,
-      "total_views": 19492035
+      "name": "tipsandtricks",
+      "uses": 1,
+      "total_views": 43500000
     },
     {
-      "name": "nursingmajor",
-      "uses": 10,
-      "total_views": 16634000
+      "name": "momsoftiktok",
+      "uses": 1,
+      "total_views": 43500000
     },
     {
-      "name": "nurse",
-      "uses": 31,
-      "total_views": 14825355
+      "name": "diy",
+      "uses": 1,
+      "total_views": 43500000
     },
     {
-      "name": "nursesoftiktok",
-      "uses": 18,
-      "total_views": 14613778
+      "name": "teenmom",
+      "uses": 1,
+      "total_views": 43500000
     },
     {
-      "name": "nursetok",
-      "uses": 19,
-      "total_views": 13114332
+      "name": "studytok",
+      "uses": 11,
+      "total_views": 22798484
     },
     {
-      "name": "nursingstudents",
-      "uses": 15,
-      "total_views": 12312109
+      "name": "studymotivation",
+      "uses": 5,
+      "total_views": 20843196
     },
     {
       "name": "nursingtiktok",
-      "uses": 4,
-      "total_views": 12035200
-    },
-    {
-      "name": "catheter",
-      "uses": 1,
-      "total_views": 11600000
-    },
-    {
-      "name": "nurses",
       "uses": 7,
-      "total_views": 11241107
+      "total_views": 15006274
     },
     {
-      "name": "nurselife",
-      "uses": 18,
-      "total_views": 10801405
+      "name": "pharmacology",
+      "uses": 12,
+      "total_views": 14731400
+    },
+    {
+      "name": "nursing",
+      "uses": 53,
+      "total_views": 14142057
+    },
+    {
+      "name": "nurse",
+      "uses": 23,
+      "total_views": 13973093
     },
     {
       "name": "",
-      "uses": 33,
-      "total_views": 10723400
+      "uses": 26,
+      "total_views": 13503454
     },
     {
-      "name": "foryou",
-      "uses": 8,
-      "total_views": 10573523
+      "name": "nursingstudents",
+      "uses": 14,
+      "total_views": 12766453
     }
   ],
   "trending_posts": [
     {
+      "url": "https://www.tiktok.com/@dailymomhacks/video/7561855390024076558",
+      "views": 43500000,
+      "likes": 703500,
+      "author": "dailymomhacks",
+      "caption": "School nurse taught me this #lifehack #tipsandtricks #momsoftiktok #DIY #teenmom ",
+      "thumbnail": "https://p16-common-sign.tiktokcdn-eu.com/tos-useast5-p-0068-tx/oAAwgKGMgiI3LvKxvaBB4UPaWE1PCEwdBiAEL~tplv-tiktokx-origin.image?dr=10395&x-expires=1780254000&x-signature=Xpl5I5VFMgCHr%2F1VzVOuev0Oi4Q%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=no1a",
+      "music": "Pretty Little Baby",
+      "created_at": "2025-10-16T16:21:16.000Z"
+    },
+    {
       "url": "https://www.tiktok.com/@kissesfrommarenda/video/7621413047541779743",
-      "views": 11600000,
-      "likes": 69200,
+      "views": 11700000,
+      "likes": 69300,
       "author": "kissesfrommarenda",
       "caption": "romanticizing my life makes me feel better abt studying 24/7 \n\n#nursingschool #nursingstudents #nursingtiktok #catheter #nursingmajor ",
-      "thumbnail": "https://p16-common-sign.tiktokcdn-eu.com/tos-useast8-p-0068-tx2/okUnDfTCBi30ilOCwEislgIu4AqI6PlAxgIRlA~tplv-tiktokx-origin.image?dr=10395&x-expires=1780246800&x-signature=btKEyjw7gSke%2FWOdlvbXfbPCyy4%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=no1a",
+      "thumbnail": "https://p16-common-sign.tiktokcdn-eu.com/tos-useast8-p-0068-tx2/okUnDfTCBi30ilOCwEislgIu4AqI6PlAxgIRlA~tplv-tiktokx-origin.image?dr=10395&x-expires=1780254000&x-signature=RnXaalSGKYVMWTI6C32yS9LxbPk%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=no1a",
       "music": "original sound",
       "created_at": "2026-03-26T04:15:33.000Z"
     },
     {
-      "url": "https://www.tiktok.com/@nurse.johnn/video/7179766234404130053",
-      "views": 7500000,
+      "url": "https://www.tiktok.com/@sydneytaul/video/7617668494577896718",
+      "views": 9500000,
       "likes": 1200000,
-      "author": "nurse.johnn",
-      "caption": "Its too deep now on this shit hole and I’m already numb so it’s okay. Anyways brb going to sleep now cause I got a shift tomorrow. #nursejohnn #nurse #nursesoftiktok #nurselife #nurses #nursehumor #nu",
-      "thumbnail": "https://p16-common-sign.tiktokcdn.com/tos-maliva-p-0068/o4cHR6EQjIJOE0BaTBoeetaDQUnDY7AOCQb7rC~tplv-tiktokx-origin.image?dr=14575&x-expires=1780246800&x-signature=jfmf2A%2FHwykLcgjgr%2F5kOclfSLg%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=my2",
+      "author": "sydneytaul",
+      "caption": "someone free me from the clutches of antibacterial drugs please I’m suffering #nursingstudent #nursingschool #pharmacology #studytok #studymotivation ",
+      "thumbnail": "https://p16-common-sign.tiktokcdn-eu.com/tos-useast5-p-0068-tx/oIiKIpiBaOfBR7tDZ073CQpITZivMIA2uZAyHw~tplv-tiktokx-origin.image?dr=10395&x-expires=1780254000&x-signature=oumdM%2B8Gtwc3zwoN3zOGMtlnFFM%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=no1a",
+      "music": "midnight sun x midnight sun",
+      "created_at": "2026-03-16T02:04:40.000Z"
+    },
+    {
+      "url": "https://www.tiktok.com/@tamidollars/video/7469519949640355118",
+      "views": 6600000,
+      "likes": 1200000,
+      "author": "tamidollars",
+      "caption": "Now I have to be an academic weapon, thanks. \n\n#nursingstudent #academicweapon #studytok #tamidollars #studywithme #studymotivation #nursingschoolmotivation ",
+      "thumbnail": "https://p16-common-sign.tiktokcdn-eu.com/tos-useast5-p-0068-tx/ocKHHeGoLAzrUQkKAjjwAEXIPFpQgkAeAPiGeI~tplv-tiktokx-origin.image?dr=10395&x-expires=1780254000&x-signature=O8FOXlf9nfLSYvmNcJM1Uo%2BrEXM%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=no1a",
       "music": "original sound",
-      "created_at": "2022-12-22T00:40:00.000Z"
+      "created_at": "2025-02-09T20:32:54.000Z"
+    },
+    {
+      "url": "https://www.tiktok.com/@brittneetheinjector/video/7123368148526550315",
+      "views": 5100000,
+      "likes": 208400,
+      "author": "brittneetheinjector",
+      "caption": "Heres a great hack for practicing how to insert an IV! #nursesoftiktok #nurse #insertinganIV  #icurn #icunurse #teachingnurses #teaching #nursingschool #nursehack",
+      "thumbnail": "https://p19-common-sign.tiktokcdn-eu.com/tos-useast5-p-0068-tx/c0abe0d2fcd2402f9cdfe9bc67f3522f_1658538397~tplv-tiktokx-origin.image?dr=10395&x-expires=1780254000&x-signature=OLoXWVJ7BEbpMohn6WZAIvQSFAA%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=no1a",
+      "music": "original sound",
+      "created_at": "2022-07-23T01:06:33.000Z"
     },
     {
       "url": "https://www.tiktok.com/@sydneytaul/video/7622082256206630158",
@@ -165,49 +195,39 @@
       "likes": 540600,
       "author": "sydneytaul",
       "caption": "no idk what my problem is #nursingstudent #nursingschool #studytok #studymotivation #activerecall",
-      "thumbnail": "https://p16-common-sign.tiktokcdn.com/tos-useast5-p-0068-tx/oEMGeHIG87BecOIxRw3fJ6AQGeA6LOJYWFrnEQ~tplv-tiktokx-origin.image?dr=14575&x-expires=1780246800&x-signature=kkr64dQJT3%2Bul8Xii2E655uapvs%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=my",
+      "thumbnail": "https://p19-common-sign.tiktokcdn-eu.com/tos-useast5-p-0068-tx/oEMGeHIG87BecOIxRw3fJ6AQGeA6LOJYWFrnEQ~tplv-tiktokx-origin.image?dr=10395&x-expires=1780254000&x-signature=EzQBDKBZJ3Anu0Fo%2FQF7HS9wtTY%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=no1a",
       "music": "Can You Hear The Music",
       "created_at": "2026-03-27T23:32:21.000Z"
     },
     {
-      "url": "https://www.tiktok.com/@simplyjesslogical_/video/7263123465140620590",
-      "views": 3100000,
-      "likes": 310800,
-      "author": "simplyjesslogical_",
-      "caption": "#nursingstudent #nursingschool #fyp #viral #enfermera #NCLEX #registerednurse #nursingmajor #paratii #helpingnursingstudents #studying #college #clinicals #fundamentals #beginnernursingschool #12danci",
-      "thumbnail": "https://p16-common-sign.tiktokcdn-us.com/tos-useast5-i-photomode-tx/45f8b2d5e62e4e4d8be0a88468adeba0~tplv-photomode-image.jpeg?dr=9616&x-expires=1780246800&x-signature=KiLWGbNTh3Ol0qwYoZhg%2F4gX6t4%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=9b759fb9&idc=useast8&ftpl=1",
+      "url": "https://www.tiktok.com/@darielaems/video/7507935024642002218",
+      "views": 2800000,
+      "likes": 168100,
+      "author": "darielaems",
+      "caption": "youre welcome 😋 #nursingtiktok #nursingtips #nurse #ernurse ",
+      "thumbnail": "https://p19-common-sign.tiktokcdn-us.com/tos-useast5-p-0068-tx/oAwEYQ1PjtoAWftFvFEvBFMERD8DNgpSoQfRI9~tplv-tiktokx-origin.image?dr=9636&x-expires=1780254000&x-signature=T046Bx%2FhkfFFiCAsg%2Fl1QjkVL%2Bs%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=useast8",
       "music": "original sound",
-      "created_at": "2023-08-03T15:48:50.000Z"
+      "created_at": "2025-05-24T09:05:39.000Z"
     },
     {
-      "url": "https://www.tiktok.com/@sydneytaul/video/7554135229548530957",
+      "url": "https://www.tiktok.com/@legendairymilk/video/7639909115698875678",
       "views": 2600000,
-      "likes": 223400,
-      "author": "sydneytaul",
-      "caption": "this took 5 hours and I need a chiropractor #nursingstudent #nursingschool #studytok #activerecall #studyvlog ",
-      "thumbnail": "https://p19-common-sign.tiktokcdn.com/tos-useast5-p-0068-tx/oQ0HpbVSRA3EtAiI5B5IFgMBiaCRw5fjLarBi7~tplv-tiktokx-origin.image?dr=14575&x-expires=1780246800&x-signature=CJNXlPR%2B%2FAmiaPh5%2B%2Fb0lCnegrY%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=my",
-      "music": "Messa da Requiem: II. Dies irae",
-      "created_at": "2025-09-25T21:03:01.000Z"
-    },
-    {
-      "url": "https://www.tiktok.com/@tamidollars/video/7364829818464259374",
-      "views": 2000000,
-      "likes": 322000,
-      "author": "tamidollars",
-      "caption": "I never thought I’d make it this far into nursing school, but here I am, half way done! I have God to thank, and my amazing friends and family 🥹🫶🏾. Nothing is impossible, never give up 💓\n#nursings",
-      "thumbnail": "https://p19-common-sign.tiktokcdn-us.com/tos-useast5-p-0068-tx/occRDEgPEdmBHHEcIB1zgSFrDNI8IDfSf5AEB9~tplv-tiktokx-origin.image?dr=9636&x-expires=1780246800&x-signature=FoD27bKU4d17juja0W5QrUOkwgI%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=useast5",
-      "music": "Dont you quit",
-      "created_at": "2024-05-03T17:41:22.000Z"
-    },
-    {
-      "url": "https://www.tiktok.com/@tiff.marieee/video/7418624711212518699",
-      "views": 2000000,
-      "likes": 238000,
-      "author": "tiff.marieee",
-      "caption": "The GOATS of nursing school 🙌🏽\n\nThese are just 2 tips! Of course you have to study too but with the help of them. You’ll understand the content much better!\n@Nurse Sarah @Nurse Mike @ SimpleNursing ",
-      "thumbnail": "https://p16-common-sign.tiktokcdn-us.com/tos-useast5-p-0068-tx/affc2cd063ae493d9f76ac5d3d3e9649_1727283174~tplv-tiktokx-dmt-logom:tos-useast5-i-0068-tx/oMeQGbA70PIIRfxdOAgAXXfeHHMAkLQGABIJgP.image?dr=9634&x-expires=1780246800&x-signature=ZQ1b%2FTxQlDQoy5b%2Bq9jXiG4V1aw%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=useast8",
+      "likes": 55500,
+      "author": "legendairymilk",
+      "caption": "This mom was tired of holding her breast up with one hand while nursing. It made multitasking hard — especially on the go.\nTwo hands-free hacks she tried: 1️⃣ Breast sling – Use an ace bandage or scar",
+      "thumbnail": "https://p16-common-sign.tiktokcdn-us.com/tos-useast8-p-0068-tx2/oo4GduADeAE68GMqAGjUuOCEaIIqLIqexN4IZf~tplv-tiktokx-origin.image?dr=9636&x-expires=1780254000&x-signature=QDwYFKINK4GLFKfYk7dXVoUqYoY%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=useast5",
       "music": "original sound",
-      "created_at": "2024-09-25T16:52:52.000Z"
+      "created_at": "2026-05-15T00:29:34.000Z"
+    },
+    {
+      "url": "https://www.tiktok.com/@superficialbiotch/video/7521566122433400119",
+      "views": 1800000,
+      "likes": 275700,
+      "author": "superficialbiotch",
+      "caption": "These are who carried me during nursing school !! I’m so thankful for them and everything that they do 🥹 I couldn’t have done it without them ❤️ \n @Nurse Mike @ SimpleNursing @Nexus Nursing 📚🩺👩🏾‍",
+      "thumbnail": "https://p19-common-sign.tiktokcdn-eu.com/tos-maliva-i-photomode-us/7be321ea255b41d2813f752f992dde5b~tplv-photomode-image.jpeg?dr=10375&x-expires=1780254000&x-signature=XeILtfy0Xqd%2BE1DwzoY9OexSdjU%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=9b759fb9&idc=no1a&ftpl=1",
+      "music": "Cruel Summer",
+      "created_at": "2025-06-30T02:38:27.000Z"
     },
     {
       "url": "https://www.tiktok.com/@caitlin.woodcock/video/7223982424189898026",
@@ -215,9 +235,19 @@
       "likes": 122900,
       "author": "caitlin.woodcock",
       "caption": "nursing student aesthetic #nursesoftiktok #nurselife #studentnurse #nursetok #nursingstudent #nursingschool #nursingschoollife #nursestudentstruggle #nursingstudentproblems #nursingschoolexams #nurses",
-      "thumbnail": "https://p16-common-sign.tiktokcdn-eu.com/tos-useast5-p-0068-tx/3bf549ff7af644a4bbf22745acad3306_1681964507~tplv-tiktokx-origin.image?dr=10395&x-expires=1780246800&x-signature=gMNrmdH7SCgayIceNPWazDwgYtA%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=no1a",
+      "thumbnail": "https://p16-common-sign.tiktokcdn.com/tos-useast5-p-0068-tx/3bf549ff7af644a4bbf22745acad3306_1681964507~tplv-tiktokx-origin.image?dr=14575&x-expires=1780254000&x-signature=RgaYzh1PvOIA5We8Dvveg48n7vg%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=sg1",
       "music": "Full House",
       "created_at": "2023-04-20T04:21:47.000Z"
+    },
+    {
+      "url": "https://www.tiktok.com/@adriannakboudro17/video/7611078366942268703",
+      "views": 1700000,
+      "likes": 80600,
+      "author": "adriannakboudro17",
+      "caption": "Me and my white board against the world #nursingstudent #nursingschool #futurenurse #fypシ゚ #studywithme ",
+      "thumbnail": "https://p16-common-sign.tiktokcdn-us.com/tos-useast8-p-0068-tx2/o4eNgieGogitNWMiJ9mQpfsffK3AuITqLSw9gA~tplv-tiktokx-origin.image?dr=9636&x-expires=1780254000&x-signature=iJ9oK7qu%2FzoOpxlgQF8y8XrieYo%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=useast5",
+      "music": "original sound",
+      "created_at": "2026-02-26T07:52:27.000Z"
     },
     {
       "url": "https://www.tiktok.com/@leslieee.mmm/video/7506510025314077994",
@@ -225,39 +255,9 @@
       "likes": 129600,
       "author": "leslieee.mmm",
       "caption": "just finished my junior year of nursing school and all of these are importabt to know✨ #nursingschool #studentnurse #nursingstudent #studytips #nursingschoolstudytips ",
-      "thumbnail": "https://p19-common-sign.tiktokcdn-us.com/tos-useast5-i-photomode-tx/e9dc8a30acd7482e864aa01982ffecac~tplv-photomode-image.jpeg?dr=9616&x-expires=1780246800&x-signature=doanQdhbz1HGGH1SC3b1xs5OWl8%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=9b759fb9&idc=useast5&ftpl=1",
+      "thumbnail": "https://p19-common-sign.tiktokcdn-us.com/tos-useast5-i-photomode-tx/e9dc8a30acd7482e864aa01982ffecac~tplv-photomode-image.jpeg?dr=9616&x-expires=1780254000&x-signature=tTTh72%2FFAICj93EvrqF%2Bq0Wsd7A%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=9b759fb9&idc=useast8&ftpl=1",
       "music": "All I Can Say",
       "created_at": "2025-05-20T12:53:55.000Z"
-    },
-    {
-      "url": "https://www.tiktok.com/@nurseinthemakingkristine/video/7475092644268395822",
-      "views": 1500000,
-      "likes": 110500,
-      "author": "nurseinthemakingkristine",
-      "caption": "Antihypertensive Basics 🫀💉💊\n\n#pharmacology #futurenurse #nursingnotes #nursinglesson #pharmlesson #nclexprep #nurseinthemaking #BSN #RN #LPN",
-      "thumbnail": "https://p16-common-sign.tiktokcdn-us.com/tos-useast5-p-0068-tx/okuvSE7IDG8yNB3PgEfUAgBuiFgeQnDEI2FRm8~tplv-tiktokx-origin.image?dr=9636&x-expires=1780246800&x-signature=H8dh3cG7gW5blbIw%2BSxLwCIkh3o%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=useast5",
-      "music": "original sound - NurseInTheMaking",
-      "created_at": "2025-02-24T20:57:45.000Z"
-    },
-    {
-      "url": "https://www.tiktok.com/@user12781798903/video/7610132651751640334",
-      "views": 1500000,
-      "likes": 237700,
-      "author": "user12781798903",
-      "caption": "I LOVE THESE GIRLS👩🏽‍⚕️💞💉❣️🥼🫂🧠\n\nThe girls in my nursing program have become my sisters. We endure together, struggle together, and succeed together🙌🏽 \n\nSchool is so much easier to get by when",
-      "thumbnail": "https://p16-common-sign.tiktokcdn-eu.com/tos-useast5-p-0068-tx/osif4sLpnAlGD6CAizrJSRnBSYcfIIKdEN8gEB~tplv-tiktokx-origin.image?dr=10395&x-expires=1780246800&x-signature=75Hxt1C1mz0S4X1z0%2FlZTavMBIQ%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=no1a",
-      "music": "Raindance",
-      "created_at": "2026-02-23T18:42:15.000Z"
-    },
-    {
-      "url": "https://www.tiktok.com/@kinleylapray/video/7350814828807884078",
-      "views": 1400000,
-      "likes": 192400,
-      "author": "kinleylapray",
-      "caption": "Marty and I have gotten real close this semester!! 🩺🦒👩‍⚕️💉\n\n#nursingstudent #foleycatheter #nursesoftiktok ",
-      "thumbnail": "https://p16-common-sign.tiktokcdn-eu.com/tos-useast5-p-0068-tx/0c6226cb51444bcb84e106ac2535ab4c_1711494978~tplv-tiktokx-origin.image?dr=10395&x-expires=1780246800&x-signature=8Ug5fjUyz2QEBku4hoLiUEKFZbY%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=no1a",
-      "music": "original sound",
-      "created_at": "2024-03-26T23:16:16.000Z"
     }
   ],
   "queries": [
@@ -272,5 +272,5 @@
     "nursing school struggles",
     "how to pass nursing school"
   ],
-  "fetched_at": "2026-05-29T17:57:14.694Z"
+  "fetched_at": "2026-05-29T19:39:57.355Z"
 }
