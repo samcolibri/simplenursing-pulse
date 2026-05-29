@@ -37,12 +37,14 @@ const TABLES = [
     text('Platform'), num('Followers'), num('Following'), num('Post Count'), text('Updated At'), text('Source'),
   ]},
   { name: 'Our_Posts', description: 'SimpleNursing posts', fields: [
-    text('Post ID'), sel('Platform', ['TikTok','Instagram']),
-    memo('Caption'), num('Views'), num('Likes'), url('URL'), text('Created At'), text('Fetched At'),
+    text('Post ID'), sel('Platform', ['TikTok','Instagram']), text('Handle'),
+    memo('Caption'), num('Views'), num('Likes'), num('Comments'), num('Shares'),
+    url('URL'), text('Created At'), text('Fetched At'),
   ]},
   { name: 'Competitor_Posts', description: 'Competitor posts', fields: [
-    text('Post ID'), text('Competitor Handle'), sel('Platform', ['TikTok','Instagram']),
-    memo('Caption'), num('Views'), num('Likes'), url('URL'), text('Created At'), text('Fetched At'),
+    text('Post ID'), text('Competitor Handle'), text('Competitor Name'),
+    sel('Platform', ['TikTok','Instagram']), memo('Caption'),
+    num('Views'), num('Likes'), num('Comments'), url('URL'), text('Created At'), text('Fetched At'),
   ]},
   { name: 'YouTube_Videos', description: 'SimpleNursing YT videos', fields: [
     text('Video ID'), text('Title'), num('Views'), num('Likes'),
