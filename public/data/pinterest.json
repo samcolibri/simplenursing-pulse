@@ -2,7 +2,7 @@
   "profile": {
     "username": "simplenursing_official",
     "account_type": "BUSINESS",
-    "monthly_views": 149151,
+    "monthly_views": 148662,
     "follower_count": 751,
     "pin_count": 1657,
     "board_count": 7,
@@ -20,290 +20,290 @@
       "date": "2026-04-29",
       "data_status": "READY",
       "metrics": {
-        "OUTBOUND_CLICK": 6,
+        "PIN_CLICK": 308,
         "IMPRESSION": 4857,
-        "SAVE": 27,
-        "PIN_CLICK": 308
+        "OUTBOUND_CLICK": 6,
+        "SAVE": 27
       }
     },
     {
       "date": "2026-04-30",
       "data_status": "READY",
       "metrics": {
-        "OUTBOUND_CLICK": 2,
+        "PIN_CLICK": 330,
         "IMPRESSION": 4964,
-        "SAVE": 32,
-        "PIN_CLICK": 330
+        "OUTBOUND_CLICK": 2,
+        "SAVE": 32
       }
     },
     {
       "date": "2026-05-01",
       "data_status": "READY",
       "metrics": {
-        "OUTBOUND_CLICK": 3,
+        "PIN_CLICK": 288,
         "IMPRESSION": 4483,
-        "SAVE": 13,
-        "PIN_CLICK": 288
+        "OUTBOUND_CLICK": 3,
+        "SAVE": 13
       }
     },
     {
       "date": "2026-05-02",
       "data_status": "READY",
       "metrics": {
-        "OUTBOUND_CLICK": 1,
+        "PIN_CLICK": 296,
         "IMPRESSION": 4256,
-        "SAVE": 23,
-        "PIN_CLICK": 296
+        "OUTBOUND_CLICK": 1,
+        "SAVE": 23
       }
     },
     {
       "date": "2026-05-03",
       "data_status": "READY",
       "metrics": {
-        "OUTBOUND_CLICK": 3,
+        "PIN_CLICK": 304,
         "IMPRESSION": 4410,
-        "SAVE": 20,
-        "PIN_CLICK": 304
+        "OUTBOUND_CLICK": 3,
+        "SAVE": 20
       }
     },
     {
       "date": "2026-05-04",
       "data_status": "READY",
       "metrics": {
-        "OUTBOUND_CLICK": 1,
+        "PIN_CLICK": 303,
         "IMPRESSION": 5027,
-        "SAVE": 14,
-        "PIN_CLICK": 303
+        "OUTBOUND_CLICK": 1,
+        "SAVE": 14
       }
     },
     {
       "date": "2026-05-05",
       "data_status": "READY",
       "metrics": {
-        "OUTBOUND_CLICK": 1,
+        "PIN_CLICK": 378,
         "IMPRESSION": 5538,
-        "SAVE": 30,
-        "PIN_CLICK": 378
+        "OUTBOUND_CLICK": 1,
+        "SAVE": 30
       }
     },
     {
       "date": "2026-05-06",
       "data_status": "READY",
       "metrics": {
-        "OUTBOUND_CLICK": 1,
+        "PIN_CLICK": 355,
         "IMPRESSION": 5644,
-        "SAVE": 32,
-        "PIN_CLICK": 355
+        "OUTBOUND_CLICK": 1,
+        "SAVE": 32
       }
     },
     {
       "date": "2026-05-07",
       "data_status": "READY",
       "metrics": {
-        "OUTBOUND_CLICK": 3,
+        "PIN_CLICK": 357,
         "IMPRESSION": 5739,
-        "SAVE": 29,
-        "PIN_CLICK": 357
+        "OUTBOUND_CLICK": 3,
+        "SAVE": 29
       }
     },
     {
       "date": "2026-05-08",
       "data_status": "READY",
       "metrics": {
-        "OUTBOUND_CLICK": 3,
+        "PIN_CLICK": 368,
         "IMPRESSION": 5587,
-        "SAVE": 26,
-        "PIN_CLICK": 368
+        "OUTBOUND_CLICK": 3,
+        "SAVE": 26
       }
     },
     {
       "date": "2026-05-09",
       "data_status": "READY",
       "metrics": {
-        "OUTBOUND_CLICK": 0,
+        "PIN_CLICK": 356,
         "IMPRESSION": 5080,
-        "SAVE": 27,
-        "PIN_CLICK": 356
+        "OUTBOUND_CLICK": 0,
+        "SAVE": 27
       }
     },
     {
       "date": "2026-05-10",
       "data_status": "READY",
       "metrics": {
-        "OUTBOUND_CLICK": 3,
+        "PIN_CLICK": 351,
         "IMPRESSION": 4751,
-        "SAVE": 37,
-        "PIN_CLICK": 351
+        "OUTBOUND_CLICK": 3,
+        "SAVE": 37
       }
     },
     {
       "date": "2026-05-11",
       "data_status": "READY",
       "metrics": {
-        "OUTBOUND_CLICK": 2,
+        "PIN_CLICK": 348,
         "IMPRESSION": 5784,
-        "SAVE": 23,
-        "PIN_CLICK": 348
+        "OUTBOUND_CLICK": 2,
+        "SAVE": 23
       }
     },
     {
       "date": "2026-05-12",
       "data_status": "READY",
       "metrics": {
-        "OUTBOUND_CLICK": 2,
+        "PIN_CLICK": 376,
         "IMPRESSION": 6716,
-        "SAVE": 34,
-        "PIN_CLICK": 376
+        "OUTBOUND_CLICK": 2,
+        "SAVE": 34
       }
     },
     {
       "date": "2026-05-13",
       "data_status": "READY",
       "metrics": {
-        "OUTBOUND_CLICK": 3,
+        "PIN_CLICK": 339,
         "IMPRESSION": 6104,
-        "SAVE": 28,
-        "PIN_CLICK": 339
+        "OUTBOUND_CLICK": 3,
+        "SAVE": 28
       }
     },
     {
       "date": "2026-05-14",
       "data_status": "READY",
       "metrics": {
-        "OUTBOUND_CLICK": 2,
+        "PIN_CLICK": 371,
         "IMPRESSION": 6225,
-        "SAVE": 40,
-        "PIN_CLICK": 371
+        "OUTBOUND_CLICK": 2,
+        "SAVE": 40
       }
     },
     {
       "date": "2026-05-15",
       "data_status": "READY",
       "metrics": {
-        "OUTBOUND_CLICK": 2,
+        "PIN_CLICK": 270,
         "IMPRESSION": 4864,
-        "SAVE": 17,
-        "PIN_CLICK": 270
+        "OUTBOUND_CLICK": 2,
+        "SAVE": 17
       }
     },
     {
       "date": "2026-05-16",
       "data_status": "READY",
       "metrics": {
-        "OUTBOUND_CLICK": 0,
+        "PIN_CLICK": 260,
         "IMPRESSION": 4228,
-        "SAVE": 24,
-        "PIN_CLICK": 260
+        "OUTBOUND_CLICK": 0,
+        "SAVE": 24
       }
     },
     {
       "date": "2026-05-17",
       "data_status": "READY",
       "metrics": {
-        "OUTBOUND_CLICK": 2,
+        "PIN_CLICK": 370,
         "IMPRESSION": 4478,
-        "SAVE": 21,
-        "PIN_CLICK": 370
+        "OUTBOUND_CLICK": 2,
+        "SAVE": 21
       }
     },
     {
       "date": "2026-05-18",
       "data_status": "READY",
       "metrics": {
-        "OUTBOUND_CLICK": 1,
+        "PIN_CLICK": 287,
         "IMPRESSION": 4446,
-        "SAVE": 16,
-        "PIN_CLICK": 287
+        "OUTBOUND_CLICK": 1,
+        "SAVE": 16
       }
     },
     {
       "date": "2026-05-19",
       "data_status": "READY",
       "metrics": {
-        "OUTBOUND_CLICK": 5,
+        "PIN_CLICK": 311,
         "IMPRESSION": 4816,
-        "SAVE": 23,
-        "PIN_CLICK": 311
+        "OUTBOUND_CLICK": 5,
+        "SAVE": 23
       }
     },
     {
       "date": "2026-05-20",
       "data_status": "READY",
       "metrics": {
-        "OUTBOUND_CLICK": 2,
+        "PIN_CLICK": 259,
         "IMPRESSION": 4692,
-        "SAVE": 23,
-        "PIN_CLICK": 259
+        "OUTBOUND_CLICK": 2,
+        "SAVE": 23
       }
     },
     {
       "date": "2026-05-21",
       "data_status": "READY",
       "metrics": {
-        "OUTBOUND_CLICK": 5,
+        "PIN_CLICK": 305,
         "IMPRESSION": 4914,
-        "SAVE": 27,
-        "PIN_CLICK": 305
+        "OUTBOUND_CLICK": 5,
+        "SAVE": 27
       }
     },
     {
       "date": "2026-05-22",
       "data_status": "READY",
       "metrics": {
-        "OUTBOUND_CLICK": 6,
+        "PIN_CLICK": 342,
         "IMPRESSION": 4631,
-        "SAVE": 18,
-        "PIN_CLICK": 342
+        "OUTBOUND_CLICK": 6,
+        "SAVE": 18
       }
     },
     {
       "date": "2026-05-23",
       "data_status": "READY",
       "metrics": {
-        "OUTBOUND_CLICK": 0,
+        "PIN_CLICK": 252,
         "IMPRESSION": 4125,
-        "SAVE": 20,
-        "PIN_CLICK": 252
+        "OUTBOUND_CLICK": 0,
+        "SAVE": 20
       }
     },
     {
       "date": "2026-05-24",
       "data_status": "READY",
       "metrics": {
-        "OUTBOUND_CLICK": 3,
+        "PIN_CLICK": 270,
         "IMPRESSION": 3833,
-        "SAVE": 19,
-        "PIN_CLICK": 270
+        "OUTBOUND_CLICK": 3,
+        "SAVE": 19
       }
     },
     {
       "date": "2026-05-25",
       "data_status": "READY",
       "metrics": {
-        "OUTBOUND_CLICK": 9,
+        "PIN_CLICK": 276,
         "IMPRESSION": 4656,
-        "SAVE": 14,
-        "PIN_CLICK": 276
+        "OUTBOUND_CLICK": 9,
+        "SAVE": 14
       }
     },
     {
       "date": "2026-05-26",
       "data_status": "READY",
       "metrics": {
-        "OUTBOUND_CLICK": 0,
+        "PIN_CLICK": 271,
         "IMPRESSION": 4434,
-        "SAVE": 21,
-        "PIN_CLICK": 271
+        "OUTBOUND_CLICK": 0,
+        "SAVE": 21
       }
     },
     {
       "date": "2026-05-27",
       "data_status": "READY",
       "metrics": {
-        "OUTBOUND_CLICK": 2,
+        "PIN_CLICK": 243,
         "IMPRESSION": 4520,
-        "SAVE": 18,
-        "PIN_CLICK": 243
+        "OUTBOUND_CLICK": 2,
+        "SAVE": 18
       }
     },
     {
@@ -627,5 +627,5 @@
       "created_at": "2026-05-21T06:42:22"
     }
   ],
-  "fetched_at": "2026-05-29T19:37:54.092Z"
+  "fetched_at": "2026-05-29T20:30:18.702Z"
 }

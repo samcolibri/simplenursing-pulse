@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-05-29T19:37:53.244Z",
+  "fetched_at": "2026-05-29T20:30:17.512Z",
   "platforms": {
     "pinterest": {
       "ok": true
@@ -14,6 +14,9 @@
       "ok": true
     },
     "ig_hashtags": {
+      "ok": true
+    },
+    "youtube": {
       "ok": true
     },
     "insights": {
