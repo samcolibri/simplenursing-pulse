@@ -50,6 +50,22 @@ const COMPETITORS = {
   ],
 }
 
+// Maps every platform-specific handle variant → one canonical key for deduplication
+const CANONICAL_HANDLE = {
+  'registerednursern.com':    'registerednursern',
+  'registerednursern_com':    'registerednursern',
+  'nurseinthemakingkristine': 'nurseinthemaking',
+  'kristine_nurseinthemaking':'nurseinthemaking',
+  'archernursing':            'archernursing',
+  'archernursingreview':      'archernursing',
+  'uworldnclex':              'uworld',
+  'uworld':                   'uworld',
+  'yournursingeducator':      'yournursingeducator',
+  'nclexbootcamp':            'nclexbootcamp',
+  'nursingstudybyally':       'nursingstudybyally',
+}
+function canonicalKey(handle) { return CANONICAL_HANDLE[handle.toLowerCase()] || handle.toLowerCase() }
+
 const NURSING_HASHTAGS = ['nursingstudent', 'nclex', 'nursetok', 'nursingschool', 'futurenurse', 'studentnurse']
 const TIKTOK_SEARCH_QUERIES = ['nursing tips', 'nclex prep', 'nursing school hacks', 'pharmacology nursing']
 
@@ -347,19 +363,22 @@ async function buildInsights(tt, ig, ttTrends) {
 
   allPosts.sort((a, b) => b.score - a.score)
 
-  // Per-competitor breakdown — one entry per account, top 10 posts each
+  // Per-competitor breakdown — one entry per canonical account, top 10 posts merged across platforms
   const compMap = new Map()
   for (const c of (tt?.competitors || [])) {
-    const key = c.handle.toLowerCase()
-    if (!compMap.has(key)) compMap.set(key, { handle: c.handle, display_name: c.display_name, followers: c.followers, platform: 'tiktok', top_posts: [] })
+    const key = canonicalKey(c.handle)
+    if (!compMap.has(key)) compMap.set(key, { handle: key, display_name: c.display_name, followers: c.followers, platform: 'tiktok', top_posts: [] })
+    const existing = compMap.get(key)
+    existing.followers = Math.max(existing.followers || 0, c.followers || 0)
     const posts = c.recent_posts.filter(p => isRecent(p.created_at))
-    const seen = new Set(compMap.get(key).top_posts.map(p => String(p.id)))
-    for (const p of posts) if (!seen.has(String(p.id))) compMap.get(key).top_posts.push({ ...p, score: velocity(p) })
+    const seen = new Set(existing.top_posts.map(p => String(p.id)))
+    for (const p of posts) if (!seen.has(String(p.id))) existing.top_posts.push({ ...p, platform: 'tiktok', score: velocity(p) })
   }
   for (const c of (ig?.competitors || [])) {
-    const key = c.handle.toLowerCase()
-    if (!compMap.has(key)) compMap.set(key, { handle: c.handle, display_name: c.display_name, followers: c.followers, platform: 'instagram', top_posts: [] })
+    const key = canonicalKey(c.handle)
+    if (!compMap.has(key)) compMap.set(key, { handle: key, display_name: c.display_name, followers: c.followers, platform: 'instagram', top_posts: [] })
     const existing = compMap.get(key)
+    existing.followers = Math.max(existing.followers || 0, c.followers || 0)
     const posts = c.recent_posts.filter(p => isRecent(p.timestamp))
     const seen = new Set(existing.top_posts.map(p => String(p.id)))
     for (const p of posts) if (!seen.has(String(p.id))) existing.top_posts.push({ ...p, platform: 'instagram', score: velocity(p) })

@@ -131,16 +131,12 @@ function PinterestCard({ pin }) {
 
 // Known competitor display names
 const COMP_DISPLAY = {
-  'nurseinthemakingkristine': 'Nurse In The Making',
-  'kristine_nurseinthemaking': 'Nurse In The Making',
-  'registerednursern.com': 'RegisteredNurseRN',
-  'registerednursern_com': 'RegisteredNurseRN',
-  'yournursingeducator': 'Your Nursing Educator',
-  'archernursing': 'Archer Review',
-  'archernursingreview': 'Archer Review',
-  'uworldnclex': 'UWorld',
-  'uworld': 'UWorld',
-  'nclexbootcamp': 'NCLEX Bootcamp',
+  'nurseinthemaking':   'Nurse In The Making',
+  'registerednursern':  'RegisteredNurseRN',
+  'yournursingeducator':'Your Nursing Educator',
+  'archernursing':      'Archer Review',
+  'uworld':             'UWorld',
+  'nclexbootcamp':      'NCLEX Bootcamp',
   'nursingstudybyally': 'NursingStudyByAlly',
 }
 
