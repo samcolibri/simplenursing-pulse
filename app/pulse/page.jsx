@@ -166,8 +166,24 @@ export default function PulsePage() {
   const [activeComp, setActiveComp] = useState(0)
   const [dateFrom, setDateFrom] = useState('')
   const [dateTo, setDateTo] = useState('')
+  const [M, setM] = useState(3) // month index: 0=Jan … 3=Apr
+  const [snapNote, setSnapNote] = useState('')
 
-  const M = 3 // April 2026 index in Excel arrays
+  const MONTH_LABELS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+  const MONTHS_WITH_DATA = useMemo(
+    () => TIKTOK_2026.new_follows.reduce((acc, v, i) => { if (v != null) acc.push(i); return acc }, []),
+    []
+  )
+
+  useEffect(() => {
+    const saved = localStorage.getItem('sn-snap-note-' + M)
+    setSnapNote(saved || '')
+  }, [M])
+
+  const handleNoteChange = (v) => {
+    setSnapNote(v)
+    localStorage.setItem('sn-snap-note-' + M, v)
+  }
   const ourPosts = insights?.ours_top || []
   const competitorsByAccount = insights?.competitors_by_account || []
 
@@ -428,12 +444,22 @@ export default function PulsePage() {
           </section>
         )}
 
-        {/* APRIL BUSINESS SNAPSHOT — EXCEL */}
+        {/* BUSINESS SNAPSHOT — EXCEL */}
         <section>
           <div className="mb-4 sm:mb-5">
-            <div className="mono text-[10px] uppercase tracking-wider text-[#75c7e6] mb-1">06 · april business funnel</div>
-            <h2 className="text-xl sm:text-2xl font-bold">Conversion + revenue snapshot</h2>
-            <p className="text-xs sm:text-sm text-[var(--text-muted)] mt-1">Last verified month from Excel · TikTok had the trials peak in Feb (464), April collapsed to 52</p>
+            <div className="mono text-[10px] uppercase tracking-wider text-[#75c7e6] mb-1">06 · business funnel snapshot</div>
+            <div className="flex items-center justify-between flex-wrap gap-3">
+              <h2 className="text-xl sm:text-2xl font-bold">Conversion + revenue snapshot</h2>
+              <div className="flex gap-1.5 flex-wrap">
+                {MONTHS_WITH_DATA.map(i => (
+                  <button key={i} onClick={() => setM(i)}
+                    className={'mono text-[10px] uppercase px-3 py-1.5 rounded-full border transition-all ' + (M === i ? 'bg-[#75c7e6] text-black border-[#75c7e6] font-bold' : 'border-[var(--border)] text-[var(--text-muted)] hover:border-[#75c7e6]/50')}>
+                    {MONTH_LABELS[i]} 2026
+                  </button>
+                ))}
+              </div>
+            </div>
+            <p className="text-xs sm:text-sm text-[var(--text-muted)] mt-1">Excel verified · {MONTH_LABELS[M]} 2026</p>
           </div>
           <div className="card-strong overflow-x-auto">
             <table className="w-full text-xs sm:text-sm">
@@ -447,37 +473,54 @@ export default function PulsePage() {
               </thead>
               <tbody className="divide-y divide-[var(--border)]/50">
                 <tr>
-                  <td className="px-3 sm:px-5 py-3 font-medium">Apr new followers</td>
+                  <td className="px-3 sm:px-5 py-3 font-medium">New followers</td>
                   <td className="px-3 sm:px-5 py-3 text-right font-semibold">{fmtFull(TIKTOK_2026.new_follows[M])}</td>
                   <td className="px-3 sm:px-5 py-3 text-right font-semibold">{fmtFull(INSTAGRAM_2026.new_follows[M])}</td>
                   <td className="px-3 sm:px-5 py-3 text-right font-semibold">{fmtFull(FACEBOOK_2026.new_follows[M])}</td>
                 </tr>
                 <tr>
-                  <td className="px-3 sm:px-5 py-3">Apr views</td>
-                  <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(TIKTOK_2026.views[M])}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(INSTAGRAM_2026.total_views[M])}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(FACEBOOK_2026.views[M])}</td>
+                  <td className="px-3 sm:px-5 py-3">GA4 sessions</td>
+                  <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(TIKTOK_2026.sessions_ga4[M])}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(INSTAGRAM_2026.sessions[M])}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(FACEBOOK_2026.sessions_ga4[M])}</td>
                 </tr>
                 <tr>
-                  <td className="px-3 sm:px-5 py-3">Apr free trials</td>
-                  <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(TIKTOK_2026.free_trials[3])}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(INSTAGRAM_2026.free_trials[3])}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(FACEBOOK_2026.free_trials[3])}</td>
+                  <td className="px-3 sm:px-5 py-3">Free trials</td>
+                  <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(TIKTOK_2026.free_trials[M])}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(INSTAGRAM_2026.free_trials[M])}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(FACEBOOK_2026.free_trials[M])}</td>
                 </tr>
                 <tr>
-                  <td className="px-3 sm:px-5 py-3">Apr FTCR</td>
-                  <td className="px-3 sm:px-5 py-3 text-right">{fmtPct(TIKTOK_2026.ftcr[3])}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right">{fmtPct(INSTAGRAM_2026.ftcr[3])}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right">{fmtPct(FACEBOOK_2026.ftcr[3])}</td>
+                  <td className="px-3 sm:px-5 py-3">FTCR</td>
+                  <td className="px-3 sm:px-5 py-3 text-right">{fmtPct(TIKTOK_2026.ftcr[M])}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right">{fmtPct(INSTAGRAM_2026.ftcr[M])}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right">{fmtPct(FACEBOOK_2026.ftcr[M])}</td>
                 </tr>
                 <tr>
-                  <td className="px-3 sm:px-5 py-3">Apr GA4 revenue</td>
-                  <td className="px-3 sm:px-5 py-3 text-right text-[#62d070]">{fmtMoney(TIKTOK_2026.revenue_ga4[3])}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right text-[#62d070]">{fmtMoney(INSTAGRAM_2026.revenue_ga4[3])}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right text-[#62d070]">{fmtMoney(FACEBOOK_2026.revenue_ga4[3])}</td>
+                  <td className="px-3 sm:px-5 py-3">GA4 revenue</td>
+                  <td className="px-3 sm:px-5 py-3 text-right text-[#62d070]">{fmtMoney(TIKTOK_2026.revenue_ga4[M])}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right text-[#62d070]">{fmtMoney(INSTAGRAM_2026.revenue_ga4[M])}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right text-[#62d070]">{fmtMoney(FACEBOOK_2026.revenue_ga4[M])}</td>
+                </tr>
+                <tr>
+                  <td className="px-3 sm:px-5 py-3">Views</td>
+                  <td className="px-3 sm:px-5 py-3 text-right text-[var(--text-muted)]">{fmtFull(TIKTOK_2026.views[M])}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right text-[var(--text-muted)]">{fmtFull(INSTAGRAM_2026.total_views[M])}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right text-[var(--text-muted)]">{fmtFull(FACEBOOK_2026.views[M])}</td>
                 </tr>
               </tbody>
             </table>
+          </div>
+          <div className="mt-4">
+            <div className="mono text-[10px] uppercase tracking-wider text-[var(--text-dim)] mb-2">Team interpretation — {MONTH_LABELS[M]} 2026</div>
+            <textarea
+              value={snapNote}
+              onChange={e => handleNoteChange(e.target.value)}
+              placeholder={`Add your team's read on ${MONTH_LABELS[M]} performance here. What drove the numbers? What's the context leadership needs to know? Saved automatically per month.`}
+              className="w-full bg-[var(--bg-card-2)] border border-[var(--border)] rounded-xl px-4 py-3 text-sm text-white placeholder:text-[var(--text-dim)] focus:outline-none focus:border-[#75c7e6]/50 resize-none leading-relaxed"
+              rows={4}
+            />
+            {snapNote && <div className="mono text-[9px] text-[#62d070] mt-1.5">✓ Saved locally for {MONTH_LABELS[M]}</div>}
           </div>
         </section>
       </main>
