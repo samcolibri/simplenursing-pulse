@@ -30,11 +30,23 @@ const OWNED = {
 }
 
 const COMPETITORS = {
-  instagram: ['registerednursern_com', 'kristine_nurseinthemaking', 'yournursingeducator'],
+  instagram: [
+    'registerednursern_com',
+    'kristine_nurseinthemaking',
+    'yournursingeducator',
+    'archernursingreview',     // Archer Review
+    'uworld',                  // UWorld (verify handle)
+    'nclexbootcamp',           // NCLEX Bootcamp (verify handle)
+    'nursingstudybyally',      // NursingStudyByAlly (verify handle)
+  ],
   tiktok: [
     'https://www.tiktok.com/@registerednursern.com',
     'https://www.tiktok.com/@nurseinthemakingkristine',
     'https://www.tiktok.com/@archernursing',
+    'https://www.tiktok.com/@yournursingeducator',
+    'https://www.tiktok.com/@uworldnclex',          // UWorld (verify handle)
+    'https://www.tiktok.com/@nclexbootcamp',        // NCLEX Bootcamp (verify handle)
+    'https://www.tiktok.com/@nursingstudybyally',   // NursingStudyByAlly (verify handle)
   ],
 }
 
@@ -189,7 +201,7 @@ async function fetchTikTok() {
   log('TikTok profiles…')
   const items = await apifyRunSync('clockworks~free-tiktok-scraper', {
     profiles: [OWNED.tiktok, ...COMPETITORS.tiktok],
-    resultsPerPage: 10, shouldDownloadVideos: false,
+    resultsPerPage: 30, shouldDownloadVideos: false,
     shouldDownloadCovers: false, shouldDownloadSubtitles: false,
   })
   const accounts = groupByAuthor(items)
@@ -260,7 +272,7 @@ async function fetchInstagram() {
     bio: p.biography || '', avatar: p.profilePicUrl || '',
     business_category: p.businessCategoryName,
     external_url: p.externalUrl || '',
-    recent_posts: (p.latestPosts || []).filter(post => isRecent(post.timestamp)).slice(0, 8).map(post => ({
+    recent_posts: (p.latestPosts || []).filter(post => isRecent(post.timestamp)).slice(0, 20).map(post => ({
       id: post.id, url: post.url, thumbnail: post.displayUrl || '',
       caption: (post.caption || '').slice(0, 280),
       type: (post.type || '').toLowerCase(),
@@ -318,40 +330,77 @@ async function fetchInstagramHashtags() {
 
 // ─── Build aggregated "what's working" insights from live data ───────────────
 async function buildInsights(tt, ig, ttTrends) {
+  // Collect all posts, deduplicated by ID
+  const seenIds = new Set()
   const allPosts = []
-  if (tt?.owned) for (const p of tt.owned.recent_posts) if (isRecent(p.created_at)) allPosts.push({ platform: 'tiktok', isOwned: true, handle: tt.owned.handle, ...p, score: velocity(p) })
-  for (const c of (tt?.competitors || [])) for (const p of c.recent_posts) if (isRecent(p.created_at)) allPosts.push({ platform: 'tiktok', isOwned: false, handle: c.handle, ...p, score: velocity(p) })
-  if (ig?.owned) for (const p of ig.owned.recent_posts) if (isRecent(p.timestamp)) allPosts.push({ platform: 'instagram', isOwned: true, handle: ig.owned.handle, ...p, score: velocity(p) })
-  for (const c of (ig?.competitors || [])) for (const p of c.recent_posts) if (isRecent(p.timestamp)) allPosts.push({ platform: 'instagram', isOwned: false, handle: c.handle, ...p, score: velocity(p) })
+  function addPost(post) {
+    const key = String(post.id || post.url || Math.random())
+    if (seenIds.has(key)) return
+    seenIds.add(key)
+    allPosts.push(post)
+  }
 
-  const top = allPosts.sort((a, b) => b.score - a.score).slice(0, 12)
+  if (tt?.owned) for (const p of tt.owned.recent_posts) if (isRecent(p.created_at)) addPost({ platform: 'tiktok', isOwned: true, handle: tt.owned.handle, ...p, score: velocity(p) })
+  for (const c of (tt?.competitors || [])) for (const p of c.recent_posts) if (isRecent(p.created_at)) addPost({ platform: 'tiktok', isOwned: false, handle: c.handle, ...p, score: velocity(p) })
+  if (ig?.owned) for (const p of ig.owned.recent_posts) if (isRecent(p.timestamp)) addPost({ platform: 'instagram', isOwned: true, handle: ig.owned.handle, ...p, score: velocity(p) })
+  for (const c of (ig?.competitors || [])) for (const p of c.recent_posts) if (isRecent(p.timestamp)) addPost({ platform: 'instagram', isOwned: false, handle: c.handle, ...p, score: velocity(p) })
 
+  allPosts.sort((a, b) => b.score - a.score)
+
+  // Per-competitor breakdown — one entry per account, top 10 posts each
+  const compMap = new Map()
+  for (const c of (tt?.competitors || [])) {
+    const key = c.handle.toLowerCase()
+    if (!compMap.has(key)) compMap.set(key, { handle: c.handle, display_name: c.display_name, followers: c.followers, platform: 'tiktok', top_posts: [] })
+    const posts = c.recent_posts.filter(p => isRecent(p.created_at))
+    const seen = new Set(compMap.get(key).top_posts.map(p => String(p.id)))
+    for (const p of posts) if (!seen.has(String(p.id))) compMap.get(key).top_posts.push({ ...p, score: velocity(p) })
+  }
+  for (const c of (ig?.competitors || [])) {
+    const key = c.handle.toLowerCase()
+    if (!compMap.has(key)) compMap.set(key, { handle: c.handle, display_name: c.display_name, followers: c.followers, platform: 'instagram', top_posts: [] })
+    const existing = compMap.get(key)
+    const posts = c.recent_posts.filter(p => isRecent(p.timestamp))
+    const seen = new Set(existing.top_posts.map(p => String(p.id)))
+    for (const p of posts) if (!seen.has(String(p.id))) existing.top_posts.push({ ...p, platform: 'instagram', score: velocity(p) })
+    if (existing.platform === 'tiktok') existing.platform = 'both'
+  }
+  for (const v of compMap.values()) v.top_posts = v.top_posts.sort((a, b) => b.score - a.score).slice(0, 10)
+  const competitors_by_account = Array.from(compMap.values())
+    .filter(c => c.top_posts.length > 0)
+    .sort((a, b) => (b.followers || 0) - (a.followers || 0))
+
+  // Topic clustering — use broader nursing search data from TikTok trends, not just our posts
+  const topicPosts = [
+    ...allPosts,
+    ...(ttTrends?.trending_posts || []),
+  ]
   const TOPICS = {
-    'NCLEX Prep': /nclex|boards|exam|test|review/i,
-    'ECG & Cardiac': /ecg|ekg|heart|cardiac|rhythm|cardio/i,
-    'Pharmacology': /pharm|medication|drug|med |dosage|insulin|antibi/i,
-    'Lab Values': /lab|electrolyte|panel|sodium|potassium|hemoglobin|glucose/i,
-    'Clinical Skills': /clinical|skill|injection|iv |cath|wound|trach|sterile/i,
-    'New Grad / Career': /new grad|first year|residency|career|burnout|night shift/i,
-    'Nursing Humor': /humor|funny|joke|haha|lol|relatable|tired/i,
-    'Mental Health': /mental|anxiety|stress|self.?care|cope/i,
+    'NCLEX Prep': /nclex|boards|licensing exam|nursing exam|pass rates|kaplan|uworld|archer/i,
+    'Nursing School Tips': /study|notes|lecture|prereq|tip|hack|school|semester|schedule|memorize/i,
+    'ECG & Cardiac': /ecg|ekg|heart|cardiac|rhythm|cardio|dysrhythmia|afib/i,
+    'Pharmacology': /pharm|medication|drug|\bmed\b|dosage|insulin|antibiotic|IV push/i,
+    'Lab Values': /lab|electrolyte|sodium|potassium|hemoglobin|glucose|CBC|BMP|CMP/i,
+    'Clinical Skills': /clinical|skill|injection|\bIV\b|catheter|wound|trach|sterile|assessment|vital/i,
+    'Career & New Grad': /new grad|first year|residency|career|burnout|night shift|job|salary|pay|hire/i,
+    'Nursing Student Life': /student nurse|nursing student|nursing school|prereq|application|acceptance|acceptance rate/i,
   }
   const topics = {}
-  for (const p of top) {
-    let matched = false
+  for (const p of topicPosts) {
+    const text = (p.caption || p.text || '')
     for (const [t, rx] of Object.entries(TOPICS)) {
-      if (rx.test(p.caption || '')) { topics[t] = (topics[t] || 0) + p.score; matched = true; break }
+      if (rx.test(text)) { topics[t] = (topics[t] || 0) + (p.score || p.views || 0); break }
     }
-    if (!matched) topics['Other'] = (topics['Other'] || 0) + p.score
   }
   const topicRanked = Object.entries(topics).sort((a, b) => b[1] - a[1])
 
-  const ours = allPosts.filter(p => p.isOwned).sort((a, b) => b.score - a.score)
-  const competitors = allPosts.filter(p => !p.isOwned).sort((a, b) => b.score - a.score)
+  const ours = allPosts.filter(p => p.isOwned)
+  const competitors = allPosts.filter(p => !p.isOwned)
   return {
-    top_viral: top,
-    ours_top: ours.slice(0, 12),
-    competitor_top: competitors.slice(0, 12),
+    top_viral: allPosts.slice(0, 12),
+    ours_top: ours.slice(0, 30),
+    competitor_top: competitors.slice(0, 50),
+    competitors_by_account,
     topics: topicRanked,
     cutoff_date: CUTOFF.slice(0, 10),
     days_back: DAYS_BACK,

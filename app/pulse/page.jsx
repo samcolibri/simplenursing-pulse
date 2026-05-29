@@ -1,9 +1,8 @@
 'use client'
 import { useEffect, useMemo, useState } from 'react'
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area, Legend, Cell } from 'recharts'
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import {
-  INSTAGRAM_2026, FACEBOOK_2026, TIKTOK_2026, YOUTUBE_2026,
-  MONTHS, latestMonth,
+  INSTAGRAM_2026, FACEBOOK_2026, TIKTOK_2026,
 } from '@/lib/excel-data'
 
 const fmt = (n) => n == null ? '—' : new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 }).format(n)
@@ -42,53 +41,112 @@ function useStaticData(file) {
   return data
 }
 
-function SourceTag({ source }) {
-  const colors = {
-    'apify-live': 'bg-[#62d070]/10 text-[#62d070] border-[#62d070]/30',
-    'pinterest-api': 'bg-[#62d070]/10 text-[#62d070] border-[#62d070]/30',
-    'xlsx': 'bg-[#75c7e6]/10 text-[#75c7e6] border-[#75c7e6]/30',
-    'pending': 'bg-[#fad74f]/10 text-[#fad74f] border-[#fad74f]/30',
-  }
-  const labels = {
-    'apify-live': 'LIVE · Apify',
-    'pinterest-api': 'LIVE · Pinterest API',
-    'xlsx': 'Excel · Apr 2026',
-    'pending': 'Meta API pending',
-  }
-  return <span className={'mono text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded border ' + (colors[source] || '')}>{labels[source] || source}</span>
+function SourceBadge({ label, color }) {
+  return (
+    <span className="mono text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded border"
+      style={{ color, borderColor: color + '50', background: color + '10' }}>
+      {label}
+    </span>
+  )
 }
 
-function PlatformCard({ platform, primary, secondary, tertiary, source }) {
+// Standardised platform card — same 5 metrics for every platform
+function PlatformCard({ platform, liveFollowers, liveSource, newFollowers, sessions, freeTrials, ftcr, revenue }) {
   const p = PLATFORM[platform]
+  const metrics = [
+    { label: 'New followers', value: fmtFull(newFollowers) },
+    { label: 'GA4 sessions', value: fmtFull(sessions) },
+    { label: 'Free trials', value: fmtFull(freeTrials) },
+    { label: 'Trial conv. rate', value: fmtPct(ftcr) },
+    { label: 'GA4 revenue', value: fmtMoney(revenue), green: true },
+  ]
   return (
-    <div className={'card-strong p-4 sm:p-5 ' + p.glow + ' fade-up'} style={{ borderColor: p.color + '40' }}>
+    <div className={'card-strong p-4 sm:p-5 fade-up ' + p.glow} style={{ borderColor: p.color + '40' }}>
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-1.5">
-          <span className="text-lg sm:text-xl">{p.glyph}</span>
-          <span className="text-sm font-semibold tracking-tight">{p.name}</span>
+          <span className="text-xl">{p.glyph}</span>
+          <span className="text-sm font-bold tracking-tight">{p.name}</span>
         </div>
-        <SourceTag source={source} />
+        {liveSource && <SourceBadge label={liveSource} color="#62d070" />}
       </div>
-      <div className="mb-3">
-        <div className="num-xl text-2xl sm:text-3xl">{primary.value}</div>
-        <div className="text-[11px] text-[var(--text-dim)] mt-0.5">{primary.label}</div>
+      {liveFollowers != null && (
+        <div className="mb-3 pb-3 border-b border-[var(--border)]">
+          <div className="num-xl text-2xl sm:text-3xl" style={{ color: p.color }}>{fmt(liveFollowers)}</div>
+          <div className="text-[10px] text-[var(--text-dim)] mt-0.5 uppercase tracking-wide mono">Total followers · live</div>
+        </div>
+      )}
+      <div className="space-y-2.5">
+        {metrics.map(m => (
+          <div key={m.label} className="flex items-center justify-between">
+            <span className="text-[11px] text-[var(--text-muted)]">{m.label}</span>
+            <span className={'text-xs font-semibold tabular-nums ' + (m.green ? 'text-[#62d070]' : '')}>{m.value}</span>
+          </div>
+        ))}
       </div>
-      <div className="grid grid-cols-2 gap-2 pt-3 border-t border-[var(--border)]">
-        <div>
-          <div className="text-xs sm:text-sm font-semibold">{secondary.value}</div>
-          <div className="text-[10px] uppercase tracking-wide text-[var(--text-dim)] mt-0.5 truncate">{secondary.label}</div>
-        </div>
-        <div>
-          <div className="text-xs sm:text-sm font-semibold">{tertiary.value}</div>
-          <div className="text-[10px] uppercase tracking-wide text-[var(--text-dim)] mt-0.5 truncate">{tertiary.label}</div>
-        </div>
+      <div className="mt-3 pt-2 border-t border-[var(--border)]">
+        <span className="mono text-[9px] text-[var(--text-dim)]">Apr 2026 · Excel verified</span>
       </div>
     </div>
   )
 }
 
-function PostCard({ post, isOwned, showCompetitor }) {
-  const p = PLATFORM[post.platform]
+// Pinterest-specific card — API provides impressions/saves/clicks but not trial/revenue
+function PinterestCard({ pin }) {
+  const p = PLATFORM.pinterest
+  const metrics = pin ? [
+    { label: 'Total followers', value: fmt(pin.profile?.follower_count) },
+    { label: '30d impressions', value: fmt(pin.summary?.impressions) },
+    { label: '30d saves', value: fmt(pin.summary?.saves) },
+    { label: 'Outbound clicks', value: fmt(pin.summary?.outbound_clicks) },
+    { label: 'Monthly views', value: fmt(pin.profile?.monthly_views) },
+  ] : []
+  return (
+    <div className={'card-strong p-4 sm:p-5 fade-up ' + p.glow} style={{ borderColor: p.color + '40' }}>
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-1.5">
+          <span className="text-xl">{p.glyph}</span>
+          <span className="text-sm font-bold">Pinterest</span>
+        </div>
+        {pin && <SourceBadge label="Pinterest API" color="#62d070" />}
+      </div>
+      {!pin && <div className="text-sm text-[var(--text-muted)]">Loading...</div>}
+      {pin && (
+        <>
+          <div className="space-y-2.5">
+            {metrics.map(m => (
+              <div key={m.label} className="flex items-center justify-between">
+                <span className="text-[11px] text-[var(--text-muted)]">{m.label}</span>
+                <span className="text-xs font-semibold tabular-nums">{m.value}</span>
+              </div>
+            ))}
+          </div>
+          <div className="mt-3 pt-2 border-t border-[var(--border)]">
+            <span className="mono text-[9px] text-[var(--text-dim)]">Live · Pinterest API v5</span>
+          </div>
+        </>
+      )}
+    </div>
+  )
+}
+
+// Known competitor display names
+const COMP_DISPLAY = {
+  'nurseinthemakingkristine': 'Nurse In The Making',
+  'kristine_nurseinthemaking': 'Nurse In The Making',
+  'registerednursern.com': 'RegisteredNurseRN',
+  'registerednursern_com': 'RegisteredNurseRN',
+  'yournursingeducator': 'Your Nursing Educator',
+  'archernursing': 'Archer Review',
+  'archernursingreview': 'Archer Review',
+  'uworldnclex': 'UWorld',
+  'uworld': 'UWorld',
+  'nclexbootcamp': 'NCLEX Bootcamp',
+  'nursingstudybyally': 'NursingStudyByAlly',
+}
+
+function PostCard({ post, isOwned }) {
+  const platform = post.platform || 'tiktok'
+  const p = PLATFORM[platform] || PLATFORM.tiktok
   const t = post.created_at || post.timestamp
   return (
     <a href={post.url} target="_blank" rel="noreferrer" className="block card overflow-hidden group hover:-translate-y-0.5 transition-all">
@@ -97,12 +155,8 @@ function PostCard({ post, isOwned, showCompetitor }) {
           <img src={post.thumbnail} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-all" referrerPolicy="no-referrer" />
         ) : <div className="w-full h-full flex items-center justify-center text-3xl opacity-30">{p.glyph}</div>}
         <div className="absolute top-2 left-2 right-2 flex items-start justify-between gap-1">
-          <span className="mono text-[9px] uppercase font-bold px-1.5 py-0.5 rounded text-white" style={{ background: p.color }}>{post.platform}</span>
-          {isOwned ? (
-            <span className="mono text-[9px] uppercase font-bold px-1.5 py-0.5 rounded bg-[#62d070] text-black">Ours</span>
-          ) : showCompetitor && (
-            <span className="mono text-[9px] uppercase font-bold px-1.5 py-0.5 rounded bg-[#fad74f] text-black">Watch</span>
-          )}
+          <span className="mono text-[9px] uppercase font-bold px-1.5 py-0.5 rounded text-white" style={{ background: p.color }}>{platform}</span>
+          {isOwned && <span className="mono text-[9px] uppercase font-bold px-1.5 py-0.5 rounded bg-[#62d070] text-black">Ours</span>}
         </div>
         <div className="absolute top-2 left-2 mt-7">
           <span className="text-[9px] mono px-1.5 py-0.5 rounded bg-black/80 text-white">{timeAgo(t)}</span>
@@ -135,24 +189,20 @@ export default function PulsePage() {
   const insights = useStaticData('insights')
   const meta = useStaticData('last-updated')
 
-  const ig_apr_reach = latestMonth(INSTAGRAM_2026.accounts_reached)
-  const ig_apr_trials = latestMonth(INSTAGRAM_2026.free_trials)
-  const fb_apr_views = latestMonth(FACEBOOK_2026.views)
-  const fb_apr_reach = latestMonth(FACEBOOK_2026.accounts_reached)
-  const fb_apr_trials = latestMonth(FACEBOOK_2026.free_trials)
-  const tt_apr_views = latestMonth(TIKTOK_2026.views)
-  const tt_apr_trials = latestMonth(TIKTOK_2026.free_trials)
+  const [activeComp, setActiveComp] = useState(0)
 
-  // SimpleNursing posts only — from filtered insights
+  const M = 3 // April 2026 index in Excel arrays
   const ourPosts = insights?.ours_top || []
-  // Competitor posts only
-  const competitorPosts = insights?.competitor_top || []
+  const competitorsByAccount = insights?.competitors_by_account || []
 
-  // Velocity metrics
-  const ourVelocity = useMemo(() => {
+  const ourQuickStats = useMemo(() => {
     if (!ourPosts.length) return null
-    const totalEng = ourPosts.reduce((s, p) => s + (p.score || 0), 0)
-    return totalEng / ourPosts.length
+    const sorted = [...ourPosts].sort((a, b) => new Date(b.created_at || b.timestamp || 0) - new Date(a.created_at || a.timestamp || 0))
+    return {
+      count: ourPosts.length,
+      bestViews: Math.max(...ourPosts.map(p => p.views || p.likes || 0)),
+      latest: timeAgo(sorted[0]?.created_at || sorted[0]?.timestamp),
+    }
   }, [ourPosts])
 
   return (
@@ -174,87 +224,58 @@ export default function PulsePage() {
           </p>
         </section>
 
-        {/* PLATFORM HEROES */}
+        {/* SECTION 1 — PLATFORM KPI CARDS */}
         <section>
           <div className="mb-4 sm:mb-5">
-            <div className="mono text-[10px] uppercase tracking-wider text-[var(--text-dim)] mb-1">01 · Live platform overview</div>
-            <h2 className="text-xl sm:text-2xl font-bold">Where we stand on each platform</h2>
+            <div className="mono text-[10px] uppercase tracking-wider text-[var(--text-dim)] mb-1">01 · platform performance</div>
+            <h2 className="text-xl sm:text-2xl font-bold">Key metrics per platform</h2>
+            <p className="text-xs sm:text-sm text-[var(--text-muted)] mt-1">Each platform operates independently — standalone snapshots, not cross-platform comparisons</p>
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-            <PlatformCard
-              platform="tiktok"
-              source={tt?.owned ? 'apify-live' : 'pending'}
-              primary={{ value: fmt(tt?.owned?.followers), label: 'Followers (live)' }}
-              secondary={{ value: fmt(tt_apr_views?.value), label: 'Apr views' }}
-              tertiary={{ value: fmtFull(tt_apr_trials?.value), label: 'Apr trials' }}
-            />
-            <PlatformCard
-              platform="instagram"
-              source={ig?.owned ? 'apify-live' : 'pending'}
-              primary={{ value: fmt(ig?.owned?.followers), label: 'Followers (live)' }}
-              secondary={{ value: fmt(ig_apr_reach?.value), label: 'Apr reach' }}
-              tertiary={{ value: fmtFull(ig_apr_trials?.value), label: 'Apr trials' }}
-            />
-            <PlatformCard
-              platform="facebook"
-              source="xlsx"
-              primary={{ value: fmt(fb_apr_views?.value), label: 'Apr views' }}
-              secondary={{ value: fmt(fb_apr_reach?.value), label: 'Apr reach' }}
-              tertiary={{ value: fmtFull(fb_apr_trials?.value), label: 'Apr trials' }}
-            />
-            <PlatformCard
-              platform="pinterest"
-              source={pin ? 'pinterest-api' : 'pending'}
-              primary={{ value: fmt(pin?.profile?.monthly_views), label: 'Monthly views' }}
-              secondary={{ value: fmt(pin?.summary?.impressions), label: '30d impressions' }}
-              tertiary={{ value: fmt(pin?.summary?.saves), label: '30d saves' }}
-            />
+            <PlatformCard platform="tiktok" liveFollowers={tt?.owned?.followers} liveSource={tt?.owned ? 'LIVE · Apify' : null} newFollowers={TIKTOK_2026.new_follows[M]} sessions={TIKTOK_2026.sessions_ga4[M]} freeTrials={TIKTOK_2026.free_trials[M]} ftcr={TIKTOK_2026.ftcr[M]} revenue={TIKTOK_2026.revenue_ga4[M]} />
+            <PlatformCard platform="instagram" liveFollowers={ig?.owned?.followers} liveSource={ig?.owned ? 'LIVE · Apify' : null} newFollowers={INSTAGRAM_2026.new_follows[M]} sessions={INSTAGRAM_2026.sessions[M]} freeTrials={INSTAGRAM_2026.free_trials[M]} ftcr={INSTAGRAM_2026.ftcr[M]} revenue={INSTAGRAM_2026.revenue_ga4[M]} />
+            <PlatformCard platform="facebook" liveFollowers={null} liveSource={null} newFollowers={FACEBOOK_2026.new_follows[M]} sessions={FACEBOOK_2026.sessions_ga4[M]} freeTrials={FACEBOOK_2026.free_trials[M]} ftcr={FACEBOOK_2026.ftcr[M]} revenue={FACEBOOK_2026.revenue_ga4[M]} />
+            <PinterestCard pin={pin} />
           </div>
         </section>
 
-        {/* SECTION 2 — OUR RECENT WORK (ONLY SIMPLENURSING) */}
+        {/* SECTION 2 — OUR RECENT POSTS */}
         <section>
           <div className="flex items-end justify-between mb-4 sm:mb-5 flex-wrap gap-2">
             <div>
               <div className="mono text-[10px] uppercase tracking-wider text-[#62d070] mb-1">02 · @simplenursing only</div>
               <h2 className="text-xl sm:text-2xl font-bold">Our recent posts — what we put out</h2>
-              <p className="text-xs sm:text-sm text-[var(--text-muted)] mt-1">{ourPosts.length} posts in the last 30 days · ranked by velocity (engagement/hour)</p>
+              <p className="text-xs sm:text-sm text-[var(--text-muted)] mt-1">{ourPosts.length} posts in the last 30 days · ranked by velocity</p>
             </div>
-            <div className="flex items-center gap-2">
-              <SourceTag source="apify-live" />
-            </div>
+            <SourceBadge label="LIVE · Apify" color="#62d070" />
           </div>
 
           {ourPosts.length === 0 && (
             <div className="card-strong p-8 text-center">
-              <div className="text-sm text-[var(--text-muted)]">No SimpleNursing posts found in the last 30 days from the live scrape.</div>
-              <div className="text-xs text-[var(--text-dim)] mt-2">Hourly refresh will pick up new posts as they go live.</div>
+              <div className="text-sm text-[var(--text-muted)]">No SimpleNursing posts found in the last 30 days.</div>
+              <div className="text-xs text-[var(--text-dim)] mt-2">Hourly refresh will populate this after the next run.</div>
             </div>
           )}
 
           {ourPosts.length > 0 && (
             <>
-              {/* Our quick stats */}
               <div className="grid grid-cols-3 gap-3 mb-4">
                 <div className="card p-3 sm:p-4">
                   <div className="text-[10px] uppercase tracking-wider text-[var(--text-dim)] mb-1">Posts last 30d</div>
-                  <div className="num-xl text-xl sm:text-2xl">{ourPosts.length}</div>
+                  <div className="num-xl text-xl sm:text-2xl">{ourQuickStats?.count}</div>
                 </div>
                 <div className="card p-3 sm:p-4">
                   <div className="text-[10px] uppercase tracking-wider text-[var(--text-dim)] mb-1">Best post</div>
-                  <div className="num-xl text-xl sm:text-2xl">{fmt(ourPosts[0]?.views || ourPosts[0]?.likes)}</div>
+                  <div className="num-xl text-xl sm:text-2xl">{fmt(ourQuickStats?.bestViews)}</div>
+                  <div className="text-[9px] text-[var(--text-dim)] mt-0.5">views</div>
                 </div>
                 <div className="card p-3 sm:p-4">
                   <div className="text-[10px] uppercase tracking-wider text-[var(--text-dim)] mb-1">Latest post</div>
-                  <div className="num-xl text-base sm:text-xl">{(() => {
-                    const sorted = ourPosts.slice().sort((a, b) => new Date(b.created_at || b.timestamp || 0) - new Date(a.created_at || a.timestamp || 0))
-                    return timeAgo(sorted[0]?.created_at || sorted[0]?.timestamp)
-                  })()}</div>
+                  <div className="num-xl text-base sm:text-xl">{ourQuickStats?.latest}</div>
                 </div>
               </div>
-
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-                {ourPosts.slice(0, 8).map((p, i) => <PostCard key={i} post={p} isOwned={true} />)}
+                {ourPosts.slice(0, 20).map((p, i) => <PostCard key={p.id || i} post={p} isOwned={true} />)}
               </div>
             </>
           )}
@@ -266,15 +287,48 @@ export default function PulsePage() {
             <div>
               <div className="mono text-[10px] uppercase tracking-wider text-[#fad74f] mb-1">03 · competitor watch</div>
               <h2 className="text-xl sm:text-2xl font-bold">What the competition is doing</h2>
-              <p className="text-xs sm:text-sm text-[var(--text-muted)] mt-1">{competitorPosts.length} competitor posts in the last 30 days · ranked by velocity · totally separate from our content</p>
+              <p className="text-xs sm:text-sm text-[var(--text-muted)] mt-1">{competitorsByAccount.length} accounts tracked · top 10 posts per account · ranked by velocity</p>
             </div>
-            <SourceTag source="apify-live" />
+            <SourceBadge label="LIVE · Apify" color="#fad74f" />
           </div>
 
-          {competitorPosts.length > 0 && (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-              {competitorPosts.slice(0, 8).map((p, i) => <PostCard key={i} post={p} isOwned={false} showCompetitor={true} />)}
+          {competitorsByAccount.length === 0 && (
+            <div className="card-strong p-8 text-center">
+              <div className="text-sm text-[var(--text-muted)]">No competitor data yet.</div>
+              <div className="text-xs text-[var(--text-dim)] mt-2">Hourly refresh will populate this after the next run.</div>
             </div>
+          )}
+
+          {competitorsByAccount.length > 0 && (
+            <>
+              <div className="flex flex-wrap gap-2 mb-4">
+                {competitorsByAccount.map((c, i) => {
+                  const name = COMP_DISPLAY[c.handle] || c.handle
+                  return (
+                    <button key={c.handle} onClick={() => setActiveComp(i)}
+                      className={'text-xs px-3 py-1.5 rounded-full border transition-all ' + (activeComp === i ? 'bg-[#fad74f] text-black border-[#fad74f] font-semibold' : 'border-[var(--border)] text-[var(--text-muted)] hover:border-[#fad74f]/50')}>
+                      {name}<span className="ml-1.5 opacity-60">{c.top_posts?.length || 0}</span>
+                    </button>
+                  )
+                })}
+              </div>
+              {(() => {
+                const c = competitorsByAccount[activeComp]
+                if (!c) return null
+                const name = COMP_DISPLAY[c.handle] || c.handle
+                return (
+                  <div>
+                    <div className="flex items-center gap-3 mb-3">
+                      <span className="text-sm font-semibold">{name}</span>
+                      {c.followers != null && <span className="mono text-[10px] text-[var(--text-dim)]">{fmtFull(c.followers)} followers</span>}
+                    </div>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                      {(c.top_posts || []).map((p, idx) => <PostCard key={p.id || idx} post={p} isOwned={false} />)}
+                    </div>
+                  </div>
+                )
+              })()}
+            </>
           )}
         </section>
 
@@ -315,8 +369,8 @@ export default function PulsePage() {
           <section>
             <div className="mb-4 sm:mb-5">
               <div className="mono text-[10px] uppercase tracking-wider text-[var(--text-dim)] mb-1">05 · last-30-day topic intelligence</div>
-              <h2 className="text-xl sm:text-2xl font-bold">What's winning in nursing content this month</h2>
-              <p className="text-xs sm:text-sm text-[var(--text-muted)] mt-1">Auto-clustered from live captions · combined ours + competitors</p>
+              <h2 className="text-xl sm:text-2xl font-bold">Trending Topics &amp; Areas This Month</h2>
+              <p className="text-xs sm:text-sm text-[var(--text-muted)] mt-1">Auto-clustered from broad nursing niche captions · ours + competitors + trending accounts</p>
             </div>
             <div className="card-strong p-5">
               <div className="space-y-3">
@@ -358,16 +412,16 @@ export default function PulsePage() {
               </thead>
               <tbody className="divide-y divide-[var(--border)]/50">
                 <tr>
-                  <td className="px-3 sm:px-5 py-3">Apr 2026 views</td>
-                  <td className="px-3 sm:px-5 py-3 text-right font-semibold">{fmtFull(TIKTOK_2026.views[3])}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right font-semibold">{fmtFull(INSTAGRAM_2026.total_views[3])}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right font-semibold">{fmtFull(FACEBOOK_2026.views[3])}</td>
+                  <td className="px-3 sm:px-5 py-3 font-medium">Apr new followers</td>
+                  <td className="px-3 sm:px-5 py-3 text-right font-semibold">{fmtFull(TIKTOK_2026.new_follows[M])}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right font-semibold">{fmtFull(INSTAGRAM_2026.new_follows[M])}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right font-semibold">{fmtFull(FACEBOOK_2026.new_follows[M])}</td>
                 </tr>
                 <tr>
-                  <td className="px-3 sm:px-5 py-3">Apr new follows</td>
-                  <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(TIKTOK_2026.new_follows[3])}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(INSTAGRAM_2026.new_follows[3])}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(FACEBOOK_2026.new_follows[3])}</td>
+                  <td className="px-3 sm:px-5 py-3">Apr views</td>
+                  <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(TIKTOK_2026.views[M])}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(INSTAGRAM_2026.total_views[M])}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(FACEBOOK_2026.views[M])}</td>
                 </tr>
                 <tr>
                   <td className="px-3 sm:px-5 py-3">Apr free trials</td>
