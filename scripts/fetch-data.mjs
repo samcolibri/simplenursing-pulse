@@ -14,6 +14,7 @@
  */
 import fs from 'node:fs/promises'
 import path from 'node:path'
+import { syncLiveStats, syncOurPosts, syncCompetitorPosts, syncYouTubeVideos, syncTrendingTopics, logFetchRun } from '../lib/airtable-sync.mjs'
 
 const ROOT = path.resolve(import.meta.dirname, '..')
 const DATA_DIR = path.join(ROOT, 'public', 'data')
@@ -21,6 +22,7 @@ const DATA_DIR = path.join(ROOT, 'public', 'data')
 const APIFY = process.env.APIFY_TOKEN
 const PINTEREST = process.env.PINTEREST_ACCESS_TOKEN
 const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY
+const AT_KEY = process.env.AIRTABLE_API_KEY
 
 const APIFY_BASE = 'https://api.apify.com/v2'
 const PINTEREST_BASE = 'https://api.pinterest.com/v5'
@@ -498,6 +500,31 @@ async function buildInsights(tt, ig, ttTrends, igHashtags) {
   }
 }
 
+// ─── Airtable brain sync ──────────────────────────────────────────────────────
+async function syncAirtable(ds, ins, res) {
+  if (!AT_KEY) { warn('Skipping Airtable sync — no key'); return }
+  log('Airtable sync…')
+  try {
+    const ls = []
+    if (ds.tiktok?.owned) ls.push({ Platform: 'TikTok', Followers: ds.tiktok.owned.followers||0, 'Updated At': new Date().toISOString(), Source: 'Apify' })
+    if (ds.instagram?.owned) ls.push({ Platform: 'Instagram', Followers: ds.instagram.owned.followers||0, 'Updated At': new Date().toISOString(), Source: 'Apify' })
+    if (ls.length) await syncLiveStats(AT_KEY, ls)
+    if (ins?.ours_top?.length) await syncOurPosts(AT_KEY, ins.ours_top)
+    if (ins?.competitors_by_account?.length) await syncCompetitorPosts(AT_KEY, ins.competitors_by_account)
+    if (ds.youtube?.videos?.length) await syncYouTubeVideos(AT_KEY, ds.youtube.videos)
+    if (ins?.topics?.length) await syncTrendingTopics(AT_KEY, ins.topics)
+    const okK = Object.keys(res.platforms).filter(k => res.platforms[k].ok)
+    const failK = Object.keys(res.platforms).filter(k => !res.platforms[k].ok)
+    await logFetchRun(AT_KEY, {
+      ok: !failK.length, platformsOk: okK.join(', '), platformsFailed: failK.join(', '),
+      ourPosts: ins?.ours_top?.length || 0,
+      compPosts: (ins?.competitors_by_account||[]).reduce((s,c)=>s+(c.top_posts?.length||0),0),
+      ytVideos: ds.youtube?.videos?.length || 0, topics: ins?.topics?.length || 0,
+    })
+    log('Airtable sync done.')
+  } catch (e) { err('Airtable sync failed:', e.message) }
+}
+
 // ─── Main ─────────────────────────────────────────────────────────────────────
 async function main() {
   await fs.mkdir(DATA_DIR, { recursive: true })
@@ -530,13 +557,15 @@ async function main() {
   }
 
   // Build insights from live data
+  let insights = null
   if (datasets.tiktok && datasets.instagram) {
-    const insights = await buildInsights(datasets.tiktok, datasets.instagram, datasets.tiktok_trends, datasets.ig_hashtags)
+    insights = await buildInsights(datasets.tiktok, datasets.instagram, datasets.tiktok_trends, datasets.ig_hashtags)
     await writeJSON('insights', insights)
     results.platforms.insights = { ok: true, viral_posts: insights.top_viral.length, topics: insights.topics.length }
   }
 
   await writeJSON('last-updated', results)
+  await syncAirtable(datasets, insights, results)
   log('done.')
 }
 

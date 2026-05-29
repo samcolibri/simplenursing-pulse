@@ -32,6 +32,7 @@ jobs:
           IG_BUSINESS_ACCOUNT_ID: ${{ secrets.IG_BUSINESS_ACCOUNT_ID }}
           META_PAGE_ID: ${{ secrets.META_PAGE_ID }}
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
         run: node scripts/fetch-data.mjs
 
       - name: Commit refreshed JSON
