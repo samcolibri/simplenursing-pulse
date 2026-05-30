@@ -1,14 +1,16 @@
 {
-  "fetched_at": "2026-05-30T12:10:46.560Z",
+  "fetched_at": "2026-05-30T14:45:17.479Z",
   "platforms": {
     "pinterest": {
       "ok": true
     },
     "tiktok": {
-      "ok": true
+      "ok": false,
+      "reason": "Apify start 403: {\n  \"error\": {\n    \"type\": \"platform-feature-disabled\",\n    \"message\": \"Monthly usage hard limit exceeded\"\n  }\n}"
     },
     "instagram": {
-      "ok": true
+      "ok": false,
+      "reason": "Apify start 403: {\n  \"error\": {\n    \"type\": \"platform-feature-disabled\",\n    \"message\": \"Monthly usage hard limit exceeded\"\n  }\n}"
     },
     "tiktok_trends": {
       "ok": true
@@ -18,11 +20,6 @@
     },
     "youtube": {
       "ok": true
-    },
-    "insights": {
-      "ok": true,
-      "viral_posts": 12,
-      "topics": 7
     }
   }
 }
