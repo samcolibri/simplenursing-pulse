@@ -1,8 +1,9 @@
 {
-  "fetched_at": "2026-05-30T16:11:49.008Z",
+  "fetched_at": "2026-05-30T18:10:22.392Z",
   "platforms": {
     "pinterest": {
-      "ok": true
+      "ok": false,
+      "reason": "Pinterest 401: {\"code\":2,\"message\":\"Authentication failed.\",\"status\":\"failure\"}"
     },
     "tiktok": {
       "ok": false,
