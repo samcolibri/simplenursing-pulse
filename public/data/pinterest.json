@@ -4,15 +4,15 @@
     "account_type": "BUSINESS",
     "monthly_views": 148662,
     "follower_count": 751,
-    "pin_count": 1658,
+    "pin_count": 1660,
     "board_count": 7,
     "profile_image": "https://i.pinimg.com/600x600_R/5b/fe/f3/5bfef39423ce02d51e4ad088eff66cd8.jpg"
   },
   "summary": {
-    "impressions": 138945,
-    "pin_clicks": 8836,
-    "saves": 669,
-    "outbound_clicks": 67,
+    "impressions": 143530,
+    "pin_clicks": 9136,
+    "saves": 724,
+    "outbound_clicks": 71,
     "period": "2026-04-30 → 2026-05-29"
   },
   "daily": [
@@ -20,290 +20,290 @@
       "date": "2026-04-30",
       "data_status": "READY",
       "metrics": {
-        "SAVE": 32,
-        "IMPRESSION": 4964,
+        "PIN_CLICK": 330,
         "OUTBOUND_CLICK": 2,
-        "PIN_CLICK": 330
+        "SAVE": 32,
+        "IMPRESSION": 4964
       }
     },
     {
       "date": "2026-05-01",
       "data_status": "READY",
       "metrics": {
-        "SAVE": 13,
-        "IMPRESSION": 4483,
+        "PIN_CLICK": 288,
         "OUTBOUND_CLICK": 3,
-        "PIN_CLICK": 288
+        "SAVE": 13,
+        "IMPRESSION": 4483
       }
     },
     {
       "date": "2026-05-02",
       "data_status": "READY",
       "metrics": {
-        "SAVE": 23,
-        "IMPRESSION": 4256,
+        "PIN_CLICK": 296,
         "OUTBOUND_CLICK": 1,
-        "PIN_CLICK": 296
+        "SAVE": 23,
+        "IMPRESSION": 4256
       }
     },
     {
       "date": "2026-05-03",
       "data_status": "READY",
       "metrics": {
-        "SAVE": 20,
-        "IMPRESSION": 4410,
+        "PIN_CLICK": 304,
         "OUTBOUND_CLICK": 3,
-        "PIN_CLICK": 304
+        "SAVE": 20,
+        "IMPRESSION": 4410
       }
     },
     {
       "date": "2026-05-04",
       "data_status": "READY",
       "metrics": {
-        "SAVE": 14,
-        "IMPRESSION": 5027,
+        "PIN_CLICK": 303,
         "OUTBOUND_CLICK": 1,
-        "PIN_CLICK": 303
+        "SAVE": 14,
+        "IMPRESSION": 5027
       }
     },
     {
       "date": "2026-05-05",
       "data_status": "READY",
       "metrics": {
-        "SAVE": 30,
-        "IMPRESSION": 5538,
+        "PIN_CLICK": 378,
         "OUTBOUND_CLICK": 1,
-        "PIN_CLICK": 378
+        "SAVE": 30,
+        "IMPRESSION": 5538
       }
     },
     {
       "date": "2026-05-06",
       "data_status": "READY",
       "metrics": {
-        "SAVE": 32,
-        "IMPRESSION": 5644,
+        "PIN_CLICK": 355,
         "OUTBOUND_CLICK": 1,
-        "PIN_CLICK": 355
+        "SAVE": 32,
+        "IMPRESSION": 5644
       }
     },
     {
       "date": "2026-05-07",
       "data_status": "READY",
       "metrics": {
-        "SAVE": 29,
-        "IMPRESSION": 5739,
+        "PIN_CLICK": 357,
         "OUTBOUND_CLICK": 3,
-        "PIN_CLICK": 357
+        "SAVE": 29,
+        "IMPRESSION": 5739
       }
     },
     {
       "date": "2026-05-08",
       "data_status": "READY",
       "metrics": {
-        "SAVE": 26,
-        "IMPRESSION": 5587,
+        "PIN_CLICK": 368,
         "OUTBOUND_CLICK": 3,
-        "PIN_CLICK": 368
+        "SAVE": 26,
+        "IMPRESSION": 5587
       }
     },
     {
       "date": "2026-05-09",
       "data_status": "READY",
       "metrics": {
-        "SAVE": 27,
-        "IMPRESSION": 5080,
+        "PIN_CLICK": 356,
         "OUTBOUND_CLICK": 0,
-        "PIN_CLICK": 356
+        "SAVE": 27,
+        "IMPRESSION": 5080
       }
     },
     {
       "date": "2026-05-10",
       "data_status": "READY",
       "metrics": {
-        "SAVE": 37,
-        "IMPRESSION": 4751,
+        "PIN_CLICK": 351,
         "OUTBOUND_CLICK": 3,
-        "PIN_CLICK": 351
+        "SAVE": 37,
+        "IMPRESSION": 4751
       }
     },
     {
       "date": "2026-05-11",
       "data_status": "READY",
       "metrics": {
-        "SAVE": 23,
-        "IMPRESSION": 5784,
+        "PIN_CLICK": 348,
         "OUTBOUND_CLICK": 2,
-        "PIN_CLICK": 348
+        "SAVE": 23,
+        "IMPRESSION": 5784
       }
     },
     {
       "date": "2026-05-12",
       "data_status": "READY",
       "metrics": {
-        "SAVE": 34,
-        "IMPRESSION": 6716,
+        "PIN_CLICK": 376,
         "OUTBOUND_CLICK": 2,
-        "PIN_CLICK": 376
+        "SAVE": 34,
+        "IMPRESSION": 6716
       }
     },
     {
       "date": "2026-05-13",
       "data_status": "READY",
       "metrics": {
-        "SAVE": 28,
-        "IMPRESSION": 6104,
+        "PIN_CLICK": 339,
         "OUTBOUND_CLICK": 3,
-        "PIN_CLICK": 339
+        "SAVE": 28,
+        "IMPRESSION": 6104
       }
     },
     {
       "date": "2026-05-14",
       "data_status": "READY",
       "metrics": {
-        "SAVE": 40,
-        "IMPRESSION": 6225,
+        "PIN_CLICK": 371,
         "OUTBOUND_CLICK": 2,
-        "PIN_CLICK": 371
+        "SAVE": 40,
+        "IMPRESSION": 6225
       }
     },
     {
       "date": "2026-05-15",
       "data_status": "READY",
       "metrics": {
-        "SAVE": 17,
-        "IMPRESSION": 4864,
+        "PIN_CLICK": 270,
         "OUTBOUND_CLICK": 2,
-        "PIN_CLICK": 270
+        "SAVE": 17,
+        "IMPRESSION": 4864
       }
     },
     {
       "date": "2026-05-16",
       "data_status": "READY",
       "metrics": {
-        "SAVE": 24,
-        "IMPRESSION": 4228,
+        "PIN_CLICK": 260,
         "OUTBOUND_CLICK": 0,
-        "PIN_CLICK": 260
+        "SAVE": 24,
+        "IMPRESSION": 4228
       }
     },
     {
       "date": "2026-05-17",
       "data_status": "READY",
       "metrics": {
-        "SAVE": 21,
-        "IMPRESSION": 4478,
+        "PIN_CLICK": 370,
         "OUTBOUND_CLICK": 2,
-        "PIN_CLICK": 370
+        "SAVE": 21,
+        "IMPRESSION": 4478
       }
     },
     {
       "date": "2026-05-18",
       "data_status": "READY",
       "metrics": {
-        "SAVE": 16,
-        "IMPRESSION": 4446,
+        "PIN_CLICK": 287,
         "OUTBOUND_CLICK": 1,
-        "PIN_CLICK": 287
+        "SAVE": 16,
+        "IMPRESSION": 4446
       }
     },
     {
       "date": "2026-05-19",
       "data_status": "READY",
       "metrics": {
-        "SAVE": 23,
-        "IMPRESSION": 4816,
+        "PIN_CLICK": 311,
         "OUTBOUND_CLICK": 5,
-        "PIN_CLICK": 311
+        "SAVE": 23,
+        "IMPRESSION": 4816
       }
     },
     {
       "date": "2026-05-20",
       "data_status": "READY",
       "metrics": {
-        "SAVE": 23,
-        "IMPRESSION": 4692,
+        "PIN_CLICK": 259,
         "OUTBOUND_CLICK": 2,
-        "PIN_CLICK": 259
+        "SAVE": 23,
+        "IMPRESSION": 4692
       }
     },
     {
       "date": "2026-05-21",
       "data_status": "READY",
       "metrics": {
-        "SAVE": 27,
-        "IMPRESSION": 4914,
+        "PIN_CLICK": 305,
         "OUTBOUND_CLICK": 5,
-        "PIN_CLICK": 305
+        "SAVE": 27,
+        "IMPRESSION": 4914
       }
     },
     {
       "date": "2026-05-22",
       "data_status": "READY",
       "metrics": {
-        "SAVE": 18,
-        "IMPRESSION": 4631,
+        "PIN_CLICK": 342,
         "OUTBOUND_CLICK": 6,
-        "PIN_CLICK": 342
+        "SAVE": 18,
+        "IMPRESSION": 4631
       }
     },
     {
       "date": "2026-05-23",
       "data_status": "READY",
       "metrics": {
-        "SAVE": 20,
-        "IMPRESSION": 4125,
+        "PIN_CLICK": 252,
         "OUTBOUND_CLICK": 0,
-        "PIN_CLICK": 252
+        "SAVE": 20,
+        "IMPRESSION": 4125
       }
     },
     {
       "date": "2026-05-24",
       "data_status": "READY",
       "metrics": {
-        "SAVE": 19,
-        "IMPRESSION": 3833,
+        "PIN_CLICK": 270,
         "OUTBOUND_CLICK": 3,
-        "PIN_CLICK": 270
+        "SAVE": 19,
+        "IMPRESSION": 3833
       }
     },
     {
       "date": "2026-05-25",
       "data_status": "READY",
       "metrics": {
-        "SAVE": 14,
-        "IMPRESSION": 4656,
+        "PIN_CLICK": 276,
         "OUTBOUND_CLICK": 9,
-        "PIN_CLICK": 276
+        "SAVE": 14,
+        "IMPRESSION": 4656
       }
     },
     {
       "date": "2026-05-26",
       "data_status": "READY",
       "metrics": {
-        "SAVE": 21,
-        "IMPRESSION": 4434,
+        "PIN_CLICK": 271,
         "OUTBOUND_CLICK": 0,
-        "PIN_CLICK": 271
+        "SAVE": 21,
+        "IMPRESSION": 4434
       }
     },
     {
       "date": "2026-05-27",
       "data_status": "READY",
       "metrics": {
-        "SAVE": 18,
-        "IMPRESSION": 4520,
+        "PIN_CLICK": 243,
         "OUTBOUND_CLICK": 2,
-        "PIN_CLICK": 243
+        "SAVE": 18,
+        "IMPRESSION": 4520
       }
     },
     {
       "date": "2026-05-28",
-      "data_status": "PROCESSING",
+      "data_status": "READY",
       "metrics": {
-        "IMPRESSION": 0,
-        "OUTBOUND_CLICK": 0,
-        "PIN_CLICK": 0,
-        "SAVE": 0
+        "PIN_CLICK": 300,
+        "OUTBOUND_CLICK": 4,
+        "SAVE": 55,
+        "IMPRESSION": 4585
       }
     },
     {
@@ -361,10 +361,10 @@
     {
       "id": "881298289520728453",
       "name": "Quick Saves",
-      "pin_count": 1413,
+      "pin_count": 1415,
       "follower_count": 750,
       "image": "https://i.pinimg.com/400x300/be/ae/fa/beaefa0fe91925eeec878c1a88330828.jpg",
-      "modified_at": "2026-05-29T06:31:01.778000"
+      "modified_at": "2026-05-30T06:29:40.417000"
     },
     {
       "id": "881298289521014242",
@@ -376,6 +376,26 @@
     }
   ],
   "pins": [
+    {
+      "id": "881298220854676634",
+      "title": "",
+      "description": "In this sneak peek, we go deeper into heart failure; helping you understand what to watch for and how to respond in real patient scenarios.\n\nDon’t miss:\n📈 Worsening signs = rapid weight gain, increas",
+      "link": "https://www.instagram.com/reel/DY7cQmMgF8p/",
+      "board_id": "881298289520728453",
+      "media_type": "video",
+      "thumbnail": "https://i.pinimg.com/400x300/a2/7e/63/a27e63c8ac0679f800959b3cad655c8e.jpg",
+      "created_at": "2026-05-30T06:29:32"
+    },
+    {
+      "id": "881298220854676604",
+      "title": "",
+      "description": "Chatting with students - what's the reality of nursing school? \n\nWant to learn more about nursing? Head to our bio! \n.\n.\n.\n#nursing #oncampus #nursingschool #nclex",
+      "link": "https://www.instagram.com/reel/DY7od_0CWm1/",
+      "board_id": "881298289520728453",
+      "media_type": "video",
+      "thumbnail": "https://i.pinimg.com/400x300/af/75/d5/af75d5d5507d9b4f49cc457750fe2268.jpg",
+      "created_at": "2026-05-30T06:27:07"
+    },
     {
       "id": "881298220854668338",
       "title": "Title: Every Critical Lab. One Card.",
@@ -605,27 +625,7 @@
       "media_type": "video",
       "thumbnail": "https://i.pinimg.com/400x300/77/64/0f/77640fd1c54ac17324d7746abf851444.jpg",
       "created_at": "2026-05-22T06:31:45"
-    },
-    {
-      "id": "881298220854413330",
-      "title": "",
-      "description": "Patient safety always comes first. 🩺\n\nEven if it means over communicating. Even if it means asking “too many” questions. \n\nHaley, an Or nurse and founder of @eight.ten.twelve talks about advocating f",
-      "link": "https://www.instagram.com/reel/DYnkRuZkxs0/",
-      "board_id": "881298289520728453",
-      "media_type": "video",
-      "thumbnail": "https://i.pinimg.com/400x300/fc/f6/f7/fcf6f7d07c10068d2397ed5128e4c5d4.jpg",
-      "created_at": "2026-05-22T06:26:36"
-    },
-    {
-      "id": "881298220854399660",
-      "title": "8-Week NCLEX Study Plan",
-      "description": "Save this daily NCLEX schedule built for NGN prep. Follow the 8-week plan with content review, question practice, and final simulation days so you know exactly what to study next. Perfect for nursing ",
-      "link": "https://simplenursing.com/?utm_source=pinterest&utm_campaign=aicreatives",
-      "board_id": "881298289521014237",
-      "media_type": "image",
-      "thumbnail": "https://i.pinimg.com/400x300/94/fc/c2/94fcc2283c4202058b153ac8b9cda90f.jpg",
-      "created_at": "2026-05-21T19:01:21"
     }
   ],
-  "fetched_at": "2026-05-30T04:11:50.253Z"
+  "fetched_at": "2026-05-30T07:46:54.165Z"
 }
