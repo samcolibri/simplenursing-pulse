@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-06-03T05:05:18.051Z",
+  "fetched_at": "2026-06-03T11:20:32.871Z",
   "platforms": {
     "pinterest": {
       "ok": false,
@@ -7,11 +7,11 @@
     },
     "tiktok": {
       "ok": false,
-      "reason": "fetch failed"
+      "reason": "Apify start 403: {\n  \"error\": {\n    \"type\": \"platform-feature-disabled\",\n    \"message\": \"Monthly usage hard limit exceeded\"\n  }\n}"
     },
     "instagram": {
       "ok": false,
-      "reason": "fetch failed"
+      "reason": "Apify start 403: {\n  \"error\": {\n    \"type\": \"platform-feature-disabled\",\n    \"message\": \"Monthly usage hard limit exceeded\"\n  }\n}"
     },
     "tiktok_trends": {
       "ok": true
