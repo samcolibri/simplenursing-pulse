@@ -1,14 +1,8 @@
 'use client'
 import { useEffect, useMemo, useState } from 'react'
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
-import {
-  INSTAGRAM_2026, FACEBOOK_2026, TIKTOK_2026,
-} from '@/lib/excel-data'
-
 const fmt = (n) => n == null ? '—' : new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 }).format(n)
 const fmtFull = (n) => n == null ? '—' : Number(n).toLocaleString()
-const fmtPct = (n) => n == null ? '—' : (n * 100).toFixed(1) + '%'
-const fmtMoney = (n) => n == null ? '—' : '$' + Number(n).toLocaleString(undefined, { maximumFractionDigits: 0 })
 const ymd = (iso) => !iso ? '' : String(iso).slice(0, 10)
 const fmtDate = (iso) => {
   const d = ymd(iso)
@@ -92,7 +86,7 @@ function SourceBadge({ label, color }) {
   )
 }
 
-function PlatformCard({ platform, liveFollowers, liveSource, posts, topPost, excelFallback }) {
+function PlatformCard({ platform, liveFollowers, liveSource, posts, topPost }) {
   const p = PLATFORM[platform]
   const totalViews = posts.reduce((s, x) => s + (x.views || x.video_views || x.likes || 0), 0)
   const avgViews = posts.length ? totalViews / posts.length : 0
@@ -128,12 +122,7 @@ function PlatformCard({ platform, liveFollowers, liveSource, posts, topPost, exc
           <span className="text-[11px] text-[var(--text-muted)]">Top post</span>
           <span className="text-xs font-semibold tabular-nums" style={{ color: p.color }}>{topPost ? fmt(topPost.views || topPost.likes || 0) : '—'}</span>
         </div>
-        {excelFallback && (
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] text-[var(--text-muted)]">{excelFallback.label}</span>
-            <span className="text-xs font-semibold tabular-nums text-[#62d070]">{excelFallback.value}</span>
-          </div>
-        )}
+
       </div>
       <div className="mt-3 pt-2 border-t border-[var(--border)]">
         <span className="mono text-[9px] text-[var(--text-dim)]">
@@ -256,22 +245,6 @@ function nextMondayLabel() {
   return fmtDate(next.toISOString())
 }
 
-const MONTHS_FULL = ['January','February','March','April','May','June','July','August','September','October','November','December']
-
-function excelRowForRange(EXCEL, from, to) {
-  if (!from || !to) return null
-  if (from.slice(0, 7) !== to.slice(0, 7)) return null
-  const monthIdx = Number(from.slice(5, 7)) - 1
-  if (monthIdx < 0 || monthIdx > 11) return null
-  const newFollows = EXCEL.new_follows?.[monthIdx]
-  const sessions  = EXCEL.sessions_ga4?.[monthIdx] ?? EXCEL.sessions?.[monthIdx]
-  const freeTrials = EXCEL.free_trials?.[monthIdx]
-  const ftcr = EXCEL.ftcr?.[monthIdx]
-  const revenue = EXCEL.revenue_ga4?.[monthIdx]
-  if (newFollows == null && sessions == null && freeTrials == null && revenue == null) return null
-  return { newFollows, sessions, freeTrials, ftcr, revenue, month: monthIdx }
-}
-
 export default function PulsePage() {
   const tt = useStaticData('tiktok')
   const ig = useStaticData('instagram')
@@ -332,10 +305,6 @@ export default function PulsePage() {
   const igTop = igOurs[0]
   const fbOurs = []
   const fbTop = null
-
-  const ttExcel = excelRowForRange(TIKTOK_2026, dateFrom, dateTo)
-  const igExcel = excelRowForRange(INSTAGRAM_2026, dateFrom, dateTo)
-  const fbExcel = excelRowForRange(FACEBOOK_2026, dateFrom, dateTo)
 
   const applyPreset = (preset) => {
     const today = new Date()
@@ -428,7 +397,7 @@ export default function PulsePage() {
           <div className="mb-4 sm:mb-5">
             <div className="mono text-[10px] uppercase tracking-wider text-[var(--text-dim)] mb-1">01 · platform performance · in selected range</div>
             <h2 className="text-xl sm:text-2xl font-bold">Key metrics per platform</h2>
-            <p className="text-xs sm:text-sm text-[var(--text-muted)] mt-1">All four cards reflect {rangeLabel}. Excel-verified GA4 stats overlay only when the range is exactly one verified month.</p>
+            <p className="text-xs sm:text-sm text-[var(--text-muted)] mt-1">All four cards reflect {rangeLabel} · 100% live from APIs.</p>
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             <PlatformCard
@@ -437,7 +406,6 @@ export default function PulsePage() {
               liveSource={tt?.owned ? 'LIVE · Apify' : null}
               posts={ttOurs}
               topPost={ttTop}
-              excelFallback={ttExcel ? { label: `GA4 revenue (${MONTHS_FULL[ttExcel.month]})`, value: fmtMoney(ttExcel.revenue) } : null}
             />
             <PlatformCard
               platform="instagram"
@@ -445,7 +413,6 @@ export default function PulsePage() {
               liveSource={ig?.owned ? 'LIVE · Apify' : null}
               posts={igOurs}
               topPost={igTop}
-              excelFallback={igExcel ? { label: `GA4 revenue (${MONTHS_FULL[igExcel.month]})`, value: fmtMoney(igExcel.revenue) } : null}
             />
             <PlatformCard
               platform="facebook"
@@ -453,7 +420,6 @@ export default function PulsePage() {
               liveSource={null}
               posts={fbOurs}
               topPost={fbTop}
-              excelFallback={fbExcel ? { label: `GA4 revenue (${MONTHS_FULL[fbExcel.month]})`, value: fmtMoney(fbExcel.revenue) } : null}
             />
             <PinterestCard pin={pin} from={dateFrom} to={dateTo} />
           </div>
@@ -638,10 +604,10 @@ export default function PulsePage() {
 
         <section>
           <div className="mb-4 sm:mb-5">
-            <div className="mono text-[10px] uppercase tracking-wider text-[#75c7e6] mb-1">07 · business funnel snapshot</div>
-            <h2 className="text-xl sm:text-2xl font-bold">Performance + revenue snapshot</h2>
+            <div className="mono text-[10px] uppercase tracking-wider text-[#75c7e6] mb-1">07 · post performance snapshot</div>
+            <h2 className="text-xl sm:text-2xl font-bold">Cross-platform performance</h2>
             <p className="text-xs sm:text-sm text-[var(--text-muted)] mt-1">
-              {rangeLabel}. Live columns (posts, views) come from the scrape · GA4 revenue overlays when the range matches a verified month.
+              All live · {rangeLabel}. Every number scraped or fetched this week — no spreadsheet.
             </p>
           </div>
           <div className="card-strong overflow-x-auto">
@@ -657,11 +623,18 @@ export default function PulsePage() {
               </thead>
               <tbody className="divide-y divide-[var(--border)]/50">
                 <tr>
-                  <td className="px-3 sm:px-5 py-3 font-medium">Posts in range</td>
-                  <td className="px-3 sm:px-5 py-3 text-right font-semibold">{fmtFull(ttOurs.length)}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right font-semibold">{fmtFull(igOurs.length)}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right font-semibold">{fmtFull(fbOurs.length)}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right font-semibold">{fmtFull(ytVideosInRange.length)}</td>
+                  <td className="px-3 sm:px-5 py-3 font-medium">Followers (live)</td>
+                  <td className="px-3 sm:px-5 py-3 text-right font-semibold text-[#75c7e6]">{fmt(tt?.owned?.followers)}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right font-semibold text-[#fc3467]">{fmt(ig?.owned?.followers)}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right text-[var(--text-dim)]">pending</td>
+                  <td className="px-3 sm:px-5 py-3 text-right font-semibold text-[#ff0000]">{fmt(yt?.channel?.subscribers)}</td>
+                </tr>
+                <tr>
+                  <td className="px-3 sm:px-5 py-3">Posts in range</td>
+                  <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(ttOurs.length)}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(igOurs.length)}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right text-[var(--text-dim)]">—</td>
+                  <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(ytVideosInRange.length)}</td>
                 </tr>
                 <tr>
                   <td className="px-3 sm:px-5 py-3">Total views</td>
@@ -672,59 +645,22 @@ export default function PulsePage() {
                 </tr>
                 <tr>
                   <td className="px-3 sm:px-5 py-3">Avg views / post</td>
-                  <td className="px-3 sm:px-5 py-3 text-right">{fmt(ttOurs.length ? ttOurs.reduce((s, x) => s + (x.views || 0), 0) / ttOurs.length : 0)}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right">{fmt(igOurs.length ? igOurs.reduce((s, x) => s + (x.video_views || x.likes || 0), 0) / igOurs.length : 0)}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right">{fmt(ttOurs.length ? ttOurs.reduce((s, x) => s + (x.views || 0), 0) / ttOurs.length : null)}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right">{fmt(igOurs.length ? igOurs.reduce((s, x) => s + (x.video_views || x.likes || 0), 0) / igOurs.length : null)}</td>
                   <td className="px-3 sm:px-5 py-3 text-right text-[var(--text-dim)]">—</td>
-                  <td className="px-3 sm:px-5 py-3 text-right">{fmt(ytVideosInRange.length ? ytVideosInRange.reduce((s, x) => s + (x.views || 0), 0) / ytVideosInRange.length : 0)}</td>
-                </tr>
-                <tr className="bg-[var(--bg-card-2)]/30">
-                  <td className="px-3 sm:px-5 py-3 font-medium" colSpan={5}>
-                    <span className="mono text-[10px] uppercase tracking-wider text-[var(--text-dim)]">GA4 — Excel verified · overlays when range is exactly one verified month</span>
-                  </td>
+                  <td className="px-3 sm:px-5 py-3 text-right">{fmt(ytVideosInRange.length ? ytVideosInRange.reduce((s, x) => s + (x.views || 0), 0) / ytVideosInRange.length : null)}</td>
                 </tr>
                 <tr>
-                  <td className="px-3 sm:px-5 py-3">New followers</td>
-                  <td className="px-3 sm:px-5 py-3 text-right">{ttExcel ? fmtFull(ttExcel.newFollows) : <span className="text-[var(--text-dim)]">—</span>}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right">{igExcel ? fmtFull(igExcel.newFollows) : <span className="text-[var(--text-dim)]">—</span>}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right">{fbExcel ? fmtFull(fbExcel.newFollows) : <span className="text-[var(--text-dim)]">—</span>}</td>
+                  <td className="px-3 sm:px-5 py-3">Top post views</td>
+                  <td className="px-3 sm:px-5 py-3 text-right text-[#75c7e6]">{fmt(ttOurs[0]?.views)}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right text-[#fc3467]">{fmt(igOurs[0]?.video_views || igOurs[0]?.likes)}</td>
                   <td className="px-3 sm:px-5 py-3 text-right text-[var(--text-dim)]">—</td>
-                </tr>
-                <tr>
-                  <td className="px-3 sm:px-5 py-3">GA4 sessions</td>
-                  <td className="px-3 sm:px-5 py-3 text-right">{ttExcel ? fmtFull(ttExcel.sessions) : <span className="text-[var(--text-dim)]">—</span>}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right">{igExcel ? fmtFull(igExcel.sessions) : <span className="text-[var(--text-dim)]">—</span>}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right">{fbExcel ? fmtFull(fbExcel.sessions) : <span className="text-[var(--text-dim)]">—</span>}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right text-[var(--text-dim)]">—</td>
-                </tr>
-                <tr>
-                  <td className="px-3 sm:px-5 py-3">Free trials</td>
-                  <td className="px-3 sm:px-5 py-3 text-right">{ttExcel ? fmtFull(ttExcel.freeTrials) : <span className="text-[var(--text-dim)]">—</span>}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right">{igExcel ? fmtFull(igExcel.freeTrials) : <span className="text-[var(--text-dim)]">—</span>}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right">{fbExcel ? fmtFull(fbExcel.freeTrials) : <span className="text-[var(--text-dim)]">—</span>}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right text-[var(--text-dim)]">—</td>
-                </tr>
-                <tr>
-                  <td className="px-3 sm:px-5 py-3">FTCR</td>
-                  <td className="px-3 sm:px-5 py-3 text-right">{ttExcel?.ftcr != null ? fmtPct(ttExcel.ftcr) : <span className="text-[var(--text-dim)]">—</span>}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right">{igExcel?.ftcr != null ? fmtPct(igExcel.ftcr) : <span className="text-[var(--text-dim)]">—</span>}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right">{fbExcel?.ftcr != null ? fmtPct(fbExcel.ftcr) : <span className="text-[var(--text-dim)]">—</span>}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right text-[var(--text-dim)]">—</td>
-                </tr>
-                <tr>
-                  <td className="px-3 sm:px-5 py-3">GA4 revenue</td>
-                  <td className="px-3 sm:px-5 py-3 text-right text-[#62d070]">{ttExcel ? fmtMoney(ttExcel.revenue) : <span className="text-[var(--text-dim)]">—</span>}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right text-[#62d070]">{igExcel ? fmtMoney(igExcel.revenue) : <span className="text-[var(--text-dim)]">—</span>}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right text-[#62d070]">{fbExcel ? fmtMoney(fbExcel.revenue) : <span className="text-[var(--text-dim)]">—</span>}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right text-[var(--text-dim)]">—</td>
+                  <td className="px-3 sm:px-5 py-3 text-right text-[#ff0000]">{fmt(ytVideosInRange.slice().sort((a,b)=>(b.views||0)-(a.views||0))[0]?.views)}</td>
                 </tr>
               </tbody>
             </table>
           </div>
-          {(!ttExcel && !igExcel && !fbExcel) && (
-            <div className="mt-3 mono text-[10px] text-[var(--text-dim)]">
-              GA4 columns show only when the range exactly matches an Excel-verified month (Jan–Apr 2026). For May, June and beyond, wire a GA4 export so live GA4 metrics can populate automatically.
-            </div>
-          )}
+
           <div className="mt-4">
             <div className="mono text-[10px] uppercase tracking-wider text-[var(--text-dim)] mb-2">Team interpretation — {rangeLabel}</div>
             <textarea
@@ -767,10 +703,11 @@ export default function PulsePage() {
                   <span className="mono" style={{color:'#ff0000'}}>YouTube Data API v3</span> — first-party Google endpoint. Subscriber, view and engagement counts match YouTube Studio at fetch time.
                 </div>
               </div>
-              <div className="rounded-lg border border-[#62d070]/30 bg-[#62d070]/5 p-3">
-                <div className="mono text-[9px] uppercase tracking-wider text-[#62d070] mb-1">GA4 funnel (Excel)</div>
-                <div className="text-xs text-white/90 leading-relaxed">
-                  New followers, sessions, free trials, FTCR and revenue for verified months come from the audited 2026 Social Performance Tracker spreadsheet, transcribed from Google Analytics 4. Future months overlay automatically once GA4 export is wired.
+              <div className="rounded-lg border border-[#fad74f]/30 bg-[#fad74f]/5 p-3">
+                <div className="mono text-[9px] uppercase tracking-wider text-[#fad74f] mb-1">Coming next · unlockable</div>
+                <div className="text-xs text-white/90 leading-relaxed space-y-1.5">
+                  <div><span className="font-semibold text-white">Facebook</span> — needs Meta Business App approval + Page Access Token. Once connected, FB posts + page metrics pull live on every refresh.</div>
+                  <div><span className="font-semibold text-white">GA4 sessions / free trials / revenue</span> — needs Google Analytics 4 Property ID + service account key (or GA4 Data API credentials). Wire those and weekly conversions flow in automatically.</div>
                 </div>
               </div>
             </div>
