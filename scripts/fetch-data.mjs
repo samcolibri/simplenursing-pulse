@@ -287,33 +287,77 @@ async function fetchTikTokTrends() {
 }
 
 // ─── Instagram ────────────────────────────────────────────────────────────────
+// Two-pass approach:
+//   Pass 1: apify~instagram-profile-scraper — gets follower/bio metadata + ~12 latestPosts
+//   Pass 2: apify~instagram-scraper per profile — paginates through posts to get full 90d history
 async function fetchInstagram() {
   if (!APIFY) { warn('Skipping IG'); return null }
-  log('Instagram profiles…')
-  const items = await apifyRunSync('apify~instagram-profile-scraper', {
-    usernames: [OWNED.instagram, ...COMPETITORS.instagram],
+
+  // --- Pass 1: profile metadata ---
+  log('Instagram profiles (metadata)…')
+  const allHandles = [OWNED.instagram, ...COMPETITORS.instagram]
+  const profileItems = await apifyRunSync('apify~instagram-profile-scraper', {
+    usernames: allHandles,
   })
-  const accounts = items.map(p => ({
-    handle: p.username, display_name: p.fullName,
-    followers: p.followersCount || 0, following: p.followsCount || 0,
-    posts: p.postsCount || 0, verified: p.verified || false,
-    bio: p.biography || '', avatar: p.profilePicUrl || '',
-    business_category: p.businessCategoryName,
-    external_url: p.externalUrl || '',
-    recent_posts: (p.latestPosts || []).filter(post => isRecent(post.timestamp)).slice(0, 20).map(post => ({
-      id: post.id, url: post.url, thumbnail: post.displayUrl || '',
-      caption: (post.caption || '').slice(0, 280),
-      type: (post.type || '').toLowerCase(),
-      likes: post.likesCount || 0,
-      comments: post.commentsCount || 0,
-      timestamp: post.timestamp,
-      video_views: post.videoViewCount || null,
-      hashtags: (post.hashtags || []).slice(0, 6),
-    })),
-  }))
-  const ownedHandle = OWNED.instagram.replace('@', '')
-  const owned = accounts.find(a => a.handle === ownedHandle) || null
-  const competitors = accounts.filter(a => a.handle !== ownedHandle)
+
+  // Build a metadata map keyed by handle
+  const metaMap = new Map()
+  for (const p of (profileItems || [])) {
+    metaMap.set((p.username || '').toLowerCase(), {
+      handle: p.username, display_name: p.fullName,
+      followers: p.followersCount || 0, following: p.followsCount || 0,
+      posts: p.postsCount || 0, verified: p.verified || false,
+      bio: p.biography || '', avatar: p.profilePicUrl || '',
+      business_category: p.businessCategoryName,
+      external_url: p.externalUrl || '',
+    })
+  }
+
+  // --- Pass 2: paginated post scrape per profile ---
+  log('Instagram posts (paginated, last 90d)…')
+  const directUrls = allHandles.map(h => `https://www.instagram.com/${h.replace('@', '')}/`)
+  const postItems = await apifyRunSync('apify~instagram-scraper', {
+    directUrls,
+    resultsType: 'posts',
+    resultsLimit: 200,   // up to 200 posts per profile — gives full 90d window for daily posters
+  }, 600000) // 10 min timeout for paginated scrape
+
+  // Group posts by profile handle
+  const postsByHandle = new Map()
+  for (const item of (postItems || [])) {
+    const owner = (item.ownerUsername || item.username || '').toLowerCase()
+    if (!owner) continue
+    if (!postsByHandle.has(owner)) postsByHandle.set(owner, [])
+    const t = item.timestamp || item.takenAtTimestamp || ''
+    if (!isRecent(t)) continue
+    postsByHandle.get(owner).push({
+      id: item.id || item.shortCode,
+      url: item.url || `https://www.instagram.com/p/${item.shortCode}/`,
+      thumbnail: item.displayUrl || item.imageUrl || '',
+      caption: (item.caption || item.alt || '').slice(0, 280),
+      type: (item.type || '').toLowerCase(),
+      likes: item.likesCount || item.likes || 0,
+      comments: item.commentsCount || item.comments || 0,
+      timestamp: t,
+      video_views: item.videoViewCount || item.videoPlayCount || null,
+      hashtags: (item.hashtags || []).slice(0, 6),
+    })
+  }
+
+  // Merge metadata + posts
+  const ownedKey = OWNED.instagram.replace('@', '').toLowerCase()
+  const accounts = []
+  for (const rawHandle of allHandles) {
+    const key = rawHandle.replace('@', '').toLowerCase()
+    const meta = metaMap.get(key) || { handle: key }
+    const recent_posts = (postsByHandle.get(key) || [])
+      .sort((a, b) => (b.timestamp > a.timestamp ? 1 : -1))
+    accounts.push({ ...meta, recent_posts })
+    log(`  @${key}: ${recent_posts.length} posts in last ${DAYS_BACK}d`)
+  }
+
+  const owned = accounts.find(a => (a.handle || '').toLowerCase() === ownedKey) || null
+  const competitors = accounts.filter(a => (a.handle || '').toLowerCase() !== ownedKey)
   return { owned, competitors, fetched_at: new Date().toISOString() }
 }
 

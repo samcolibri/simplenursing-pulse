@@ -27,6 +27,29 @@ const inRange = (iso, from, to) => {
   return true
 }
 
+
+// Topic patterns — same as fetch-data.mjs, applied client-side to date-filtered posts
+const TOPIC_PATTERNS = [
+  ['NCLEX Prep',           /nclex|boards|licensing exam|nursing exam|pass rates|kaplan|uworld|archer/i],
+  ['Nursing School Tips',  /study|notes|lecture|prereq|tip|hack|school|semester|schedule|memorize/i],
+  ['ECG & Cardiac',        /ecg|ekg|heart|cardiac|rhythm|cardio|dysrhythmia|afib/i],
+  ['Pharmacology',         /pharm|medication|drug|\bmed\b|dosage|insulin|antibiotic|IV push/i],
+  ['Lab Values',           /lab|electrolyte|sodium|potassium|hemoglobin|glucose|CBC|BMP|CMP/i],
+  ['Clinical Skills',      /clinical|skill|injection|\bIV\b|catheter|wound|trach|sterile|assessment|vital/i],
+  ['Career & New Grad',    /new grad|first year|residency|career|burnout|night shift|job|salary|pay|hire/i],
+  ['Nursing Student Life', /student nurse|nursing student|nursing school|prereq|application|acceptance/i],
+]
+function clusterTopics(posts) {
+  const scores = {}
+  for (const p of posts) {
+    const text = p.caption || p.text || p.title || ''
+    for (const [topic, rx] of TOPIC_PATTERNS) {
+      if (rx.test(text)) { scores[topic] = (scores[topic] || 0) + (p.views || p.score || p.likes || 0); break }
+    }
+  }
+  return Object.entries(scores).sort((a, b) => b[1] - a[1]).filter(([, s]) => s > 0)
+}
+
 const PLATFORM = {
   tiktok:    { name: 'TikTok',    color: '#75c7e6', glow: 'glow-tt',  glyph: '🎵' },
   instagram: { name: 'Instagram', color: '#fc3467', glow: 'glow-ig',  glyph: '📷' },
@@ -126,7 +149,12 @@ function PlatformCard({ platform, liveFollowers, liveSource, posts, topPost }) {
       </div>
       <div className="mt-3 pt-2 border-t border-[var(--border)]">
         <span className="mono text-[9px] text-[var(--text-dim)]">
-          {posts.length ? `Latest: ${fmtDateShort(posts[0]?.created_at || posts[0]?.timestamp)}` : 'No posts in selected range'}
+          {(() => {
+            if (!posts.length) return 'No posts in selected range'
+            const sorted = [...posts].sort((a, b) => (b.created_at || b.timestamp || '') > (a.created_at || a.timestamp || '') ? 1 : -1)
+            const latest = sorted[0]?.created_at || sorted[0]?.timestamp
+            return `Latest post: ${fmtDateShort(latest)} · ${fmtFull(posts.length)} total`
+          })()}
         </span>
       </div>
     </div>
@@ -303,9 +331,6 @@ export default function PulsePage() {
 
   const ttTop = ttOurs[0]
   const igTop = igOurs[0]
-  const fbOurs = []
-  const fbTop = null
-
   const applyPreset = (preset) => {
     const today = new Date()
     const iso = (d) => d.toISOString().slice(0, 10)
@@ -378,6 +403,25 @@ export default function PulsePage() {
               ))}
             </div>
           </div>
+          <div className="flex flex-wrap gap-1.5 pt-1 border-t border-[var(--border)]/50">
+            <span className="mono text-[9px] uppercase tracking-wider text-[var(--text-dim)] self-center">2026</span>
+            {['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'].map((label, mi) => {
+              const y = 2026
+              const m = String(mi + 1).padStart(2, '0')
+              const lastDay = new Date(y, mi + 1, 0).getDate()
+              const from = `${y}-${m}-01`
+              const to = `${y}-${m}-${String(lastDay).padStart(2, '0')}`
+              const today = new Date().toISOString().slice(0, 10)
+              if (from > today) return null
+              const active = dateFrom === from && dateTo === to
+              return (
+                <button key={label} onClick={() => { setDateFrom(from); setDateTo(to) }}
+                  className={'mono text-[10px] px-2.5 py-1 rounded border transition-all ' + (active ? 'bg-[#75c7e6] text-black border-[#75c7e6] font-bold' : 'border-[var(--border)] text-[var(--text-muted)] hover:border-[#75c7e6]/50 hover:text-white')}>
+                  {label}
+                </button>
+              )
+            })}
+          </div>
           <div className="flex flex-wrap items-center gap-2">
             <span className="mono text-[10px] uppercase tracking-wider text-[var(--text-dim)]">Custom</span>
             <input type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)}
@@ -414,13 +458,21 @@ export default function PulsePage() {
               posts={igOurs}
               topPost={igTop}
             />
-            <PlatformCard
-              platform="facebook"
-              liveFollowers={null}
-              liveSource={null}
-              posts={fbOurs}
-              topPost={fbTop}
-            />
+            <div className="card-strong p-4 sm:p-5 fade-up" style={{ borderColor: '#00709c40' }}>
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xl">📘</span>
+                  <span className="text-sm font-bold tracking-tight" style={{ color: '#00709c' }}>Facebook</span>
+                </div>
+                <span className="mono text-[9px] uppercase px-1.5 py-0.5 rounded border" style={{ color: '#fad74f', borderColor: '#fad74f50', background: '#fad74f10' }}>not connected</span>
+              </div>
+              <p className="text-[11px] text-[var(--text-muted)] leading-relaxed">
+                Facebook data requires a <span className="text-white font-medium">Meta Business App</span> + Page Access Token — pending approval. We post daily here but cannot pull metrics yet.
+              </p>
+              <p className="text-[10px] text-[var(--text-dim)] mt-2 mono">
+                When Dom is back: developers.facebook.com → request Business app access
+              </p>
+            </div>
             <PinterestCard pin={pin} from={dateFrom} to={dateTo} />
           </div>
         </section>
@@ -570,37 +622,40 @@ export default function PulsePage() {
           </section>
         )}
 
-        {insights?.topics && insights.topics.length > 0 && (
-          <section>
-            <div className="mb-4 sm:mb-5">
-              <div className="mono text-[10px] uppercase tracking-wider text-[var(--text-dim)] mb-1">06 · topic intelligence · scrape window</div>
-              <h2 className="text-xl sm:text-2xl font-bold">Trending topics this scrape window</h2>
-              <p className="text-xs sm:text-sm text-[var(--text-muted)] mt-1">
-                Auto-clustered from broad nursing niche captions across our posts, competitors, and trending accounts ·
-                {insights.days_back ? ` last ${insights.days_back} days` : ''}
-                <span className="ml-2 mono text-[10px] text-[var(--text-dim)]">(not affected by date filter — clustering happens at scrape time)</span>
-              </p>
-            </div>
-            <div className="card-strong p-5">
-              <div className="space-y-3">
-                {insights.topics.map(([topic, score], i) => {
-                  const max = insights.topics[0][1]
-                  return (
-                    <div key={topic}>
-                      <div className="flex justify-between mb-1.5">
-                        <span className="text-sm font-medium">{topic}</span>
-                        <span className="mono text-[10px] text-[var(--text-dim)]">{fmt(score)} aggregate velocity</span>
-                      </div>
-                      <div className="h-2.5 bg-[var(--bg-card-2)] rounded-full overflow-hidden">
-                        <div className="h-full rounded-full" style={{ width: `${(score / max) * 100}%`, background: i === 0 ? '#fc3467' : i < 3 ? '#fad74f' : '#75c7e6' }} />
-                      </div>
-                    </div>
-                  )
-                })}
+        {(() => {
+          const filteredTopics = clusterTopics(ourPostsInRange)
+          if (filteredTopics.length === 0) return null
+          return (
+            <section>
+              <div className="mb-4 sm:mb-5">
+                <div className="mono text-[10px] uppercase tracking-wider text-[var(--text-dim)] mb-1">06 · topic intelligence · {rangeLabel}</div>
+                <h2 className="text-xl sm:text-2xl font-bold">Trending topics in this range</h2>
+                <p className="text-xs sm:text-sm text-[var(--text-muted)] mt-1">
+                  Clustered from {ourPostsInRange.length} SimpleNursing posts in the selected date range — updates when you change the range.
+                  <span className="ml-2 mono text-[10px] text-[var(--text-dim)]">Source: TikTok + Instagram captions via Apify</span>
+                </p>
               </div>
-            </div>
-          </section>
-        )}
+              <div className="card-strong p-5">
+                <div className="space-y-3">
+                  {filteredTopics.map(([topic, score], i) => {
+                    const max = filteredTopics[0][1]
+                    return (
+                      <div key={topic}>
+                        <div className="flex justify-between mb-1.5">
+                          <span className="text-sm font-medium">{topic}</span>
+                          <span className="mono text-[10px] text-[var(--text-dim)]">{fmt(score)} total views in posts about this</span>
+                        </div>
+                        <div className="h-2.5 bg-[var(--bg-card-2)] rounded-full overflow-hidden">
+                          <div className="h-full rounded-full" style={{ width: `${(score / max) * 100}%`, background: i === 0 ? '#fc3467' : i < 3 ? '#fad74f' : '#75c7e6' }} />
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            </section>
+          )
+        })()}
 
         <section>
           <div className="mb-4 sm:mb-5">
@@ -617,7 +672,7 @@ export default function PulsePage() {
                   <th className="text-left px-3 sm:px-5 py-3 text-[var(--text-dim)] mono text-[10px] uppercase">Metric</th>
                   <th className="text-right px-3 sm:px-5 py-3 text-[#75c7e6] mono text-[10px] uppercase">TikTok</th>
                   <th className="text-right px-3 sm:px-5 py-3 text-[#fc3467] mono text-[10px] uppercase">Instagram</th>
-                  <th className="text-right px-3 sm:px-5 py-3 text-[#00709c] mono text-[10px] uppercase">Facebook</th>
+
                   <th className="text-right px-3 sm:px-5 py-3 text-[#ff0000] mono text-[10px] uppercase">YouTube</th>
                 </tr>
               </thead>
@@ -626,35 +681,30 @@ export default function PulsePage() {
                   <td className="px-3 sm:px-5 py-3 font-medium">Followers (live)</td>
                   <td className="px-3 sm:px-5 py-3 text-right font-semibold text-[#75c7e6]">{fmt(tt?.owned?.followers)}</td>
                   <td className="px-3 sm:px-5 py-3 text-right font-semibold text-[#fc3467]">{fmt(ig?.owned?.followers)}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right text-[var(--text-dim)]">pending</td>
                   <td className="px-3 sm:px-5 py-3 text-right font-semibold text-[#ff0000]">{fmt(yt?.channel?.subscribers)}</td>
                 </tr>
                 <tr>
                   <td className="px-3 sm:px-5 py-3">Posts in range</td>
                   <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(ttOurs.length)}</td>
                   <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(igOurs.length)}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right text-[var(--text-dim)]">—</td>
                   <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(ytVideosInRange.length)}</td>
                 </tr>
                 <tr>
                   <td className="px-3 sm:px-5 py-3">Total views</td>
                   <td className="px-3 sm:px-5 py-3 text-right">{fmt(ttOurs.reduce((s, x) => s + (x.views || 0), 0))}</td>
                   <td className="px-3 sm:px-5 py-3 text-right">{fmt(igOurs.reduce((s, x) => s + (x.video_views || x.likes || 0), 0))}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right text-[var(--text-dim)]">—</td>
                   <td className="px-3 sm:px-5 py-3 text-right">{fmt(ytVideosInRange.reduce((s, x) => s + (x.views || 0), 0))}</td>
                 </tr>
                 <tr>
                   <td className="px-3 sm:px-5 py-3">Avg views / post</td>
                   <td className="px-3 sm:px-5 py-3 text-right">{fmt(ttOurs.length ? ttOurs.reduce((s, x) => s + (x.views || 0), 0) / ttOurs.length : null)}</td>
                   <td className="px-3 sm:px-5 py-3 text-right">{fmt(igOurs.length ? igOurs.reduce((s, x) => s + (x.video_views || x.likes || 0), 0) / igOurs.length : null)}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right text-[var(--text-dim)]">—</td>
                   <td className="px-3 sm:px-5 py-3 text-right">{fmt(ytVideosInRange.length ? ytVideosInRange.reduce((s, x) => s + (x.views || 0), 0) / ytVideosInRange.length : null)}</td>
                 </tr>
                 <tr>
                   <td className="px-3 sm:px-5 py-3">Top post views</td>
                   <td className="px-3 sm:px-5 py-3 text-right text-[#75c7e6]">{fmt(ttOurs[0]?.views)}</td>
                   <td className="px-3 sm:px-5 py-3 text-right text-[#fc3467]">{fmt(igOurs[0]?.video_views || igOurs[0]?.likes)}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right text-[var(--text-dim)]">—</td>
                   <td className="px-3 sm:px-5 py-3 text-right text-[#ff0000]">{fmt(ytVideosInRange.slice().sort((a,b)=>(b.views||0)-(a.views||0))[0]?.views)}</td>
                 </tr>
               </tbody>
