@@ -9,17 +9,29 @@ const fmt = (n) => n == null ? '—' : new Intl.NumberFormat('en-US', { notation
 const fmtFull = (n) => n == null ? '—' : Number(n).toLocaleString()
 const fmtPct = (n) => n == null ? '—' : (n * 100).toFixed(1) + '%'
 const fmtMoney = (n) => n == null ? '—' : '$' + Number(n).toLocaleString(undefined, { maximumFractionDigits: 0 })
-const timeAgo = (iso) => {
-  if (!iso) return '—'
-  const m = Math.floor((Date.now() - new Date(iso).getTime()) / 60000)
-  if (m < 1) return 'just now'
-  if (m < 60) return m + 'm ago'
-  const h = Math.floor(m / 60); if (h < 24) return h + 'h ago'
-  const d = Math.floor(h / 24); if (d < 7) return d + 'd ago'
-  return Math.floor(d / 7) + 'w ago'
+const ymd = (iso) => !iso ? '' : String(iso).slice(0, 10)
+const fmtDate = (iso) => {
+  const d = ymd(iso)
+  if (!d) return '—'
+  const [y, m, day] = d.split('-')
+  const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+  return `${MONTHS[Number(m) - 1]} ${Number(day)}, ${y}`
+}
+const fmtDateShort = (iso) => {
+  const d = ymd(iso)
+  if (!d) return '—'
+  const [, m, day] = d.split('-')
+  const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+  return `${MONTHS[Number(m) - 1]} ${Number(day)}`
 }
 
-
+const inRange = (iso, from, to) => {
+  const d = ymd(iso)
+  if (!d) return false
+  if (from && d < from) return false
+  if (to && d > to) return false
+  return true
+}
 
 const PLATFORM = {
   tiktok:    { name: 'TikTok',    color: '#75c7e6', glow: 'glow-tt',  glyph: '🎵' },
@@ -36,6 +48,41 @@ function useStaticData(file) {
   return data
 }
 
+function PipelineHealth({ meta }) {
+  if (!meta?.platforms) return null
+  const failing = Object.entries(meta.platforms)
+    .filter(([, v]) => v && v.ok === false)
+    .map(([k, v]) => ({ key: k, reason: v.reason || 'unknown error' }))
+  if (failing.length === 0) return null
+  const fetchedAgo = (() => {
+    if (!meta.fetched_at) return null
+    const m = Math.floor((Date.now() - new Date(meta.fetched_at).getTime()) / 60000)
+    if (m < 60) return m + 'm'
+    const h = Math.floor(m / 60); if (h < 24) return h + 'h'
+    return Math.floor(h / 24) + 'd'
+  })()
+  return (
+    <div className="rounded-xl border border-[#fc3467]/40 bg-[#fc3467]/10 p-4 sm:p-5 space-y-2">
+      <div className="flex items-center gap-2 flex-wrap">
+        <span className="mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded bg-[#fc3467] text-white">Pipeline degraded</span>
+        <span className="text-xs text-[var(--text-muted)]">
+          {failing.length} source{failing.length > 1 ? 's' : ''} failing · last refresh {fetchedAgo} ago
+        </span>
+      </div>
+      <ul className="text-[11px] text-[var(--text-muted)] space-y-1 font-mono">
+        {failing.map(f => (
+          <li key={f.key}>
+            <span className="text-white">{f.key}</span>: {String(f.reason).split('\n')[0].slice(0, 160)}
+          </li>
+        ))}
+      </ul>
+      <div className="text-[11px] text-[var(--text-muted)] pt-1">
+        Data shown below is from the most recent successful scrape and will not reflect anything posted since then. Resolve the source(s) above to restore freshness.
+      </div>
+    </div>
+  )
+}
+
 function SourceBadge({ label, color }) {
   return (
     <span className="mono text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded border"
@@ -45,16 +92,10 @@ function SourceBadge({ label, color }) {
   )
 }
 
-// Standardised platform card — same 5 metrics for every platform
-function PlatformCard({ platform, liveFollowers, liveSource, newFollowers, sessions, freeTrials, ftcr, revenue }) {
+function PlatformCard({ platform, liveFollowers, liveSource, posts, topPost, excelFallback }) {
   const p = PLATFORM[platform]
-  const metrics = [
-    { label: 'New followers', value: fmtFull(newFollowers) },
-    { label: 'GA4 sessions', value: fmtFull(sessions) },
-    { label: 'Free trials', value: fmtFull(freeTrials) },
-    { label: 'Trial conv. rate', value: fmtPct(ftcr) },
-    { label: 'GA4 revenue', value: fmtMoney(revenue), green: true },
-  ]
+  const totalViews = posts.reduce((s, x) => s + (x.views || x.video_views || x.likes || 0), 0)
+  const avgViews = posts.length ? totalViews / posts.length : 0
   return (
     <div className={'card-strong p-4 sm:p-5 fade-up ' + p.glow} style={{ borderColor: p.color + '40' }}>
       <div className="flex items-center justify-between mb-3">
@@ -71,30 +112,48 @@ function PlatformCard({ platform, liveFollowers, liveSource, newFollowers, sessi
         </div>
       )}
       <div className="space-y-2.5">
-        {metrics.map(m => (
-          <div key={m.label} className="flex items-center justify-between">
-            <span className="text-[11px] text-[var(--text-muted)]">{m.label}</span>
-            <span className={'text-xs font-semibold tabular-nums ' + (m.green ? 'text-[#62d070]' : '')}>{m.value}</span>
+        <div className="flex items-center justify-between">
+          <span className="text-[11px] text-[var(--text-muted)]">Posts in range</span>
+          <span className="text-xs font-semibold tabular-nums">{fmtFull(posts.length)}</span>
+        </div>
+        <div className="flex items-center justify-between">
+          <span className="text-[11px] text-[var(--text-muted)]">Total views</span>
+          <span className="text-xs font-semibold tabular-nums">{fmt(totalViews)}</span>
+        </div>
+        <div className="flex items-center justify-between">
+          <span className="text-[11px] text-[var(--text-muted)]">Avg per post</span>
+          <span className="text-xs font-semibold tabular-nums">{fmt(avgViews)}</span>
+        </div>
+        <div className="flex items-center justify-between">
+          <span className="text-[11px] text-[var(--text-muted)]">Top post</span>
+          <span className="text-xs font-semibold tabular-nums" style={{ color: p.color }}>{topPost ? fmt(topPost.views || topPost.likes || 0) : '—'}</span>
+        </div>
+        {excelFallback && (
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] text-[var(--text-muted)]">{excelFallback.label}</span>
+            <span className="text-xs font-semibold tabular-nums text-[#62d070]">{excelFallback.value}</span>
           </div>
-        ))}
+        )}
       </div>
       <div className="mt-3 pt-2 border-t border-[var(--border)]">
-        <span className="mono text-[9px] text-[var(--text-dim)]">Apr 2026 · Excel verified</span>
+        <span className="mono text-[9px] text-[var(--text-dim)]">
+          {posts.length ? `Latest: ${fmtDateShort(posts[0]?.created_at || posts[0]?.timestamp)}` : 'No posts in selected range'}
+        </span>
       </div>
     </div>
   )
 }
 
-// Pinterest-specific card — API provides impressions/saves/clicks but not trial/revenue
-function PinterestCard({ pin }) {
+function PinterestCard({ pin, from, to }) {
   const p = PLATFORM.pinterest
-  const metrics = pin ? [
-    { label: 'Total followers', value: fmt(pin.profile?.follower_count) },
-    { label: '30d impressions', value: fmt(pin.summary?.impressions) },
-    { label: '30d saves', value: fmt(pin.summary?.saves) },
-    { label: 'Outbound clicks', value: fmt(pin.summary?.outbound_clicks) },
-    { label: 'Monthly views', value: fmt(pin.profile?.monthly_views) },
-  ] : []
+  const daily = (pin?.daily || []).filter(d => inRange(d.date, from, to))
+  const totals = daily.reduce((acc, d) => {
+    acc.imp += d.metrics?.IMPRESSION || 0
+    acc.save += d.metrics?.SAVE || 0
+    acc.click += d.metrics?.PIN_CLICK || 0
+    acc.outbound += d.metrics?.OUTBOUND_CLICK || 0
+    return acc
+  }, { imp: 0, save: 0, click: 0, outbound: 0 })
   return (
     <div className={'card-strong p-4 sm:p-5 fade-up ' + p.glow} style={{ borderColor: p.color + '40' }}>
       <div className="flex items-center justify-between mb-3">
@@ -107,16 +166,36 @@ function PinterestCard({ pin }) {
       {!pin && <div className="text-sm text-[var(--text-muted)]">Loading...</div>}
       {pin && (
         <>
+          <div className="mb-3 pb-3 border-b border-[var(--border)]">
+            <div className="num-xl text-2xl sm:text-3xl" style={{ color: p.color }}>{fmt(pin.profile?.follower_count)}</div>
+            <div className="text-[10px] text-[var(--text-dim)] mt-0.5 uppercase tracking-wide mono">Total followers · live</div>
+          </div>
           <div className="space-y-2.5">
-            {metrics.map(m => (
-              <div key={m.label} className="flex items-center justify-between">
-                <span className="text-[11px] text-[var(--text-muted)]">{m.label}</span>
-                <span className="text-xs font-semibold tabular-nums">{m.value}</span>
-              </div>
-            ))}
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] text-[var(--text-muted)]">Days in range</span>
+              <span className="text-xs font-semibold tabular-nums">{daily.length}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] text-[var(--text-muted)]">Impressions</span>
+              <span className="text-xs font-semibold tabular-nums">{fmt(totals.imp)}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] text-[var(--text-muted)]">Saves</span>
+              <span className="text-xs font-semibold tabular-nums">{fmt(totals.save)}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] text-[var(--text-muted)]">Outbound clicks</span>
+              <span className="text-xs font-semibold tabular-nums">{fmt(totals.outbound)}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] text-[var(--text-muted)]">Monthly views</span>
+              <span className="text-xs font-semibold tabular-nums">{fmt(pin.profile?.monthly_views)}</span>
+            </div>
           </div>
           <div className="mt-3 pt-2 border-t border-[var(--border)]">
-            <span className="mono text-[9px] text-[var(--text-dim)]">Live · Pinterest API v5</span>
+            <span className="mono text-[9px] text-[var(--text-dim)]">
+              {daily.length ? `Pinterest API v5 · ${daily.length} day window` : 'No daily data in selected range'}
+            </span>
           </div>
         </>
       )}
@@ -124,7 +203,6 @@ function PinterestCard({ pin }) {
   )
 }
 
-// Known competitor display names
 const COMP_DISPLAY = {
   'nurseinthemaking':   'Nurse In The Making',
   'registerednursern':  'RegisteredNurseRN',
@@ -135,11 +213,11 @@ const COMP_DISPLAY = {
   'nursingstudybyally': 'NursingStudyByAlly',
 }
 
-function PostRow({ post, isOwned }) {
+function PostRow({ post }) {
   const platform = post.platform || 'tiktok'
   const p = PLATFORM[platform] || PLATFORM.tiktok
-  const t = post.created_at || post.timestamp
-  const views = post.views || post.likes || 0
+  const t = post.created_at || post.timestamp || post.published_at
+  const views = post.views || post.video_views || post.likes || 0
   return (
     <a href={post.url} target="_blank" rel="noreferrer"
       className="flex items-center gap-3 sm:gap-4 px-3 sm:px-4 py-2.5 rounded-lg hover:bg-[var(--bg-card-2)] transition-colors group border border-transparent hover:border-[var(--border)]">
@@ -150,11 +228,35 @@ function PostRow({ post, isOwned }) {
       <span className="text-[11px] text-[var(--text-dim)] shrink-0 w-32 truncate">@{post.handle}</span>
       <span className="text-xs text-white/80 flex-1 truncate min-w-0">{post.caption || post.title || '(no caption)'}</span>
       <span className="num-xl text-sm font-semibold tabular-nums shrink-0" style={{ color: p.color }}>{fmt(views)}</span>
-      <span className="mono text-[9px] uppercase text-[var(--text-dim)] shrink-0 hidden sm:inline">{post.views ? 'views' : 'likes'}</span>
-      <span className="text-[10px] text-[var(--text-dim)] shrink-0 hidden sm:inline">{timeAgo(t)}</span>
+      <span className="mono text-[9px] uppercase text-[var(--text-dim)] shrink-0 hidden sm:inline">{post.views || post.video_views ? 'views' : 'likes'}</span>
+      <span className="mono text-[10px] text-[var(--text-dim)] shrink-0 hidden sm:inline tabular-nums">{fmtDateShort(t)}</span>
       <span className="text-[var(--text-dim)] group-hover:text-white transition-colors shrink-0 text-xs">↗</span>
     </a>
   )
+}
+
+function defaultRange(meta) {
+  const today = new Date()
+  const end = meta?.fetched_at ? new Date(meta.fetched_at) : today
+  const start = new Date(end.getTime() - 29 * 24 * 60 * 60 * 1000)
+  const iso = (d) => d.toISOString().slice(0, 10)
+  return { from: iso(start), to: iso(today) }
+}
+
+const MONTHS_FULL = ['January','February','March','April','May','June','July','August','September','October','November','December']
+
+function excelRowForRange(EXCEL, from, to) {
+  if (!from || !to) return null
+  if (from.slice(0, 7) !== to.slice(0, 7)) return null
+  const monthIdx = Number(from.slice(5, 7)) - 1
+  if (monthIdx < 0 || monthIdx > 11) return null
+  const newFollows = EXCEL.new_follows?.[monthIdx]
+  const sessions  = EXCEL.sessions_ga4?.[monthIdx] ?? EXCEL.sessions?.[monthIdx]
+  const freeTrials = EXCEL.free_trials?.[monthIdx]
+  const ftcr = EXCEL.ftcr?.[monthIdx]
+  const revenue = EXCEL.revenue_ga4?.[monthIdx]
+  if (newFollows == null && sessions == null && freeTrials == null && revenue == null) return null
+  return { newFollows, sessions, freeTrials, ftcr, revenue, month: monthIdx }
 }
 
 export default function PulsePage() {
@@ -168,175 +270,208 @@ export default function PulsePage() {
   const [activeComp, setActiveComp] = useState(0)
   const [dateFrom, setDateFrom] = useState('')
   const [dateTo, setDateTo] = useState('')
-  const [M, setM] = useState(3) // month index: 0=Jan … 3=Apr
   const [snapNote, setSnapNote] = useState('')
 
-  const MONTH_LABELS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-  const MONTHS_WITH_DATA = useMemo(
-    () => TIKTOK_2026.new_follows.reduce((acc, v, i) => { if (v != null) acc.push(i); return acc }, []),
-    []
-  )
-
   useEffect(() => {
-    const saved = localStorage.getItem('sn-snap-note-' + M)
-    setSnapNote(saved || '')
-  }, [M])
+    if (meta && !dateFrom && !dateTo) {
+      const r = defaultRange(meta)
+      setDateFrom(r.from)
+      setDateTo(r.to)
+    }
+  }, [meta]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const noteKey = dateFrom && dateTo ? `sn-note-${dateFrom}_${dateTo}` : null
+  useEffect(() => {
+    if (!noteKey) return
+    setSnapNote(localStorage.getItem(noteKey) || '')
+  }, [noteKey])
 
   const handleNoteChange = (v) => {
     setSnapNote(v)
-    localStorage.setItem('sn-snap-note-' + M, v)
+    if (noteKey) localStorage.setItem(noteKey, v)
   }
+
   const ourPosts = insights?.ours_top || []
   const competitorsByAccount = insights?.competitors_by_account || []
 
-  const displayOurPosts = useMemo(() => {
-    let posts = ourPosts
-    if (dateFrom || dateTo) {
-      posts = posts.filter(p => {
-        const d = (p.created_at || p.timestamp || '').slice(0, 10)
-        if (!d) return false
-        if (dateFrom && d < dateFrom) return false
-        if (dateTo && d > dateTo) return false
-        return true
-      })
-    }
-    return [...posts].sort((a, b) => (b.views || b.likes || 0) - (a.views || a.likes || 0))
-  }, [ourPosts, dateFrom, dateTo])
+  const ourPostsInRange = useMemo(() =>
+    ourPosts
+      .filter(p => inRange(p.created_at || p.timestamp, dateFrom, dateTo))
+      .sort((a, b) => (b.views || b.likes || 0) - (a.views || a.likes || 0)),
+    [ourPosts, dateFrom, dateTo]
+  )
 
-  const displayCompPosts = useMemo(() => {
+  const compPostsInRange = useMemo(() => {
     const c = competitorsByAccount[activeComp]
     if (!c) return []
-    let posts = c.top_posts || []
-    if (dateFrom || dateTo) {
-      posts = posts.filter(p => {
-        const d = (p.created_at || p.timestamp || '').slice(0, 10)
-        if (!d) return true // keep posts with no date
-        if (dateFrom && d < dateFrom) return false
-        if (dateTo && d > dateTo) return false
-        return true
-      })
-    }
-    return posts
+    return (c.top_posts || []).filter(p => inRange(p.created_at || p.timestamp, dateFrom, dateTo))
   }, [competitorsByAccount, activeComp, dateFrom, dateTo])
 
-  const hasDateFilter = dateFrom || dateTo
+  const ytVideosInRange = useMemo(() =>
+    (yt?.videos || []).filter(v => inRange(v.published_at || v.created_at || v.timestamp, dateFrom, dateTo)),
+    [yt, dateFrom, dateTo]
+  )
 
-  const ourQuickStats = useMemo(() => {
-    if (!displayOurPosts.length) return null
-    const sorted = [...displayOurPosts].sort((a, b) => new Date(b.created_at || b.timestamp || 0) - new Date(a.created_at || a.timestamp || 0))
-    return {
-      count: displayOurPosts.length,
-      bestViews: Math.max(...displayOurPosts.map(p => p.views || p.likes || 0)),
-      latest: timeAgo(sorted[0]?.created_at || sorted[0]?.timestamp),
+  const ttOurs = useMemo(() => ourPosts.filter(p => p.platform === 'tiktok' && inRange(p.created_at || p.timestamp, dateFrom, dateTo)), [ourPosts, dateFrom, dateTo])
+  const igOurs = useMemo(() => ourPosts.filter(p => p.platform === 'instagram' && inRange(p.created_at || p.timestamp, dateFrom, dateTo)), [ourPosts, dateFrom, dateTo])
+
+  const ttTop = ttOurs[0]
+  const igTop = igOurs[0]
+  const fbOurs = []
+  const fbTop = null
+
+  const ttExcel = excelRowForRange(TIKTOK_2026, dateFrom, dateTo)
+  const igExcel = excelRowForRange(INSTAGRAM_2026, dateFrom, dateTo)
+  const fbExcel = excelRowForRange(FACEBOOK_2026, dateFrom, dateTo)
+
+  const applyPreset = (preset) => {
+    const today = new Date()
+    const iso = (d) => d.toISOString().slice(0, 10)
+    let from, to
+    if (preset === '7d') {
+      to = iso(today); from = iso(new Date(today.getTime() - 6 * 86400000))
+    } else if (preset === '30d') {
+      to = iso(today); from = iso(new Date(today.getTime() - 29 * 86400000))
+    } else if (preset === 'this-month') {
+      from = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-01`
+      to = iso(today)
+    } else if (preset === 'last-month') {
+      const y = today.getMonth() === 0 ? today.getFullYear() - 1 : today.getFullYear()
+      const m = today.getMonth() === 0 ? 12 : today.getMonth()
+      const lastDay = new Date(y, m, 0).getDate()
+      from = `${y}-${String(m).padStart(2, '0')}-01`
+      to = `${y}-${String(m).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`
+    } else if (preset === 'ytd') {
+      from = `${today.getFullYear()}-01-01`; to = iso(today)
     }
-  }, [displayOurPosts])
+    setDateFrom(from); setDateTo(to)
+  }
+
+  const rangeLabel = dateFrom && dateTo ? `${fmtDate(dateFrom)} → ${fmtDate(dateTo)}` : 'All time'
 
   return (
     <div className="min-h-screen bg-gradient-mesh">
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-10 space-y-8 sm:space-y-12">
-        {/* HERO */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-10 space-y-8 sm:space-y-10">
         <section className="space-y-3 sm:space-y-4">
           <div className="flex flex-wrap items-center gap-2">
             <span className="mono text-[10px] uppercase tracking-widest text-[var(--text-dim)]">
-              {insights?.cutoff_date ? `Showing only posts since ${insights.cutoff_date}` : 'Live · auto-refreshed hourly'}
+              {meta?.fetched_at ? `Last refresh ${new Date(meta.fetched_at).toUTCString().slice(5, 22)} · auto every hour` : 'Live · auto-refreshed hourly'}
             </span>
           </div>
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.05]">
-            What's happening<br/>
+            What is happening<br/>
             <span className="bg-gradient-to-r from-[#75c7e6] via-[#fc3467] to-[#e60036] bg-clip-text text-transparent">at SimpleNursing right now.</span>
           </h1>
           <p className="text-sm sm:text-base text-[var(--text-muted)] max-w-2xl">
-            Last 30 days of posts, ranked by views. Refreshes every hour.
+            One date range controls everything below. Set it once · every section updates.
           </p>
         </section>
 
-        {/* DATE RANGE FILTER */}
-        <div className="flex flex-wrap items-center gap-3 p-3 sm:p-4 card-strong rounded-xl">
-          <span className="mono text-[10px] uppercase tracking-wider text-[var(--text-dim)]">Filter posts by date</span>
-          <div className="flex items-center gap-2">
+        <PipelineHealth meta={meta} />
+
+        <section className="card-strong rounded-xl p-4 sm:p-5 space-y-3">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <div className="mono text-[10px] uppercase tracking-widest text-[var(--text-dim)] mb-1">date range · drives every section</div>
+              <div className="text-base sm:text-lg font-semibold">{rangeLabel}</div>
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              {[
+                { id: '7d', label: 'Last 7d' },
+                { id: '30d', label: 'Last 30d' },
+                { id: 'this-month', label: 'This month' },
+                { id: 'last-month', label: 'Last month' },
+                { id: 'ytd', label: 'YTD' },
+              ].map(p => (
+                <button key={p.id} onClick={() => applyPreset(p.id)}
+                  className="text-xs px-3 py-1.5 rounded-lg border border-[var(--border)] text-[var(--text-muted)] hover:border-[#75c7e6]/50 hover:text-white transition-all">
+                  {p.label}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="mono text-[10px] uppercase tracking-wider text-[var(--text-dim)]">Custom</span>
             <input type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)}
               className="bg-[var(--bg-card-2)] border border-[var(--border)] rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-[#75c7e6]" />
             <span className="text-[var(--text-dim)] text-xs">to</span>
             <input type="date" value={dateTo} onChange={e => setDateTo(e.target.value)}
               className="bg-[var(--bg-card-2)] border border-[var(--border)] rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-[#75c7e6]" />
-          </div>
-          {hasDateFilter && (
-            <button onClick={() => { setDateFrom(''); setDateTo('') }}
-              className="text-xs px-3 py-1.5 rounded-lg border border-[var(--border)] text-[var(--text-muted)] hover:border-[#fc3467]/50 hover:text-[#fc3467] transition-all">
-              Clear · show all 30 days
-            </button>
-          )}
-          {hasDateFilter && (
-            <span className="mono text-[10px] text-[#75c7e6]">
-              {displayOurPosts.length} of {ourPosts.length} posts match
-            </span>
-          )}
-        </div>
-
-        {/* SECTION 1 — PLATFORM KPI CARDS */}
-        <section>
-          <div className="mb-4 sm:mb-5">
-            <div className="mono text-[10px] uppercase tracking-wider text-[var(--text-dim)] mb-1">01 · platform performance</div>
-            <h2 className="text-xl sm:text-2xl font-bold">Key metrics per platform</h2>
-            <p className="text-xs sm:text-sm text-[var(--text-muted)] mt-1">Each platform operates independently — standalone snapshots, not cross-platform comparisons</p>
-          </div>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-            <PlatformCard platform="tiktok" liveFollowers={tt?.owned?.followers} liveSource={tt?.owned ? 'LIVE · Apify' : null} newFollowers={TIKTOK_2026.new_follows[M]} sessions={TIKTOK_2026.sessions_ga4[M]} freeTrials={TIKTOK_2026.free_trials[M]} ftcr={TIKTOK_2026.ftcr[M]} revenue={TIKTOK_2026.revenue_ga4[M]} />
-            <PlatformCard platform="instagram" liveFollowers={ig?.owned?.followers} liveSource={ig?.owned ? 'LIVE · Apify' : null} newFollowers={INSTAGRAM_2026.new_follows[M]} sessions={INSTAGRAM_2026.sessions[M]} freeTrials={INSTAGRAM_2026.free_trials[M]} ftcr={INSTAGRAM_2026.ftcr[M]} revenue={INSTAGRAM_2026.revenue_ga4[M]} />
-            <PlatformCard platform="facebook" liveFollowers={null} liveSource={null} newFollowers={FACEBOOK_2026.new_follows[M]} sessions={FACEBOOK_2026.sessions_ga4[M]} freeTrials={FACEBOOK_2026.free_trials[M]} ftcr={FACEBOOK_2026.ftcr[M]} revenue={FACEBOOK_2026.revenue_ga4[M]} />
-            <PinterestCard pin={pin} />
+            {insights?.cutoff_date && dateFrom && dateFrom < insights.cutoff_date && (
+              <span className="mono text-[10px] text-[#fad74f]">
+                ⚠ Earliest data: {insights.cutoff_date} (scrape window). Older posts will not appear until window widens.
+              </span>
+            )}
           </div>
         </section>
 
-        {/* SECTION 2 — OUR RECENT POSTS */}
+        <section>
+          <div className="mb-4 sm:mb-5">
+            <div className="mono text-[10px] uppercase tracking-wider text-[var(--text-dim)] mb-1">01 · platform performance · in selected range</div>
+            <h2 className="text-xl sm:text-2xl font-bold">Key metrics per platform</h2>
+            <p className="text-xs sm:text-sm text-[var(--text-muted)] mt-1">All four cards reflect {rangeLabel}. Excel-verified GA4 stats overlay only when the range is exactly one verified month.</p>
+          </div>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            <PlatformCard
+              platform="tiktok"
+              liveFollowers={tt?.owned?.followers}
+              liveSource={tt?.owned ? 'LIVE · Apify' : null}
+              posts={ttOurs}
+              topPost={ttTop}
+              excelFallback={ttExcel ? { label: `GA4 revenue (${MONTHS_FULL[ttExcel.month]})`, value: fmtMoney(ttExcel.revenue) } : null}
+            />
+            <PlatformCard
+              platform="instagram"
+              liveFollowers={ig?.owned?.followers}
+              liveSource={ig?.owned ? 'LIVE · Apify' : null}
+              posts={igOurs}
+              topPost={igTop}
+              excelFallback={igExcel ? { label: `GA4 revenue (${MONTHS_FULL[igExcel.month]})`, value: fmtMoney(igExcel.revenue) } : null}
+            />
+            <PlatformCard
+              platform="facebook"
+              liveFollowers={null}
+              liveSource={null}
+              posts={fbOurs}
+              topPost={fbTop}
+              excelFallback={fbExcel ? { label: `GA4 revenue (${MONTHS_FULL[fbExcel.month]})`, value: fmtMoney(fbExcel.revenue) } : null}
+            />
+            <PinterestCard pin={pin} from={dateFrom} to={dateTo} />
+          </div>
+        </section>
+
         <section>
           <div className="flex items-end justify-between mb-4 sm:mb-5 flex-wrap gap-2">
             <div>
               <div className="mono text-[10px] uppercase tracking-wider text-[#62d070] mb-1">02 · @simplenursing only</div>
-              <h2 className="text-xl sm:text-2xl font-bold">Our recent posts — what we put out</h2>
-              <p className="text-xs sm:text-sm text-[var(--text-muted)] mt-1">{displayOurPosts.length} posts{hasDateFilter ? ' in selected range' : ' in the last 30 days'} · highest views first</p>
+              <h2 className="text-xl sm:text-2xl font-bold">Our posts in this range</h2>
+              <p className="text-xs sm:text-sm text-[var(--text-muted)] mt-1">
+                {ourPostsInRange.length} post{ourPostsInRange.length === 1 ? '' : 's'} between {fmtDate(dateFrom)} and {fmtDate(dateTo)} · highest views first
+              </p>
             </div>
-            <SourceBadge label="LIVE · Apify" color="#62d070" />
+            <SourceBadge label="LIVE · Apify + YouTube" color="#62d070" />
           </div>
 
-          {displayOurPosts.length === 0 && (
+          {ourPostsInRange.length === 0 && (
             <div className="card-strong p-8 text-center">
-              <div className="text-sm text-[var(--text-muted)]">{hasDateFilter ? 'No posts in that date range.' : 'No SimpleNursing posts found in the last 30 days.'}</div>
-              <div className="text-xs text-[var(--text-dim)] mt-2">{hasDateFilter ? 'Try widening the date range.' : 'Hourly refresh will populate this after the next run.'}</div>
+              <div className="text-sm text-[var(--text-muted)]">No SimpleNursing posts in this range.</div>
+              <div className="text-xs text-[var(--text-dim)] mt-2">Try widening the range or check the pipeline status above.</div>
             </div>
           )}
 
-          {displayOurPosts.length > 0 && (
-            <>
-              <div className="grid grid-cols-3 gap-3 mb-4">
-                <div className="card p-3 sm:p-4">
-                  <div className="text-[10px] uppercase tracking-wider text-[var(--text-dim)] mb-1">Posts last 30d</div>
-                  <div className="num-xl text-xl sm:text-2xl">{ourQuickStats?.count}</div>
-                </div>
-                <div className="card p-3 sm:p-4">
-                  <div className="text-[10px] uppercase tracking-wider text-[var(--text-dim)] mb-1">Best post</div>
-                  <div className="num-xl text-xl sm:text-2xl">{fmt(ourQuickStats?.bestViews)}</div>
-                  <div className="text-[9px] text-[var(--text-dim)] mt-0.5">views</div>
-                </div>
-                <div className="card p-3 sm:p-4">
-                  <div className="text-[10px] uppercase tracking-wider text-[var(--text-dim)] mb-1">Latest post</div>
-                  <div className="num-xl text-base sm:text-xl">{ourQuickStats?.latest}</div>
-                </div>
-              </div>
-              <div className="card-strong rounded-xl divide-y divide-[var(--border)]/50">
-                {displayOurPosts.slice(0, 20).map((p, i) => <PostRow key={p.id || i} post={p} isOwned={true} />)}
-              </div>
-            </>
+          {ourPostsInRange.length > 0 && (
+            <div className="card-strong rounded-xl divide-y divide-[var(--border)]/50">
+              {ourPostsInRange.map((p, i) => <PostRow key={p.id || i} post={p} />)}
+            </div>
           )}
         </section>
 
-        {/* SECTION 3 — COMPETITOR WATCH (SEPARATE) */}
         <section>
           <div className="flex items-end justify-between mb-4 sm:mb-5 flex-wrap gap-2">
             <div>
               <div className="mono text-[10px] uppercase tracking-wider text-[#fad74f] mb-1">03 · competitor watch</div>
               <h2 className="text-xl sm:text-2xl font-bold">What the competition is doing</h2>
-              <p className="text-xs sm:text-sm text-[var(--text-muted)] mt-1">{competitorsByAccount.length} accounts tracked · top 10 posts per account · ranked by velocity</p>
+              <p className="text-xs sm:text-sm text-[var(--text-muted)] mt-1">{competitorsByAccount.length} accounts tracked · filtered to {rangeLabel}</p>
             </div>
             <SourceBadge label="LIVE · Apify" color="#fad74f" />
           </div>
@@ -344,7 +479,6 @@ export default function PulsePage() {
           {competitorsByAccount.length === 0 && (
             <div className="card-strong p-8 text-center">
               <div className="text-sm text-[var(--text-muted)]">No competitor data yet.</div>
-              <div className="text-xs text-[var(--text-dim)] mt-2">Hourly refresh will populate this after the next run.</div>
             </div>
           )}
 
@@ -353,10 +487,11 @@ export default function PulsePage() {
               <div className="flex flex-wrap gap-2 mb-4">
                 {competitorsByAccount.map((c, i) => {
                   const name = COMP_DISPLAY[c.handle] || c.handle
+                  const inRangeCount = (c.top_posts || []).filter(p => inRange(p.created_at || p.timestamp, dateFrom, dateTo)).length
                   return (
                     <button key={c.handle} onClick={() => setActiveComp(i)}
                       className={'text-xs px-3 py-1.5 rounded-full border transition-all ' + (activeComp === i ? 'bg-[#fad74f] text-black border-[#fad74f] font-semibold' : 'border-[var(--border)] text-[var(--text-muted)] hover:border-[#fad74f]/50')}>
-                      {name}<span className="ml-1.5 opacity-60">{c.top_posts?.length || 0}</span>
+                      {name}<span className="ml-1.5 opacity-60">{inRangeCount}</span>
                     </button>
                   )
                 })}
@@ -370,12 +505,12 @@ export default function PulsePage() {
                     <div className="flex items-center gap-3 mb-3">
                       <span className="text-sm font-semibold">{name}</span>
                       {c.followers != null && <span className="mono text-[10px] text-[var(--text-dim)]">{fmtFull(c.followers)} followers</span>}
-                      {hasDateFilter && <span className="mono text-[10px] text-[#75c7e6]">{displayCompPosts.length} posts in range</span>}
+                      <span className="mono text-[10px] text-[#75c7e6]">{compPostsInRange.length} posts in range</span>
                     </div>
-                    {displayCompPosts.length === 0
-                      ? <div className="card-strong p-6 text-center text-sm text-[var(--text-muted)]">No posts in that date range for this account.</div>
+                    {compPostsInRange.length === 0
+                      ? <div className="card-strong p-6 text-center text-sm text-[var(--text-muted)]">No posts in this range for this account.</div>
                       : <div className="card-strong rounded-xl divide-y divide-[var(--border)]/50">
-                          {displayCompPosts.map((p, idx) => <PostRow key={p.id || idx} post={p} isOwned={false} />)}
+                          {compPostsInRange.map((p, idx) => <PostRow key={p.id || idx} post={p} />)}
                         </div>
                     }
                   </div>
@@ -385,74 +520,81 @@ export default function PulsePage() {
           )}
         </section>
 
-        {/* SECTION 4 — PINTEREST 30-DAY */}
         {pin?.daily && (
           <section>
             <div className="mb-4 sm:mb-5">
               <div className="mono text-[10px] uppercase tracking-wider text-[#e60036] mb-1">04 · pinterest live</div>
-              <h2 className="text-xl sm:text-2xl font-bold">Pinterest 30-day impression curve</h2>
-              <p className="text-xs sm:text-sm text-[var(--text-muted)] mt-1">
-                {pin?.summary?.period} · {fmt(pin?.summary?.impressions)} impressions · {fmt(pin?.summary?.saves)} saves · {fmt(pin?.summary?.outbound_clicks)} outbound clicks
-              </p>
+              <h2 className="text-xl sm:text-2xl font-bold">Pinterest impression curve</h2>
+              <p className="text-xs sm:text-sm text-[var(--text-muted)] mt-1">{rangeLabel}</p>
             </div>
-            <div className="card-strong p-3 sm:p-5">
-              <div className="h-[280px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={pin.daily.map(d => ({ date: d.date.slice(5), impressions: d.metrics?.IMPRESSION || 0, saves: d.metrics?.SAVE || 0 }))}>
-                    <defs>
-                      <linearGradient id="pinG" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#e60036" stopOpacity={0.5} />
-                        <stop offset="100%" stopColor="#e60036" stopOpacity={0} />
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#1e2433" />
-                    <XAxis dataKey="date" tick={{ fill: '#6b7280', fontSize: 9 }} />
-                    <YAxis tick={{ fill: '#6b7280', fontSize: 10 }} tickFormatter={fmt} />
-                    <Tooltip contentStyle={{ background: '#0d1117', border: '1px solid #2a3142', borderRadius: 8, fontSize: 11 }} formatter={(v) => fmtFull(v)} />
-                    <Area type="monotone" dataKey="impressions" stroke="#e60036" strokeWidth={2.5} fill="url(#pinG)" />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
+            {(() => {
+              const filtered = pin.daily.filter(d => inRange(d.date, dateFrom, dateTo))
+              if (filtered.length === 0) {
+                return <div className="card-strong p-8 text-center text-sm text-[var(--text-muted)]">No Pinterest daily data in this range. (Pinterest API only returns the last ~30 days.)</div>
+              }
+              return (
+                <div className="card-strong p-3 sm:p-5">
+                  <div className="h-[280px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <AreaChart data={filtered.map(d => ({ date: d.date.slice(5), impressions: d.metrics?.IMPRESSION || 0, saves: d.metrics?.SAVE || 0 }))}>
+                        <defs>
+                          <linearGradient id="pinG" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stopColor="#e60036" stopOpacity={0.5} />
+                            <stop offset="100%" stopColor="#e60036" stopOpacity={0} />
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#1e2433" />
+                        <XAxis dataKey="date" tick={{ fill: '#6b7280', fontSize: 9 }} />
+                        <YAxis tick={{ fill: '#6b7280', fontSize: 10 }} tickFormatter={fmt} />
+                        <Tooltip contentStyle={{ background: '#0d1117', border: '1px solid #2a3142', borderRadius: 8, fontSize: 11 }} formatter={(v) => fmtFull(v)} />
+                        <Area type="monotone" dataKey="impressions" stroke="#e60036" strokeWidth={2.5} fill="url(#pinG)" />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+              )
+            })()}
           </section>
         )}
 
-        {/* SECTION 4.5 — YOUTUBE */}
         {yt && (
           <section>
             <div className="flex items-end justify-between mb-4 sm:mb-5 flex-wrap gap-2">
               <div>
-                <div className="mono text-[10px] uppercase tracking-wider mb-1" style={{ color: '#ff0000' }}>04.5 · youtube</div>
-                <h2 className="text-xl sm:text-2xl font-bold">YouTube — last 30 days</h2>
+                <div className="mono text-[10px] uppercase tracking-wider mb-1" style={{ color: '#ff0000' }}>05 · youtube</div>
+                <h2 className="text-xl sm:text-2xl font-bold">YouTube in this range</h2>
                 <p className="text-xs sm:text-sm text-[var(--text-muted)] mt-1">
-                  {yt.videos?.length || 0} videos · {yt.channel ? fmtFull(yt.channel.subscribers) + ' subscribers' : ''}
-                  {yt.channel ? ' · ' + fmt(yt.channel.total_views) + ' total channel views' : ''}
+                  {ytVideosInRange.length} video{ytVideosInRange.length === 1 ? '' : 's'} between {fmtDate(dateFrom)} and {fmtDate(dateTo)}
+                  {yt.channel ? ` · ${fmtFull(yt.channel.subscribers)} subscribers` : ''}
                 </p>
               </div>
               <SourceBadge label="YouTube Data API" color="#ff0000" />
             </div>
 
-            {(!yt.videos || yt.videos.length === 0) && (
+            {ytVideosInRange.length === 0 && (
               <div className="card-strong p-8 text-center">
-                <div className="text-sm text-[var(--text-muted)]">No YouTube videos in the last 30 days.</div>
+                <div className="text-sm text-[var(--text-muted)]">No YouTube videos in this range.</div>
               </div>
             )}
 
-            {yt.videos && yt.videos.length > 0 && (
+            {ytVideosInRange.length > 0 && (
               <div className="card-strong rounded-xl divide-y divide-[var(--border)]/50">
-                {yt.videos.map((v, i) => <PostRow key={v.id || i} post={v} isOwned={true} />)}
+                {ytVideosInRange.map((v, i) => <PostRow key={v.id || i} post={{ ...v, platform: 'youtube', handle: 'simplenursing', created_at: v.published_at || v.created_at }} />)}
               </div>
             )}
           </section>
         )}
 
-        {/* TOPICS */}
         {insights?.topics && insights.topics.length > 0 && (
           <section>
             <div className="mb-4 sm:mb-5">
-              <div className="mono text-[10px] uppercase tracking-wider text-[var(--text-dim)] mb-1">05 · last-30-day topic intelligence</div>
-              <h2 className="text-xl sm:text-2xl font-bold">Trending Topics &amp; Areas This Month</h2>
-              <p className="text-xs sm:text-sm text-[var(--text-muted)] mt-1">Auto-clustered from broad nursing niche captions · ours + competitors + trending accounts</p>
+              <div className="mono text-[10px] uppercase tracking-wider text-[var(--text-dim)] mb-1">06 · topic intelligence · scrape window</div>
+              <h2 className="text-xl sm:text-2xl font-bold">Trending topics this scrape window</h2>
+              <p className="text-xs sm:text-sm text-[var(--text-muted)] mt-1">
+                Auto-clustered from broad nursing niche captions across our posts, competitors, and trending accounts ·
+                {insights.days_back ? ` last ${insights.days_back} days` : ''}
+                <span className="ml-2 mono text-[10px] text-[var(--text-dim)]">(not affected by date filter — clustering happens at scrape time)</span>
+              </p>
             </div>
             <div className="card-strong p-5">
               <div className="space-y-3">
@@ -475,22 +617,13 @@ export default function PulsePage() {
           </section>
         )}
 
-        {/* BUSINESS SNAPSHOT — EXCEL */}
         <section>
           <div className="mb-4 sm:mb-5">
-            <div className="mono text-[10px] uppercase tracking-wider text-[#75c7e6] mb-1">06 · business funnel snapshot</div>
-            <div className="flex items-center justify-between flex-wrap gap-3">
-              <h2 className="text-xl sm:text-2xl font-bold">Conversion + revenue snapshot</h2>
-              <div className="flex gap-1.5 flex-wrap">
-                {MONTHS_WITH_DATA.map(i => (
-                  <button key={i} onClick={() => setM(i)}
-                    className={'mono text-[10px] uppercase px-3 py-1.5 rounded-full border transition-all ' + (M === i ? 'bg-[#75c7e6] text-black border-[#75c7e6] font-bold' : 'border-[var(--border)] text-[var(--text-muted)] hover:border-[#75c7e6]/50')}>
-                    {MONTH_LABELS[i]} 2026
-                  </button>
-                ))}
-              </div>
-            </div>
-            <p className="text-xs sm:text-sm text-[var(--text-muted)] mt-1">Excel verified · {MONTH_LABELS[M]} 2026</p>
+            <div className="mono text-[10px] uppercase tracking-wider text-[#75c7e6] mb-1">07 · business funnel snapshot</div>
+            <h2 className="text-xl sm:text-2xl font-bold">Performance + revenue snapshot</h2>
+            <p className="text-xs sm:text-sm text-[var(--text-muted)] mt-1">
+              {rangeLabel}. Live columns (posts, views) come from the scrape · GA4 revenue overlays when the range matches a verified month.
+            </p>
           </div>
           <div className="card-strong overflow-x-auto">
             <table className="w-full text-xs sm:text-sm">
@@ -500,58 +633,89 @@ export default function PulsePage() {
                   <th className="text-right px-3 sm:px-5 py-3 text-[#75c7e6] mono text-[10px] uppercase">TikTok</th>
                   <th className="text-right px-3 sm:px-5 py-3 text-[#fc3467] mono text-[10px] uppercase">Instagram</th>
                   <th className="text-right px-3 sm:px-5 py-3 text-[#00709c] mono text-[10px] uppercase">Facebook</th>
+                  <th className="text-right px-3 sm:px-5 py-3 text-[#ff0000] mono text-[10px] uppercase">YouTube</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[var(--border)]/50">
                 <tr>
-                  <td className="px-3 sm:px-5 py-3 font-medium">New followers</td>
-                  <td className="px-3 sm:px-5 py-3 text-right font-semibold">{fmtFull(TIKTOK_2026.new_follows[M])}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right font-semibold">{fmtFull(INSTAGRAM_2026.new_follows[M])}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right font-semibold">{fmtFull(FACEBOOK_2026.new_follows[M])}</td>
+                  <td className="px-3 sm:px-5 py-3 font-medium">Posts in range</td>
+                  <td className="px-3 sm:px-5 py-3 text-right font-semibold">{fmtFull(ttOurs.length)}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right font-semibold">{fmtFull(igOurs.length)}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right font-semibold">{fmtFull(fbOurs.length)}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right font-semibold">{fmtFull(ytVideosInRange.length)}</td>
+                </tr>
+                <tr>
+                  <td className="px-3 sm:px-5 py-3">Total views</td>
+                  <td className="px-3 sm:px-5 py-3 text-right">{fmt(ttOurs.reduce((s, x) => s + (x.views || 0), 0))}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right">{fmt(igOurs.reduce((s, x) => s + (x.video_views || x.likes || 0), 0))}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right text-[var(--text-dim)]">—</td>
+                  <td className="px-3 sm:px-5 py-3 text-right">{fmt(ytVideosInRange.reduce((s, x) => s + (x.views || 0), 0))}</td>
+                </tr>
+                <tr>
+                  <td className="px-3 sm:px-5 py-3">Avg views / post</td>
+                  <td className="px-3 sm:px-5 py-3 text-right">{fmt(ttOurs.length ? ttOurs.reduce((s, x) => s + (x.views || 0), 0) / ttOurs.length : 0)}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right">{fmt(igOurs.length ? igOurs.reduce((s, x) => s + (x.video_views || x.likes || 0), 0) / igOurs.length : 0)}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right text-[var(--text-dim)]">—</td>
+                  <td className="px-3 sm:px-5 py-3 text-right">{fmt(ytVideosInRange.length ? ytVideosInRange.reduce((s, x) => s + (x.views || 0), 0) / ytVideosInRange.length : 0)}</td>
+                </tr>
+                <tr className="bg-[var(--bg-card-2)]/30">
+                  <td className="px-3 sm:px-5 py-3 font-medium" colSpan={5}>
+                    <span className="mono text-[10px] uppercase tracking-wider text-[var(--text-dim)]">GA4 — Excel verified · overlays when range is exactly one verified month</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="px-3 sm:px-5 py-3">New followers</td>
+                  <td className="px-3 sm:px-5 py-3 text-right">{ttExcel ? fmtFull(ttExcel.newFollows) : <span className="text-[var(--text-dim)]">—</span>}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right">{igExcel ? fmtFull(igExcel.newFollows) : <span className="text-[var(--text-dim)]">—</span>}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right">{fbExcel ? fmtFull(fbExcel.newFollows) : <span className="text-[var(--text-dim)]">—</span>}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right text-[var(--text-dim)]">—</td>
                 </tr>
                 <tr>
                   <td className="px-3 sm:px-5 py-3">GA4 sessions</td>
-                  <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(TIKTOK_2026.sessions_ga4[M])}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(INSTAGRAM_2026.sessions[M])}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(FACEBOOK_2026.sessions_ga4[M])}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right">{ttExcel ? fmtFull(ttExcel.sessions) : <span className="text-[var(--text-dim)]">—</span>}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right">{igExcel ? fmtFull(igExcel.sessions) : <span className="text-[var(--text-dim)]">—</span>}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right">{fbExcel ? fmtFull(fbExcel.sessions) : <span className="text-[var(--text-dim)]">—</span>}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right text-[var(--text-dim)]">—</td>
                 </tr>
                 <tr>
                   <td className="px-3 sm:px-5 py-3">Free trials</td>
-                  <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(TIKTOK_2026.free_trials[M])}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(INSTAGRAM_2026.free_trials[M])}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(FACEBOOK_2026.free_trials[M])}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right">{ttExcel ? fmtFull(ttExcel.freeTrials) : <span className="text-[var(--text-dim)]">—</span>}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right">{igExcel ? fmtFull(igExcel.freeTrials) : <span className="text-[var(--text-dim)]">—</span>}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right">{fbExcel ? fmtFull(fbExcel.freeTrials) : <span className="text-[var(--text-dim)]">—</span>}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right text-[var(--text-dim)]">—</td>
                 </tr>
                 <tr>
                   <td className="px-3 sm:px-5 py-3">FTCR</td>
-                  <td className="px-3 sm:px-5 py-3 text-right">{fmtPct(TIKTOK_2026.ftcr[M])}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right">{fmtPct(INSTAGRAM_2026.ftcr[M])}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right">{fmtPct(FACEBOOK_2026.ftcr[M])}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right">{ttExcel?.ftcr != null ? fmtPct(ttExcel.ftcr) : <span className="text-[var(--text-dim)]">—</span>}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right">{igExcel?.ftcr != null ? fmtPct(igExcel.ftcr) : <span className="text-[var(--text-dim)]">—</span>}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right">{fbExcel?.ftcr != null ? fmtPct(fbExcel.ftcr) : <span className="text-[var(--text-dim)]">—</span>}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right text-[var(--text-dim)]">—</td>
                 </tr>
                 <tr>
                   <td className="px-3 sm:px-5 py-3">GA4 revenue</td>
-                  <td className="px-3 sm:px-5 py-3 text-right text-[#62d070]">{fmtMoney(TIKTOK_2026.revenue_ga4[M])}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right text-[#62d070]">{fmtMoney(INSTAGRAM_2026.revenue_ga4[M])}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right text-[#62d070]">{fmtMoney(FACEBOOK_2026.revenue_ga4[M])}</td>
-                </tr>
-                <tr>
-                  <td className="px-3 sm:px-5 py-3">Views</td>
-                  <td className="px-3 sm:px-5 py-3 text-right text-[var(--text-muted)]">{fmtFull(TIKTOK_2026.views[M])}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right text-[var(--text-muted)]">{fmtFull(INSTAGRAM_2026.total_views[M])}</td>
-                  <td className="px-3 sm:px-5 py-3 text-right text-[var(--text-muted)]">{fmtFull(FACEBOOK_2026.views[M])}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right text-[#62d070]">{ttExcel ? fmtMoney(ttExcel.revenue) : <span className="text-[var(--text-dim)]">—</span>}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right text-[#62d070]">{igExcel ? fmtMoney(igExcel.revenue) : <span className="text-[var(--text-dim)]">—</span>}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right text-[#62d070]">{fbExcel ? fmtMoney(fbExcel.revenue) : <span className="text-[var(--text-dim)]">—</span>}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right text-[var(--text-dim)]">—</td>
                 </tr>
               </tbody>
             </table>
           </div>
+          {(!ttExcel && !igExcel && !fbExcel) && (
+            <div className="mt-3 mono text-[10px] text-[var(--text-dim)]">
+              GA4 columns show only when the range exactly matches an Excel-verified month (Jan–Apr 2026). For May, June and beyond, wire a GA4 export so live GA4 metrics can populate automatically.
+            </div>
+          )}
           <div className="mt-4">
-            <div className="mono text-[10px] uppercase tracking-wider text-[var(--text-dim)] mb-2">Team interpretation — {MONTH_LABELS[M]} 2026</div>
+            <div className="mono text-[10px] uppercase tracking-wider text-[var(--text-dim)] mb-2">Team interpretation — {rangeLabel}</div>
             <textarea
               value={snapNote}
               onChange={e => handleNoteChange(e.target.value)}
-              placeholder={`Add your team's read on ${MONTH_LABELS[M]} performance here. What drove the numbers? What's the context leadership needs to know? Saved automatically per month.`}
+              placeholder={`Add the team read for this range. What drove the numbers? What context does leadership need? Saved automatically per range.`}
               className="w-full bg-[var(--bg-card-2)] border border-[var(--border)] rounded-xl px-4 py-3 text-sm text-white placeholder:text-[var(--text-dim)] focus:outline-none focus:border-[#75c7e6]/50 resize-none leading-relaxed"
               rows={4}
             />
-            {snapNote && <div className="mono text-[9px] text-[#62d070] mt-1.5">✓ Saved locally for {MONTH_LABELS[M]}</div>}
+            {snapNote && <div className="mono text-[9px] text-[#62d070] mt-1.5">✓ Saved locally</div>}
           </div>
         </section>
       </main>

@@ -87,7 +87,7 @@ const err = (...a) => console.error('[error]', ...a)
 const sleep = (ms) => new Promise(r => setTimeout(r, ms))
 
 
-const DAYS_BACK = 30
+const DAYS_BACK = Number(process.env.DAYS_BACK) || 90
 const CUTOFF = new Date(Date.now() - DAYS_BACK * 24 * 60 * 60 * 1000).toISOString()
 const isRecent = (iso) => iso && iso >= CUTOFF
 function velocity(post) {
@@ -453,7 +453,7 @@ async function buildInsights(tt, ig, ttTrends, igHashtags) {
     for (const p of posts) if (!seen.has(String(p.id))) existing.top_posts.push({ ...p, platform: 'instagram', score: velocity(p) })
     if (existing.platform === 'tiktok') existing.platform = 'both'
   }
-  for (const v of compMap.values()) v.top_posts = v.top_posts.sort((a, b) => b.score - a.score).slice(0, 10)
+  for (const v of compMap.values()) v.top_posts = v.top_posts.sort((a, b) => b.score - a.score).slice(0, 50)
   const competitors_by_account = Array.from(compMap.values())
     .filter(c => c.top_posts.length > 0)
     .sort((a, b) => (b.followers || 0) - (a.followers || 0))
@@ -490,8 +490,8 @@ async function buildInsights(tt, ig, ttTrends, igHashtags) {
   const competitors = allPosts.filter(p => !p.isOwned)
   return {
     top_viral: allPosts.slice(0, 12),
-    ours_top: ours.slice(0, 30),
-    competitor_top: competitors.slice(0, 50),
+    ours_top: ours.slice(0, 200),
+    competitor_top: competitors.slice(0, 200),
     competitors_by_account,
     topics: topicRanked,
     cutoff_date: CUTOFF.slice(0, 10),
