@@ -1,8 +1,14 @@
-name: Refresh dashboard data (hourly)
+name: Refresh dashboard data (weekly)
 
+# Weekly cadence: every Monday at 12:00 UTC.
+# Apify (TikTok + Instagram scraping) is the paid line item — running weekly
+# keeps spend predictable. Pinterest and YouTube are free but ride the same
+# cadence so every section of the dashboard reflects the same point-in-time
+# snapshot. Trigger a manual refresh via `gh workflow run refresh-data.yml`
+# or the GitHub Actions UI if you need an off-cycle update.
 on:
   schedule:
-    - cron: '5 * * * *'   # 5 minutes past every hour, UTC
+    - cron: '0 12 * * 1'   # Mondays at 12:00 UTC
   workflow_dispatch: {}
 
 permissions:
@@ -45,7 +51,7 @@ jobs:
             echo "No data changes — skipping commit"
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
-            git commit -m "chore(data): hourly refresh — $(date -u +'%Y-%m-%d %H:%M UTC')"
+            git commit -m "chore(data): weekly refresh — $(date -u +'%Y-%m-%d %H:%M UTC')"
             git push
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi

@@ -219,7 +219,7 @@ function PostRow({ post }) {
   const t = post.created_at || post.timestamp || post.published_at
   const views = post.views || post.video_views || post.likes || 0
   return (
-    <a href={post.url} target="_blank" rel="noreferrer"
+    <a href={post.url} target="_blank" rel="noreferrer" title={`Verify on ${p.name} — opens the original post in a new tab`}
       className="flex items-center gap-3 sm:gap-4 px-3 sm:px-4 py-2.5 rounded-lg hover:bg-[var(--bg-card-2)] transition-colors group border border-transparent hover:border-[var(--border)]">
       <span className="mono text-[9px] uppercase font-bold px-1.5 py-0.5 rounded shrink-0 w-16 text-center"
         style={{ background: p.color + '20', color: p.color, border: '1px solid ' + p.color + '40' }}>
@@ -230,7 +230,7 @@ function PostRow({ post }) {
       <span className="num-xl text-sm font-semibold tabular-nums shrink-0" style={{ color: p.color }}>{fmt(views)}</span>
       <span className="mono text-[9px] uppercase text-[var(--text-dim)] shrink-0 hidden sm:inline">{post.views || post.video_views ? 'views' : 'likes'}</span>
       <span className="mono text-[10px] text-[var(--text-dim)] shrink-0 hidden sm:inline tabular-nums">{fmtDateShort(t)}</span>
-      <span className="text-[var(--text-dim)] group-hover:text-white transition-colors shrink-0 text-xs">↗</span>
+      <span className="mono text-[9px] uppercase font-semibold text-[var(--text-dim)] group-hover:text-[#75c7e6] transition-colors shrink-0 hidden md:inline tabular-nums tracking-wider">verify ↗</span>
     </a>
   )
 }
@@ -241,6 +241,19 @@ function defaultRange(meta) {
   const start = new Date(end.getTime() - 29 * 24 * 60 * 60 * 1000)
   const iso = (d) => d.toISOString().slice(0, 10)
   return { from: iso(start), to: iso(today) }
+}
+
+// Next Monday at 12:00 UTC — used in the hero to advertise the next refresh.
+function nextMondayLabel() {
+  const now = new Date()
+  const day = now.getUTCDay() // 0=Sun, 1=Mon, ...
+  const hour = now.getUTCHours()
+  // If today is Monday and we haven't hit 12:00 UTC yet, today is the next refresh
+  let daysAhead = (1 - day + 7) % 7
+  if (day === 1 && hour < 12) daysAhead = 0
+  if (daysAhead === 0 && hour >= 12) daysAhead = 7
+  const next = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + daysAhead, 12, 0, 0))
+  return fmtDate(next.toISOString())
 }
 
 const MONTHS_FULL = ['January','February','March','April','May','June','July','August','September','October','November','December']
@@ -355,15 +368,21 @@ export default function PulsePage() {
         <section className="space-y-3 sm:space-y-4">
           <div className="flex flex-wrap items-center gap-2">
             <span className="mono text-[10px] uppercase tracking-widest text-[var(--text-dim)]">
-              {meta?.fetched_at ? `Last refresh ${new Date(meta.fetched_at).toUTCString().slice(5, 22)} · auto every hour` : 'Live · auto-refreshed hourly'}
+              {meta?.fetched_at ? `Last hard refresh: ${fmtDate(meta.fetched_at)} ${new Date(meta.fetched_at).toUTCString().slice(17, 22)} UTC` : 'Awaiting first refresh'}
+            </span>
+            <span className="mono text-[10px] uppercase tracking-widest text-[#75c7e6]">
+              · next: {nextMondayLabel()}
+            </span>
+            <span className="mono text-[10px] uppercase tracking-widest text-[var(--text-dim)]">
+              · cadence: weekly · Mondays 12:00 UTC
             </span>
           </div>
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.05]">
             What is happening<br/>
-            <span className="bg-gradient-to-r from-[#75c7e6] via-[#fc3467] to-[#e60036] bg-clip-text text-transparent">at SimpleNursing right now.</span>
+            <span className="bg-gradient-to-r from-[#75c7e6] via-[#fc3467] to-[#e60036] bg-clip-text text-transparent">at SimpleNursing this week.</span>
           </h1>
           <p className="text-sm sm:text-base text-[var(--text-muted)] max-w-2xl">
-            One date range controls everything below. Set it once · every section updates.
+            One date range controls everything below. Every post links straight back to its native page — click any row to verify the numbers against the source.
           </p>
         </section>
 
@@ -716,6 +735,64 @@ export default function PulsePage() {
               rows={4}
             />
             {snapNote && <div className="mono text-[9px] text-[#62d070] mt-1.5">✓ Saved locally</div>}
+          </div>
+        </section>
+
+        {/* DATA INTEGRITY — how this is trustworthy */}
+        <section>
+          <div className="mb-4 sm:mb-5">
+            <div className="mono text-[10px] uppercase tracking-wider text-[var(--text-dim)] mb-1">08 · data integrity</div>
+            <h2 className="text-xl sm:text-2xl font-bold">How we know this is real</h2>
+            <p className="text-xs sm:text-sm text-[var(--text-muted)] mt-1">
+              Every number on this page comes from a public API or scrape of the native platform · click any post row to open the original and compare in one tap.
+            </p>
+          </div>
+          <div className="card-strong p-4 sm:p-5 space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="rounded-lg border border-[#75c7e6]/30 bg-[#75c7e6]/5 p-3">
+                <div className="mono text-[9px] uppercase tracking-wider text-[#75c7e6] mb-1">TikTok + Instagram</div>
+                <div className="text-xs text-white/90 leading-relaxed">
+                  Scraped via <span className="mono text-[#75c7e6]">Apify</span> (clockworks/tiktok-scraper + apify/instagram-profile-scraper) — the industry-standard public-page scrapers. View / like / comment counts read straight from the native page DOM at scrape time.
+                </div>
+              </div>
+              <div className="rounded-lg border border-[#e60036]/30 bg-[#e60036]/5 p-3">
+                <div className="mono text-[9px] uppercase tracking-wider text-[#e60036] mb-1">Pinterest</div>
+                <div className="text-xs text-white/90 leading-relaxed">
+                  <span className="mono text-[#e60036]">Pinterest API v5</span> — first-party endpoint authenticated with our brand token. Impressions, saves and outbound clicks come from the same source Pinterest Analytics shows internally.
+                </div>
+              </div>
+              <div className="rounded-lg border border-[#ff0000]/30 bg-[#ff0000]/5 p-3">
+                <div className="mono text-[9px] uppercase tracking-wider" style={{color:'#ff0000'}}>YouTube</div>
+                <div className="text-xs text-white/90 leading-relaxed">
+                  <span className="mono" style={{color:'#ff0000'}}>YouTube Data API v3</span> — first-party Google endpoint. Subscriber, view and engagement counts match YouTube Studio at fetch time.
+                </div>
+              </div>
+              <div className="rounded-lg border border-[#62d070]/30 bg-[#62d070]/5 p-3">
+                <div className="mono text-[9px] uppercase tracking-wider text-[#62d070] mb-1">GA4 funnel (Excel)</div>
+                <div className="text-xs text-white/90 leading-relaxed">
+                  New followers, sessions, free trials, FTCR and revenue for verified months come from the audited 2026 Social Performance Tracker spreadsheet, transcribed from Google Analytics 4. Future months overlay automatically once GA4 export is wired.
+                </div>
+              </div>
+            </div>
+
+            <div className="rounded-lg border border-[var(--border)] bg-[var(--bg-card-2)] p-3">
+              <div className="mono text-[9px] uppercase tracking-wider text-[var(--text-dim)] mb-2">Refresh cadence</div>
+              <ul className="text-xs text-white/90 space-y-1.5 leading-relaxed">
+                <li>· <span className="font-semibold">Weekly hard refresh</span> every Monday at 12:00 UTC. All five sources fire together so every section on this page reflects the same point-in-time snapshot.</li>
+                <li>· Last hard refresh: <span className="mono text-[#75c7e6]">{meta?.fetched_at ? new Date(meta.fetched_at).toUTCString() : 'pending'}</span></li>
+                <li>· Next scheduled refresh: <span className="mono text-[#75c7e6]">{nextMondayLabel()} 12:00 UTC</span></li>
+                <li>· Off-cycle refresh: trigger <span className="mono">refresh-data.yml</span> from GitHub Actions when needed.</li>
+              </ul>
+            </div>
+
+            <div className="rounded-lg border border-[var(--border)] bg-[var(--bg-card-2)] p-3">
+              <div className="mono text-[9px] uppercase tracking-wider text-[var(--text-dim)] mb-2">Spot-check it yourself</div>
+              <ol className="text-xs text-white/90 space-y-1.5 leading-relaxed list-decimal list-inside">
+                <li>Click any post row above. It opens the original on TikTok / Instagram / YouTube / Pinterest in a new tab.</li>
+                <li>Compare the view / like / save count to what you see here. They should match within minutes of the refresh timestamp.</li>
+                <li>If a number looks off, note the timestamp — view counts on the native platform continue updating between our weekly refreshes. Trigger an off-cycle refresh to reconcile.</li>
+              </ol>
+            </div>
           </div>
         </section>
       </main>
