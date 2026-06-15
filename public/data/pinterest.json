@@ -2,188 +2,28 @@
   "profile": {
     "username": "simplenursing_official",
     "account_type": "BUSINESS",
-    "monthly_views": 148662,
-    "follower_count": 751,
-    "pin_count": 1660,
+    "monthly_views": 142144,
+    "follower_count": 755,
+    "pin_count": 1705,
     "board_count": 7,
     "profile_image": "https://i.pinimg.com/600x600_R/5b/fe/f3/5bfef39423ce02d51e4ad088eff66cd8.jpg"
   },
   "summary": {
-    "impressions": 143530,
-    "pin_clicks": 9136,
-    "saves": 724,
-    "outbound_clicks": 71,
-    "period": "2026-04-30 → 2026-05-29"
+    "impressions": 135885,
+    "pin_clicks": 8482,
+    "saves": 640,
+    "outbound_clicks": 67,
+    "period": "2026-05-16 → 2026-06-14"
   },
   "daily": [
-    {
-      "date": "2026-04-30",
-      "data_status": "READY",
-      "metrics": {
-        "PIN_CLICK": 330,
-        "SAVE": 32,
-        "IMPRESSION": 4964,
-        "OUTBOUND_CLICK": 2
-      }
-    },
-    {
-      "date": "2026-05-01",
-      "data_status": "READY",
-      "metrics": {
-        "PIN_CLICK": 288,
-        "SAVE": 13,
-        "IMPRESSION": 4483,
-        "OUTBOUND_CLICK": 3
-      }
-    },
-    {
-      "date": "2026-05-02",
-      "data_status": "READY",
-      "metrics": {
-        "PIN_CLICK": 296,
-        "SAVE": 23,
-        "IMPRESSION": 4256,
-        "OUTBOUND_CLICK": 1
-      }
-    },
-    {
-      "date": "2026-05-03",
-      "data_status": "READY",
-      "metrics": {
-        "PIN_CLICK": 304,
-        "SAVE": 20,
-        "IMPRESSION": 4410,
-        "OUTBOUND_CLICK": 3
-      }
-    },
-    {
-      "date": "2026-05-04",
-      "data_status": "READY",
-      "metrics": {
-        "PIN_CLICK": 303,
-        "SAVE": 14,
-        "IMPRESSION": 5027,
-        "OUTBOUND_CLICK": 1
-      }
-    },
-    {
-      "date": "2026-05-05",
-      "data_status": "READY",
-      "metrics": {
-        "PIN_CLICK": 378,
-        "SAVE": 30,
-        "IMPRESSION": 5538,
-        "OUTBOUND_CLICK": 1
-      }
-    },
-    {
-      "date": "2026-05-06",
-      "data_status": "READY",
-      "metrics": {
-        "PIN_CLICK": 355,
-        "SAVE": 32,
-        "IMPRESSION": 5644,
-        "OUTBOUND_CLICK": 1
-      }
-    },
-    {
-      "date": "2026-05-07",
-      "data_status": "READY",
-      "metrics": {
-        "PIN_CLICK": 357,
-        "SAVE": 29,
-        "IMPRESSION": 5739,
-        "OUTBOUND_CLICK": 3
-      }
-    },
-    {
-      "date": "2026-05-08",
-      "data_status": "READY",
-      "metrics": {
-        "PIN_CLICK": 368,
-        "SAVE": 26,
-        "IMPRESSION": 5587,
-        "OUTBOUND_CLICK": 3
-      }
-    },
-    {
-      "date": "2026-05-09",
-      "data_status": "READY",
-      "metrics": {
-        "PIN_CLICK": 356,
-        "SAVE": 27,
-        "IMPRESSION": 5080,
-        "OUTBOUND_CLICK": 0
-      }
-    },
-    {
-      "date": "2026-05-10",
-      "data_status": "READY",
-      "metrics": {
-        "PIN_CLICK": 351,
-        "SAVE": 37,
-        "IMPRESSION": 4751,
-        "OUTBOUND_CLICK": 3
-      }
-    },
-    {
-      "date": "2026-05-11",
-      "data_status": "READY",
-      "metrics": {
-        "PIN_CLICK": 348,
-        "SAVE": 23,
-        "IMPRESSION": 5784,
-        "OUTBOUND_CLICK": 2
-      }
-    },
-    {
-      "date": "2026-05-12",
-      "data_status": "READY",
-      "metrics": {
-        "PIN_CLICK": 376,
-        "SAVE": 34,
-        "IMPRESSION": 6716,
-        "OUTBOUND_CLICK": 2
-      }
-    },
-    {
-      "date": "2026-05-13",
-      "data_status": "READY",
-      "metrics": {
-        "PIN_CLICK": 339,
-        "SAVE": 28,
-        "IMPRESSION": 6104,
-        "OUTBOUND_CLICK": 3
-      }
-    },
-    {
-      "date": "2026-05-14",
-      "data_status": "READY",
-      "metrics": {
-        "PIN_CLICK": 371,
-        "SAVE": 40,
-        "IMPRESSION": 6225,
-        "OUTBOUND_CLICK": 2
-      }
-    },
-    {
-      "date": "2026-05-15",
-      "data_status": "READY",
-      "metrics": {
-        "PIN_CLICK": 270,
-        "SAVE": 17,
-        "IMPRESSION": 4864,
-        "OUTBOUND_CLICK": 2
-      }
-    },
     {
       "date": "2026-05-16",
       "data_status": "READY",
       "metrics": {
         "PIN_CLICK": 260,
-        "SAVE": 24,
+        "OUTBOUND_CLICK": 0,
         "IMPRESSION": 4228,
-        "OUTBOUND_CLICK": 0
+        "SAVE": 24
       }
     },
     {
@@ -191,9 +31,9 @@
       "data_status": "READY",
       "metrics": {
         "PIN_CLICK": 370,
-        "SAVE": 21,
+        "OUTBOUND_CLICK": 2,
         "IMPRESSION": 4478,
-        "OUTBOUND_CLICK": 2
+        "SAVE": 21
       }
     },
     {
@@ -201,9 +41,9 @@
       "data_status": "READY",
       "metrics": {
         "PIN_CLICK": 287,
-        "SAVE": 16,
+        "OUTBOUND_CLICK": 1,
         "IMPRESSION": 4446,
-        "OUTBOUND_CLICK": 1
+        "SAVE": 16
       }
     },
     {
@@ -211,9 +51,9 @@
       "data_status": "READY",
       "metrics": {
         "PIN_CLICK": 311,
-        "SAVE": 23,
+        "OUTBOUND_CLICK": 5,
         "IMPRESSION": 4816,
-        "OUTBOUND_CLICK": 5
+        "SAVE": 23
       }
     },
     {
@@ -221,9 +61,9 @@
       "data_status": "READY",
       "metrics": {
         "PIN_CLICK": 259,
-        "SAVE": 23,
+        "OUTBOUND_CLICK": 2,
         "IMPRESSION": 4692,
-        "OUTBOUND_CLICK": 2
+        "SAVE": 23
       }
     },
     {
@@ -231,9 +71,9 @@
       "data_status": "READY",
       "metrics": {
         "PIN_CLICK": 305,
-        "SAVE": 27,
+        "OUTBOUND_CLICK": 5,
         "IMPRESSION": 4914,
-        "OUTBOUND_CLICK": 5
+        "SAVE": 27
       }
     },
     {
@@ -241,9 +81,9 @@
       "data_status": "READY",
       "metrics": {
         "PIN_CLICK": 342,
-        "SAVE": 18,
+        "OUTBOUND_CLICK": 6,
         "IMPRESSION": 4631,
-        "OUTBOUND_CLICK": 6
+        "SAVE": 18
       }
     },
     {
@@ -251,9 +91,9 @@
       "data_status": "READY",
       "metrics": {
         "PIN_CLICK": 252,
-        "SAVE": 20,
+        "OUTBOUND_CLICK": 0,
         "IMPRESSION": 4125,
-        "OUTBOUND_CLICK": 0
+        "SAVE": 20
       }
     },
     {
@@ -261,9 +101,9 @@
       "data_status": "READY",
       "metrics": {
         "PIN_CLICK": 270,
-        "SAVE": 19,
+        "OUTBOUND_CLICK": 3,
         "IMPRESSION": 3833,
-        "OUTBOUND_CLICK": 3
+        "SAVE": 19
       }
     },
     {
@@ -271,9 +111,9 @@
       "data_status": "READY",
       "metrics": {
         "PIN_CLICK": 276,
-        "SAVE": 14,
+        "OUTBOUND_CLICK": 9,
         "IMPRESSION": 4656,
-        "OUTBOUND_CLICK": 9
+        "SAVE": 14
       }
     },
     {
@@ -281,9 +121,9 @@
       "data_status": "READY",
       "metrics": {
         "PIN_CLICK": 271,
-        "SAVE": 21,
+        "OUTBOUND_CLICK": 0,
         "IMPRESSION": 4434,
-        "OUTBOUND_CLICK": 0
+        "SAVE": 21
       }
     },
     {
@@ -291,9 +131,9 @@
       "data_status": "READY",
       "metrics": {
         "PIN_CLICK": 243,
-        "SAVE": 18,
+        "OUTBOUND_CLICK": 2,
         "IMPRESSION": 4520,
-        "OUTBOUND_CLICK": 2
+        "SAVE": 18
       }
     },
     {
@@ -301,13 +141,173 @@
       "data_status": "READY",
       "metrics": {
         "PIN_CLICK": 300,
-        "SAVE": 55,
+        "OUTBOUND_CLICK": 4,
         "IMPRESSION": 4585,
-        "OUTBOUND_CLICK": 4
+        "SAVE": 55
       }
     },
     {
       "date": "2026-05-29",
+      "data_status": "READY",
+      "metrics": {
+        "PIN_CLICK": 273,
+        "OUTBOUND_CLICK": 1,
+        "IMPRESSION": 4631,
+        "SAVE": 26
+      }
+    },
+    {
+      "date": "2026-05-30",
+      "data_status": "READY",
+      "metrics": {
+        "PIN_CLICK": 238,
+        "OUTBOUND_CLICK": 2,
+        "IMPRESSION": 4341,
+        "SAVE": 15
+      }
+    },
+    {
+      "date": "2026-05-31",
+      "data_status": "READY",
+      "metrics": {
+        "PIN_CLICK": 279,
+        "OUTBOUND_CLICK": 3,
+        "IMPRESSION": 4196,
+        "SAVE": 27
+      }
+    },
+    {
+      "date": "2026-06-01",
+      "data_status": "READY",
+      "metrics": {
+        "PIN_CLICK": 307,
+        "OUTBOUND_CLICK": 1,
+        "IMPRESSION": 4874,
+        "SAVE": 28
+      }
+    },
+    {
+      "date": "2026-06-02",
+      "data_status": "READY",
+      "metrics": {
+        "PIN_CLICK": 327,
+        "OUTBOUND_CLICK": 1,
+        "IMPRESSION": 5048,
+        "SAVE": 20
+      }
+    },
+    {
+      "date": "2026-06-03",
+      "data_status": "READY",
+      "metrics": {
+        "PIN_CLICK": 358,
+        "OUTBOUND_CLICK": 1,
+        "IMPRESSION": 5875,
+        "SAVE": 24
+      }
+    },
+    {
+      "date": "2026-06-04",
+      "data_status": "READY",
+      "metrics": {
+        "PIN_CLICK": 302,
+        "OUTBOUND_CLICK": 0,
+        "IMPRESSION": 5317,
+        "SAVE": 28
+      }
+    },
+    {
+      "date": "2026-06-05",
+      "data_status": "READY",
+      "metrics": {
+        "PIN_CLICK": 221,
+        "OUTBOUND_CLICK": 2,
+        "IMPRESSION": 4380,
+        "SAVE": 18
+      }
+    },
+    {
+      "date": "2026-06-06",
+      "data_status": "READY",
+      "metrics": {
+        "PIN_CLICK": 245,
+        "OUTBOUND_CLICK": 0,
+        "IMPRESSION": 4310,
+        "SAVE": 17
+      }
+    },
+    {
+      "date": "2026-06-07",
+      "data_status": "READY",
+      "metrics": {
+        "PIN_CLICK": 293,
+        "OUTBOUND_CLICK": 6,
+        "IMPRESSION": 4427,
+        "SAVE": 22
+      }
+    },
+    {
+      "date": "2026-06-08",
+      "data_status": "READY",
+      "metrics": {
+        "PIN_CLICK": 341,
+        "OUTBOUND_CLICK": 4,
+        "IMPRESSION": 5009,
+        "SAVE": 30
+      }
+    },
+    {
+      "date": "2026-06-09",
+      "data_status": "READY",
+      "metrics": {
+        "PIN_CLICK": 325,
+        "OUTBOUND_CLICK": 0,
+        "IMPRESSION": 5041,
+        "SAVE": 19
+      }
+    },
+    {
+      "date": "2026-06-10",
+      "data_status": "READY",
+      "metrics": {
+        "PIN_CLICK": 345,
+        "OUTBOUND_CLICK": 3,
+        "IMPRESSION": 5255,
+        "SAVE": 13
+      }
+    },
+    {
+      "date": "2026-06-11",
+      "data_status": "READY",
+      "metrics": {
+        "PIN_CLICK": 301,
+        "OUTBOUND_CLICK": 0,
+        "IMPRESSION": 5104,
+        "SAVE": 17
+      }
+    },
+    {
+      "date": "2026-06-12",
+      "data_status": "READY",
+      "metrics": {
+        "PIN_CLICK": 286,
+        "OUTBOUND_CLICK": 2,
+        "IMPRESSION": 4889,
+        "SAVE": 17
+      }
+    },
+    {
+      "date": "2026-06-13",
+      "data_status": "READY",
+      "metrics": {
+        "PIN_CLICK": 295,
+        "OUTBOUND_CLICK": 2,
+        "IMPRESSION": 4830,
+        "SAVE": 20
+      }
+    },
+    {
+      "date": "2026-06-14",
       "data_status": "PROCESSING",
       "metrics": {
         "IMPRESSION": 0,
@@ -321,16 +321,16 @@
     {
       "id": "881298289521014237",
       "name": "Carousels",
-      "pin_count": 51,
-      "follower_count": 750,
+      "pin_count": 65,
+      "follower_count": 754,
       "image": "https://i.pinimg.com/400x300/85/d7/0c/85d70c1f4684a19c4d0411bb3d778505.jpg",
-      "modified_at": "2026-05-29T23:00:57.709000"
+      "modified_at": "2026-06-14T19:01:54.243000"
     },
     {
       "id": "881298289521014252",
       "name": "Medical Terminology",
       "pin_count": 2,
-      "follower_count": 750,
+      "follower_count": 754,
       "image": "https://i.pinimg.com/custom_covers/400x300/881298289521014252_1719934947.jpg",
       "modified_at": "2024-07-02T15:04:31.647000"
     },
@@ -338,7 +338,7 @@
       "id": "881298289521007421",
       "name": "NCLEX Review Blogs",
       "pin_count": 37,
-      "follower_count": 750,
+      "follower_count": 754,
       "image": "https://i.pinimg.com/400x300/89/59/21/8959211f1e65eab2bfa8ee7ff6c226f8.jpg",
       "modified_at": "2024-11-04T13:41:27.648000"
     },
@@ -346,7 +346,7 @@
       "id": "881298289521014253",
       "name": "Nursing Humor",
       "pin_count": 96,
-      "follower_count": 749,
+      "follower_count": 753,
       "image": "https://i.pinimg.com/400x300/f5/e0/36/f5e03680a57967d3a3ad1a98440c8d74.jpg",
       "modified_at": "2024-07-24T13:53:40.577000"
     },
@@ -354,278 +354,258 @@
       "id": "881298289521014247",
       "name": "Pharmacology Tips",
       "pin_count": 9,
-      "follower_count": 750,
+      "follower_count": 754,
       "image": "https://i.pinimg.com/custom_covers/400x300/881298289521014247_1719929338.jpg",
       "modified_at": "2024-07-02T14:08:25.195000"
     },
     {
       "id": "881298289520728453",
       "name": "Quick Saves",
-      "pin_count": 1415,
-      "follower_count": 750,
+      "pin_count": 1446,
+      "follower_count": 754,
       "image": "https://i.pinimg.com/400x300/be/ae/fa/beaefa0fe91925eeec878c1a88330828.jpg",
-      "modified_at": "2026-05-30T06:29:40.417000"
+      "modified_at": "2026-06-15T06:27:26.244000"
     },
     {
       "id": "881298289521014242",
       "name": "Study Guides",
       "pin_count": 11,
-      "follower_count": 751,
+      "follower_count": 755,
       "image": "https://i.pinimg.com/400x300/6b/22/98/6b2298f0b2f48eac9772a9b3856afa85.jpg",
       "modified_at": "2024-07-02T13:59:30.657000"
     }
   ],
   "pins": [
     {
-      "id": "881298220854676634",
+      "id": "881298220855198554",
       "title": "",
-      "description": "In this sneak peek, we go deeper into heart failure; helping you understand what to watch for and how to respond in real patient scenarios.\n\nDon’t miss:\n📈 Worsening signs = rapid weight gain, increas",
-      "link": "https://www.instagram.com/reel/DY7cQmMgF8p/",
+      "description": "Did you guess the diagnosis correctly? \n.\n.\n.\n#nursing #nurse #nursingschool",
+      "link": "https://www.instagram.com/reel/DZkpCTskekP/",
       "board_id": "881298289520728453",
       "media_type": "video",
-      "thumbnail": "https://i.pinimg.com/400x300/a2/7e/63/a27e63c8ac0679f800959b3cad655c8e.jpg",
-      "created_at": "2026-05-30T06:29:32"
+      "thumbnail": "https://i.pinimg.com/400x300/85/db/5d/85db5d36801f02e6b34ce79c6378bb63.jpg",
+      "created_at": "2026-06-15T06:27:23"
     },
     {
-      "id": "881298220854676604",
+      "id": "881298220855198507",
       "title": "",
-      "description": "Chatting with students - what's the reality of nursing school? \n\nWant to learn more about nursing? Head to our bio! \n.\n.\n.\n#nursing #oncampus #nursingschool #nclex",
-      "link": "https://www.instagram.com/reel/DY7od_0CWm1/",
+      "description": "Pediatrics is such a unique part of nursing because you get to think like a kid… while also being the calm, professional support system families need. \n\nListen to our latest episode of Bedpan Banter w",
+      "link": "https://www.instagram.com/reel/DZlJs4HkiT1/",
       "board_id": "881298289520728453",
       "media_type": "video",
-      "thumbnail": "https://i.pinimg.com/400x300/af/75/d5/af75d5d5507d9b4f49cc457750fe2268.jpg",
-      "created_at": "2026-05-30T06:27:07"
+      "thumbnail": "https://i.pinimg.com/400x300/f7/49/e9/f749e9dee3f724d94f4235e6255f3daf.jpg",
+      "created_at": "2026-06-15T06:24:33"
     },
     {
-      "id": "881298220854668338",
-      "title": "Title: Every Critical Lab. One Card.",
-      "description": "A clean SimpleNursing-branded NCLEX reference card that organizes CBC, BMP, CMP add-ons, coagulation, and ABG critical values into one scannable visual.",
+      "id": "881298220855182086",
+      "title": "AI Study Mistakes Nursing Students Must Avoid",
+      "description": "92% of nursing students use AI to study, but generic AI can fail you on NCLEX-style clinical judgment, dosage safety, priority questions, and lab interpretation. Learn when AI helps - and when verifie",
       "link": "https://simplenursing.com/?utm_source=pinterest&utm_campaign=aicreatives",
       "board_id": "881298289521014237",
       "media_type": "image",
-      "thumbnail": "https://i.pinimg.com/400x300/a5/f5/36/a5f53668c60fcdebbca57d42355a1fdb.jpg",
-      "created_at": "2026-05-29T23:00:44"
+      "thumbnail": "https://i.pinimg.com/400x300/9d/8c/41/9d8c419add0b4ef0cd6f06811694c5ae.jpg",
+      "created_at": "2026-06-14T19:01:37"
     },
     {
-      "id": "881298220854646888",
+      "id": "881298220855160883",
       "title": "",
-      "description": "Learn the proper technique for drawing up medication accurately and safely. This quick clinical skills clip helps you build confidence for skills check-offs, clinicals, and the NCLEX 🩺\n\nHead to our b",
-      "link": "https://www.instagram.com/reel/DY5njnskz7_/",
-      "board_id": "881298289520728453",
-      "media_type": "video",
-      "thumbnail": "https://i.pinimg.com/400x300/7a/bf/5a/7abf5a1c3a8b4399cd6e933ab341d674.jpg",
-      "created_at": "2026-05-29T06:30:57"
-    },
-    {
-      "id": "881298220854646704",
-      "title": "",
-      "description": "1 in 4 new grad nurses quit within their first year. 💔🩺\n\nNot because they’re weak. Because nursing school could never fully prepare you for the pressure, burnout, anxiety, exhaustion, and reality sh",
-      "link": "https://www.instagram.com/p/DY42fJtko7A/",
-      "board_id": "881298289520728453",
-      "media_type": "image",
-      "thumbnail": "https://i.pinimg.com/400x300/0f/eb/ae/0febaeead36f566d2c85bfd67d0f51e3.jpg",
-      "created_at": "2026-05-29T06:16:53"
-    },
-    {
-      "id": "881298220854632227",
-      "title": "2026 BSN Game Plan for ADN Nurses",
-      "description": "ADN grads, know the real RN-to-BSN cost and timeline before hospital hiring standards shift. Compare budget, online, and private BSN options so you can plan ahead, avoid surprise tuition costs, and ch",
-      "link": "https://simplenursing.com/?utm_source=pinterest&utm_campaign=aicreatives",
-      "board_id": "881298289521014237",
-      "media_type": "image",
-      "thumbnail": "https://i.pinimg.com/400x300/6d/35/c6/6d35c6c6cd876d4a8b855c9b7788260a.jpg",
-      "created_at": "2026-05-28T19:02:55"
-    },
-    {
-      "id": "881298220854613175",
-      "title": "",
-      "description": "Pharmacology doesn't need to stress you out! Let us make the process easier with our pharmacology flashcard set. \n\n180+ medications covered, all color coded by body system! \n\nGet yours in our bio!\n.\n.",
-      "link": "https://www.instagram.com/reel/DY29l2pjvqo/",
-      "board_id": "881298289520728453",
-      "media_type": "video",
-      "thumbnail": "https://i.pinimg.com/400x300/48/8e/80/488e8031592a5ef0989cb5c485d257f3.jpg",
-      "created_at": "2026-05-28T06:33:55"
-    },
-    {
-      "id": "881298220854613136",
-      "title": "",
-      "description": "Haley and Marcelle, sisters and founders of @eight.ten.twelve show how their app helps nurses keep everything in one place, from organized nursing discounts and scheduling tools to a community space w",
-      "link": "https://www.instagram.com/reel/DY2Q-ccjtm0/",
-      "board_id": "881298289520728453",
-      "media_type": "video",
-      "thumbnail": "https://i.pinimg.com/400x300/97/e0/87/97e087c8bf59c5c2285e4f50a158c3ff.jpg",
-      "created_at": "2026-05-28T06:31:40"
-    },
-    {
-      "id": "881298220854598341",
-      "title": "Drug Calculation Formulas Nursing Students Must Master",
-      "description": "Most nursing programs require a 90–100% score on dosage calculation exams before clinical placement. This SimpleNursing reference card breaks down the four formulas nursing students need most: Desired",
-      "link": "https://simplenursing.com/?utm_source=pinterest&utm_campaign=aicreatives",
-      "board_id": "881298289521014237",
-      "media_type": "image",
-      "thumbnail": "https://i.pinimg.com/400x300/22/86/7b/22867b6e8383e47784ca5f28594bf70b.jpg",
-      "created_at": "2026-05-27T19:05:21"
-    },
-    {
-      "id": "881298220854579153",
-      "title": "",
-      "description": "Get a sneak peek of our Cushing's lesson - breaks down the most tested differences for the NCLEX, from cortisol levels to classic signs and symptoms.\n\nLearn simple memory tricks to easily recognize ea",
-      "link": "https://www.instagram.com/reel/DY0d8urASid/",
-      "board_id": "881298289520728453",
-      "media_type": "video",
-      "thumbnail": "https://i.pinimg.com/400x300/18/a9/28/18a92821bd612637b5020e3d32414027.jpg",
-      "created_at": "2026-05-27T06:33:29"
-    },
-    {
-      "id": "881298220854579068",
-      "title": "",
-      "description": "Once you’re in… you’re IN 🤝 welcome new grad nurses. Nursing isn’t just a career, it’s a whole culture.\n\n🎙️ Watch the full episode with @eight.ten.twelve at the link in our bio!\n\n#nursing #nurse #nu",
-      "link": "https://www.instagram.com/reel/DYzsMW9Aju4/",
-      "board_id": "881298289520728453",
-      "media_type": "video",
-      "thumbnail": "https://i.pinimg.com/400x300/a3/1d/b0/a31db0428bcc5d677da509902c8567bd.jpg",
-      "created_at": "2026-05-27T06:27:59"
-    },
-    {
-      "id": "881298220854563280",
-      "title": "$100K Nursing Without Hospital Shifts",
-      "description": "Hospital nursing is not your only option. Compare home health vs hospital RN paths for pay, schedule, autonomy, and growth in 2026. See why more nurses are rethinking nights, weekends, and rotating sh",
-      "link": "https://simplenursing.com/?utm_source=pinterest&utm_campaign=aicreatives",
-      "board_id": "881298289521014237",
-      "media_type": "image",
-      "thumbnail": "https://i.pinimg.com/400x300/d2/c9/f8/d2c9f8f2a6816face3ac9e9936933722.jpg",
-      "created_at": "2026-05-26T19:04:29"
-    },
-    {
-      "id": "881298220854545167",
-      "title": "",
-      "description": "Need help passing the NCLEX? This quick clip covers key test-taking strategies to help you improve accuracy, manage time, and focus on what matters most. \n\nWatch the full lesson in our NCLEX podcast e",
-      "link": "https://www.instagram.com/reel/DYx5MZlCcf8/",
-      "board_id": "881298289520728453",
-      "media_type": "video",
-      "thumbnail": "https://i.pinimg.com/400x300/66/a4/cf/66a4cf1212f93363ccdffb3b68ffb5eb.jpg",
-      "created_at": "2026-05-26T06:45:37"
-    },
-    {
-      "id": "881298220854544676",
-      "title": "",
-      "description": "This Memorial Day, we honor and remember the brave men and women who made the ultimate sacrifice for our country, including veterans who continue to serve in healthcare ❤️🇺🇸\n\nTo give back, Simple Nu",
-      "link": "https://www.instagram.com/p/DYw35BTERzs/",
+      "description": "Prioritization review beyond airway, breathing & circulation - for full lessons head to our bio! \n\n#abc #airway #breathing #prioritization #nclex",
+      "link": "https://www.instagram.com/p/DZiKyZLFEUZ/",
       "board_id": "881298289520728453",
       "media_type": "multiple_images",
       "thumbnail": "",
-      "created_at": "2026-05-26T06:17:31"
+      "created_at": "2026-06-14T06:17:36"
     },
     {
-      "id": "881298220854529608",
-      "title": "New Grad RN Sign-On Bonuses by State: What to Ask Before You Sign",
-      "description": "Before accepting your first RN job offer, know what’s negotiable. New grad nurses may be leaving $10K–$15K in sign-on bonus and relocation money on the table. Compare 2026 RN sign-on bonus ranges by s",
+      "id": "881298220855147726",
+      "title": "ABGs Made Simple for NCLEX",
+      "description": "Master ABG interpretation in four easy steps. Learn how to check pH, identify the disorder, spot compensation, and evaluate oxygenation with confidence for NCLEX respiratory questions.",
       "link": "https://simplenursing.com/?utm_source=pinterest&utm_campaign=aicreatives",
       "board_id": "881298289521014237",
       "media_type": "image",
-      "thumbnail": "https://i.pinimg.com/400x300/53/db/c9/53dbc9d3b0e581de10e32200adcb4074.jpg",
-      "created_at": "2026-05-25T19:00:11"
+      "thumbnail": "https://i.pinimg.com/400x300/f7/8d/0c/f78d0cab7cc1f3bac40ab5f1c6ee8d73.jpg",
+      "created_at": "2026-06-13T19:05:04"
     },
     {
-      "id": "881298220854511433",
+      "id": "881298220855129450",
       "title": "",
-      "description": "Have you practiced a highlight case-study style NCLEX question? Join us at SimpleNursing and we will prep you for exam day with detailed rationales for each practice question. \n\nOur NCLEX prep is made",
-      "link": "https://www.instagram.com/reel/DYvUW46gRbg/",
+      "description": "We hope this trivia helped you refresh on some nursing school topics! How did you do? \n.\n.\n.\n#nursing #nursingschool",
+      "link": "https://www.instagram.com/reel/DZffZLKjV-G/",
       "board_id": "881298289520728453",
       "media_type": "video",
-      "thumbnail": "https://i.pinimg.com/400x300/12/6e/f4/126ef4e6044ad09f6041cde2a6e0e030.jpg",
-      "created_at": "2026-05-25T06:24:49"
+      "thumbnail": "https://i.pinimg.com/400x300/a5/0a/40/a50a4002b06d0bc341961697d67bab9d.jpg",
+      "created_at": "2026-06-13T06:40:02"
     },
     {
-      "id": "881298220854511270",
+      "id": "881298220855129073",
       "title": "",
-      "description": "Check out our 5 new exclusive lessons added into our Nursing School memberships 🎉\n\nWant to access these videos & more? Head to our bio! \n\n#nursingschool #nclex #nursingstudent",
-      "link": "https://www.instagram.com/p/DYuJENEEfby/",
+      "description": "Thinking about becoming a nurse? Here's your roadmap from high school to RN! 👩‍⚕️📚\n\nThe journey to nursing can feel overwhelming, but every RN started exactly where you are now. From choosing the ri",
+      "link": "https://www.instagram.com/p/DZgOTclGsvW/",
+      "board_id": "881298289520728453",
+      "media_type": "image",
+      "thumbnail": "https://i.pinimg.com/400x300/83/62/94/836294fa4afcc828f6d53b781fa999e0.jpg",
+      "created_at": "2026-06-13T06:16:30"
+    },
+    {
+      "id": "881298220855113675",
+      "title": "Dosage Calc. Done Right: 5-Step Dimensional Analysis Guide",
+      "description": "Failed dosage calc can pull you from rotation. Learn the 5-step dimensional analysis setup nursing students use to solve med math with more clarity and confidence. Includes IV drip rate, weight-based ",
+      "link": "https://simplenursing.com/?utm_source=pinterest&utm_campaign=aicreatives",
+      "board_id": "881298289521014237",
+      "media_type": "image",
+      "thumbnail": "https://i.pinimg.com/400x300/a3/12/a9/a312a9978418213d8d3e347dbbd91e6d.jpg",
+      "created_at": "2026-06-12T19:03:56"
+    },
+    {
+      "id": "881298220855094719",
+      "title": "",
+      "description": "This is a top missed question! How did you do? For more practice question videos, Q banks and more head to our bio - and you can try it for free! \n.\n.\n.\n#nursing #nurse #nurses",
+      "link": "https://www.instagram.com/reel/DZc8VOsjE4s/",
+      "board_id": "881298289520728453",
+      "media_type": "video",
+      "thumbnail": "https://i.pinimg.com/400x300/97/eb/21/97eb212c465fb578e1ad0905118b328c.jpg",
+      "created_at": "2026-06-12T06:29:27"
+    },
+    {
+      "id": "881298220855094708",
+      "title": "",
+      "description": "give me a p wave 🗣️ \n\nWant to listen to more of our memory music? It's 100% free - head to our bio to listen! \n.\n.\n.\n#nursing school",
+      "link": "https://www.instagram.com/reel/DZdqrXLgfLD/",
+      "board_id": "881298289520728453",
+      "media_type": "video",
+      "thumbnail": "https://i.pinimg.com/400x300/9e/e7/aa/9ee7aa7753fd9a353151b7150acaace6.jpg",
+      "created_at": "2026-06-12T06:28:33"
+    },
+    {
+      "id": "881298220855079111",
+      "title": "Pressure Injury Stages Cheat Sheet",
+      "description": "Save this quick pressure injury staging guide for clinical, NCLEX review, and first-shift confidence. Learn the key difference between Stage 3 and Stage 4 wounds so you can assess, document, and escal",
+      "link": "https://simplenursing.com/?utm_source=pinterest&utm_campaign=aicreatives",
+      "board_id": "881298289521014237",
+      "media_type": "image",
+      "thumbnail": "https://i.pinimg.com/400x300/4b/75/c5/4b75c5bf7c2cc6b488c2bd99ab35760a.jpg",
+      "created_at": "2026-06-11T19:02:18"
+    },
+    {
+      "id": "881298220855062206",
+      "title": "",
+      "description": "NDRIs: different from SSRIs & SNRIs 💊🧠\n\nNDRI = Norepinephrine + Dopamine Reuptake Inhibitor\n(Think bupropion.)\n\nRemember:\n✔️ Used for depression & smoking cessation\n✔️ NO sexual dysfunction (common ",
+      "link": "https://www.instagram.com/reel/DZa4JRSkcDV/",
+      "board_id": "881298289520728453",
+      "media_type": "video",
+      "thumbnail": "https://i.pinimg.com/400x300/aa/99/0d/aa990dd85af4fa1d0c757d0bc836af55.jpg",
+      "created_at": "2026-06-11T06:28:59"
+    },
+    {
+      "id": "881298220855047952",
+      "title": "Is Nursing Still a Safe Career? The 2026 Job Numbers Say Yes",
+      "description": "Healthcare made up 63% of every new U.S. job created in January 2026. With RN jobs projected to grow 5% and advanced practice nursing roles projected to grow 35% through 2034, nursing remains one of t",
+      "link": "https://simplenursing.com/?utm_source=pinterest&utm_campaign=aicreatives",
+      "board_id": "881298289521014237",
+      "media_type": "image",
+      "thumbnail": "https://i.pinimg.com/400x300/0b/ab/0e/0bab0e740f4c6ec52085af6ee31d454f.jpg",
+      "created_at": "2026-06-10T19:00:33"
+    },
+    {
+      "id": "881298220855030239",
+      "title": "",
+      "description": "Outside of nursing, Kash spends time as Spider-Man, doing flips, acrobatics, and bringing smiles to children going through some of the hardest moments of their lives.\n\nBecause sometimes healing isn’t ",
+      "link": "https://www.instagram.com/reel/DZXvUnnDTxD/",
+      "board_id": "881298289520728453",
+      "media_type": "video",
+      "thumbnail": "https://i.pinimg.com/400x300/e1/70/47/e17047c52fb642759cd4767594a358b3.jpg",
+      "created_at": "2026-06-10T06:54:07"
+    },
+    {
+      "id": "881298220855029942",
+      "title": "",
+      "description": "Nurse Mike with some memory tricks that you'll never forget ... \n\n#nursingschool #labs #nurse",
+      "link": "https://www.instagram.com/reel/DZYRpAwlVA3/",
+      "board_id": "881298289520728453",
+      "media_type": "video",
+      "thumbnail": "https://i.pinimg.com/400x300/0f/a4/af/0fa4afd770e5bbdcab14646bc7e0cd6e.jpg",
+      "created_at": "2026-06-10T06:36:41"
+    },
+    {
+      "id": "881298220855014868",
+      "title": "Think Like a Nurse, Pass NCLEX",
+      "description": "The NGN NCLEX tests clinical judgment, not memorization. Save this 6-step NCJMM ladder before you study so you know exactly how to recognize cues, prioritize, take action, and evaluate outcomes. Learn",
+      "link": "https://simplenursing.com/?utm_source=pinterest&utm_campaign=aicreatives",
+      "board_id": "881298289521014237",
+      "media_type": "image",
+      "thumbnail": "https://i.pinimg.com/400x300/37/6c/40/376c40282cdcb3703647bf5a5c2a3442.jpg",
+      "created_at": "2026-06-09T19:05:06"
+    },
+    {
+      "id": "881298220854996454",
+      "title": "",
+      "description": "I’m literally Kenzie 🤣 \n\n#nursing #nursingschool #nurse #loveisland",
+      "link": "https://www.instagram.com/p/DZVH9HBlDw5/",
       "board_id": "881298289520728453",
       "media_type": "multiple_images",
       "thumbnail": "",
-      "created_at": "2026-05-25T06:17:08"
+      "created_at": "2026-06-09T06:17:41"
     },
     {
-      "id": "881298220854497241",
-      "title": "Two Predictors You Control",
-      "description": "1 in 5 nursing students do not finish, but the warning signs are not random. Learn the three predictors that shape nursing school success, what you can control before day one, and how to choose the st",
+      "id": "881298220854963686",
+      "title": "",
+      "description": "Our memory music helps nursing concepts stick 🤣 and they'll give you a laugh ... Listen for free in our bio! \n.\n.\n.\n#nursing #nurse #uti",
+      "link": "https://www.instagram.com/reel/DZSnbOVDOwU/",
+      "board_id": "881298289520728453",
+      "media_type": "video",
+      "thumbnail": "https://i.pinimg.com/400x300/93/80/4d/93804d744ed6285e6206153664d22098.jpg",
+      "created_at": "2026-06-08T06:51:02"
+    },
+    {
+      "id": "881298220854963418",
+      "title": "",
+      "description": "At the end of the day, YOU are the one sitting for the NCLEX. You are the one putting in the hours, showing up to study, pushing through the doubt, and fighting for your future.\n\nThe way you talk to y",
+      "link": "https://www.instagram.com/reel/DZTVxKkFfUW/",
+      "board_id": "881298289520728453",
+      "media_type": "video",
+      "thumbnail": "https://i.pinimg.com/400x300/d8/7a/5c/d87a5c5bce23da076e0928aed13552be.jpg",
+      "created_at": "2026-06-08T06:27:02"
+    },
+    {
+      "id": "881298220854929635",
+      "title": "",
+      "description": "Sliding scale = insulin dose based on the patient’s current blood glucose. The NCLEX loves testing dose calculation, safety, and priority actions with insulin.\n\n📚 For ourPharmacology Flashcards click",
+      "link": "https://www.instagram.com/reel/DZQA7aVkTUY/",
+      "board_id": "881298289520728453",
+      "media_type": "video",
+      "thumbnail": "https://i.pinimg.com/400x300/a3/f8/fa/a3f8faea7e264c5f7cc3de7dca6e194f.jpg",
+      "created_at": "2026-06-07T06:34:33"
+    },
+    {
+      "id": "881298220854929532",
+      "title": "",
+      "description": "And we hope it was reported 👀 \n\n#nurse #nursing #crazystories",
+      "link": "https://www.instagram.com/reel/DZPzxOgBkaJ/",
+      "board_id": "881298289520728453",
+      "media_type": "video",
+      "thumbnail": "https://i.pinimg.com/400x300/8c/f0/e3/8cf0e31190c2a8fea5d78e71268187f9.jpg",
+      "created_at": "2026-06-07T06:29:23"
+    },
+    {
+      "id": "881298220854914101",
+      "title": "Septic Shock Fluids: Push or Hold? 4 Shock Types for Nursing Students",
+      "description": "Septic shock patient in front of you: do you push fluids or hold them? Save this SimpleNursing shock reference guide for clinical, NCLEX review, and quick nursing priority actions. Covers hypovolemic,",
       "link": "https://simplenursing.com/?utm_source=pinterest&utm_campaign=aicreatives",
       "board_id": "881298289521014237",
       "media_type": "image",
-      "thumbnail": "https://i.pinimg.com/400x300/b1/0a/df/b10adfcde746f05b3075134606c68b5c.jpg",
-      "created_at": "2026-05-24T19:01:00"
+      "thumbnail": "https://i.pinimg.com/400x300/ad/5c/1b/ad5c1b65966a941bdde0726e112b9b74.jpg",
+      "created_at": "2026-06-06T19:04:57"
     },
     {
-      "id": "881298220854479917",
+      "id": "881298220854895614",
       "title": "",
-      "description": "The NCLEX isn’t about memorizing everything, it’s about proving you can keep patients safe. Learn how to choose the safest answer using prioritization, delegation, and clinical judgment strategies des",
-      "link": "https://www.instagram.com/reel/DYsUF1-lPCP/",
+      "description": "Your setbacks do not determine your future. Sometimes the comeback becomes the most powerful part of the story 🩺\n\nFailing the NCLEX didn’t define Nurse Kash, how he came back from it did. \n\n🎧 Watch ",
+      "link": "https://www.instagram.com/reel/DZNcJW9AAMB/",
       "board_id": "881298289520728453",
       "media_type": "video",
-      "thumbnail": "https://i.pinimg.com/400x300/89/7d/cd/897dcd3af069e88a0def43a5f2a3cac9.jpg",
-      "created_at": "2026-05-24T06:44:48"
-    },
-    {
-      "id": "881298220854479658",
-      "title": "",
-      "description": "This series simplifies medical abbreviations so you can read notes faster, understand your patients better, and feel confident walking into clinicals! \n.\n. Want more detailed nursing school lessons ? ",
-      "link": "https://www.instagram.com/reel/DYr_fu4mMZM/",
-      "board_id": "881298289520728453",
-      "media_type": "video",
-      "thumbnail": "https://i.pinimg.com/400x300/49/50/0d/49500d63660cffde859d378b8f253190.jpg",
-      "created_at": "2026-05-24T06:32:15"
-    },
-    {
-      "id": "881298220854464863",
-      "title": "New Grad RN Residency Programs: The Career Move That Helps Nurses Survive Year One",
-      "description": "1 in 4 new grad RNs quit within their first year, but nurse residency programs can change the outcome. See why hospitals with 6–12 month residency support, assigned preceptors, mentors, and structured",
-      "link": "https://simplenursing.com/?utm_source=pinterest&utm_campaign=aicreatives",
-      "board_id": "881298289521014237",
-      "media_type": "image",
-      "thumbnail": "https://i.pinimg.com/400x300/04/b3/5c/04b35c194800306af9225d7602b359ed.jpg",
-      "created_at": "2026-05-23T19:02:34"
-    },
-    {
-      "id": "881298220854445679",
-      "title": "",
-      "description": "Master the Clinical Judgment Measurement Model (CJMM) and learn how the NCLEX tests your ability to recognize cues, analyze findings, prioritize hypotheses, and take action!\n\nWatch the full episode in",
-      "link": "https://www.instagram.com/reel/DYpvTr0DxAC/",
-      "board_id": "881298289520728453",
-      "media_type": "video",
-      "thumbnail": "https://i.pinimg.com/400x300/6c/43/8b/6c438bfc1c1b5a12d96aaea1f8582c16.jpg",
-      "created_at": "2026-05-23T06:35:30"
-    },
-    {
-      "id": "881298220854445591",
-      "title": "",
-      "description": "I feel like the sim man rn … \n\n#nurselife #nursingschool #nclex #top5horrormovies - my top 5 horror movies",
-      "link": "https://www.instagram.com/reel/DYpgb0ipZ06/",
-      "board_id": "881298289520728453",
-      "media_type": "video",
-      "thumbnail": "https://i.pinimg.com/400x300/bf/3d/e2/bf3de2a03c3c99b4dee75f6a5e16a084.jpg",
-      "created_at": "2026-05-23T06:32:26"
-    },
-    {
-      "id": "881298220854430730",
-      "title": "Nursing School Rec Letter Mistakes",
-      "description": "Asked the wrong person for your nursing school recommendation letter? Learn who BSN admissions committees want to hear from—and what your letter must say before you submit. Visit simplenursing.com.",
-      "link": "https://simplenursing.com/?utm_source=pinterest&utm_campaign=aicreatives",
-      "board_id": "881298289521014237",
-      "media_type": "image",
-      "thumbnail": "https://i.pinimg.com/400x300/62/d5/c8/62d5c8fb6266096effdbb83cc54f1898.jpg",
-      "created_at": "2026-05-22T19:05:06"
-    },
-    {
-      "id": "881298220854413456",
-      "title": "",
-      "description": "Use an orange to practice your IM Injections! \n\nMaster the steps for safe intramuscular injections, including site selection, technique, and patient safety tips. \n\n👉  head to our bio for full access ",
-      "link": "https://www.instagram.com/reel/DYm16dxlHyy/",
-      "board_id": "881298289520728453",
-      "media_type": "video",
-      "thumbnail": "https://i.pinimg.com/400x300/77/64/0f/77640fd1c54ac17324d7746abf851444.jpg",
-      "created_at": "2026-05-22T06:31:45"
+      "thumbnail": "https://i.pinimg.com/400x300/43/fd/d3/43fdd389ce82e292c1672741dbb0f962.jpg",
+      "created_at": "2026-06-06T06:25:34"
     }
   ],
-  "fetched_at": "2026-05-30T16:11:49.881Z"
+  "fetched_at": "2026-06-15T16:24:54.821Z"
 }
