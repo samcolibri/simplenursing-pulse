@@ -111,8 +111,11 @@ function SourceBadge({ label, color }) {
 
 function PlatformCard({ platform, liveFollowers, liveSource, posts, topPost }) {
   const p = PLATFORM[platform]
-  const totalViews = posts.reduce((s, x) => s + (x.views || x.video_views || x.likes || 0), 0)
-  const avgViews = posts.length ? totalViews / posts.length : 0
+  const isIG = platform === 'instagram'
+  // TikTok: playCount = true views. Instagram: Apify returns video_views + likes (public engagement),
+  // NOT reach/impressions — those require Meta Business API.
+  const totalEngagement = posts.reduce((s, x) => s + (x.views || x.video_views || x.likes || 0), 0)
+  const avgEngagement = posts.length ? totalEngagement / posts.length : 0
   return (
     <div className={'card-strong p-4 sm:p-5 fade-up ' + p.glow} style={{ borderColor: p.color + '40' }}>
       <div className="flex items-center justify-between mb-3">
@@ -134,12 +137,15 @@ function PlatformCard({ platform, liveFollowers, liveSource, posts, topPost }) {
           <span className="text-xs font-semibold tabular-nums">{fmtFull(posts.length)}</span>
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-[11px] text-[var(--text-muted)]">Total views</span>
-          <span className="text-xs font-semibold tabular-nums">{fmt(totalViews)}</span>
+          <span className="text-[11px] text-[var(--text-muted)]">{isIG ? 'Engagements' : 'Total views'}</span>
+          <span className="text-xs font-semibold tabular-nums">{fmt(totalEngagement)}</span>
         </div>
+        {isIG && (
+          <div className="text-[9px] text-[#fad74f]/80 mono -mt-1">video views + likes · not reach</div>
+        )}
         <div className="flex items-center justify-between">
           <span className="text-[11px] text-[var(--text-muted)]">Avg per post</span>
-          <span className="text-xs font-semibold tabular-nums">{fmt(avgViews)}</span>
+          <span className="text-xs font-semibold tabular-nums">{fmt(avgEngagement)}</span>
         </div>
         <div className="flex items-center justify-between">
           <span className="text-[11px] text-[var(--text-muted)]">Top post</span>
@@ -480,27 +486,89 @@ export default function PulsePage() {
         <section>
           <div className="flex items-end justify-between mb-4 sm:mb-5 flex-wrap gap-2">
             <div>
-              <div className="mono text-[10px] uppercase tracking-wider text-[#62d070] mb-1">02 · @simplenursing only</div>
-              <h2 className="text-xl sm:text-2xl font-bold">Our posts in this range</h2>
+              <div className="mono text-[10px] uppercase tracking-wider text-[#62d070] mb-1">02 · @simplenursing · ranked by performance</div>
+              <h2 className="text-xl sm:text-2xl font-bold">Our posts ranked by performance</h2>
               <p className="text-xs sm:text-sm text-[var(--text-muted)] mt-1">
-                {ourPostsInRange.length} post{ourPostsInRange.length === 1 ? '' : 's'} between {fmtDate(dateFrom)} and {fmtDate(dateTo)} · highest views first
+                {ttOurs.length + igOurs.length} posts in {rangeLabel} · each platform ranked highest to lowest
               </p>
             </div>
-            <SourceBadge label="LIVE · Apify + YouTube" color="#62d070" />
+            <SourceBadge label="LIVE · Apify" color="#62d070" />
           </div>
 
-          {ourPostsInRange.length === 0 && (
-            <div className="card-strong p-8 text-center">
-              <div className="text-sm text-[var(--text-muted)]">No SimpleNursing posts in this range.</div>
-              <div className="text-xs text-[var(--text-dim)] mt-2">Try widening the range or check the pipeline status above.</div>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            {/* TikTok column */}
+            <div className="card-strong rounded-xl overflow-hidden">
+              <div className="px-4 py-3 border-b border-[var(--border)] flex items-center gap-2" style={{ borderLeftWidth: 3, borderLeftColor: '#75c7e6', borderLeftStyle: 'solid' }}>
+                <span className="text-lg">🎵</span>
+                <span className="font-bold text-sm text-[#75c7e6]">TikTok</span>
+                <span className="mono text-[9px] text-[var(--text-dim)] ml-auto">{ttOurs.length} posts · ranked by views</span>
+              </div>
+              {ttOurs.length === 0
+                ? <div className="px-4 py-8 text-sm text-[var(--text-muted)] text-center">No TikTok posts in range</div>
+                : <div className="divide-y divide-[var(--border)]/50">
+                    {ttOurs.map((post, i) => (
+                      <a key={post.id || i} href={post.url} target="_blank" rel="noreferrer"
+                        className="flex items-center gap-2.5 px-3 py-2.5 hover:bg-[var(--bg-card-2)] transition-colors group">
+                        <span className="mono text-[10px] text-[var(--text-dim)] shrink-0 w-4 text-right">{i + 1}</span>
+                        <span className="text-xs flex-1 truncate text-white/80 min-w-0">{post.caption || '(no caption)'}</span>
+                        <span className="mono text-xs font-semibold tabular-nums shrink-0 text-[#75c7e6]">{fmt(post.views || 0)}</span>
+                        <span className="mono text-[9px] text-[var(--text-dim)] shrink-0 hidden sm:block">{fmtDateShort(post.created_at || post.timestamp)}</span>
+                        <span className="mono text-[9px] text-[var(--text-dim)] group-hover:text-[#75c7e6] shrink-0">↗</span>
+                      </a>
+                    ))}
+                  </div>
+              }
             </div>
-          )}
 
-          {ourPostsInRange.length > 0 && (
-            <div className="card-strong rounded-xl divide-y divide-[var(--border)]/50">
-              {ourPostsInRange.map((p, i) => <PostRow key={p.id || i} post={p} />)}
+            {/* Instagram column */}
+            <div className="card-strong rounded-xl overflow-hidden">
+              <div className="px-4 py-3 border-b border-[var(--border)] flex items-center gap-2" style={{ borderLeftWidth: 3, borderLeftColor: '#fc3467', borderLeftStyle: 'solid' }}>
+                <span className="text-lg">📷</span>
+                <span className="font-bold text-sm text-[#fc3467]">Instagram</span>
+                <span className="mono text-[9px] text-[var(--text-dim)] ml-auto">{igOurs.length} posts · by engagement</span>
+              </div>
+              {igOurs.length === 0
+                ? <div className="px-4 py-6 text-sm text-[var(--text-muted)] text-center">
+                    <div>No Instagram posts in range.</div>
+                    <div className="text-xs text-[var(--text-dim)] mt-1">Only {ig?.owned?.recent_posts?.length || 0} IG posts captured — more come with next Apify refresh.</div>
+                  </div>
+                : <>
+                    <div className="divide-y divide-[var(--border)]/50">
+                      {igOurs.map((post, i) => {
+                        const metric = post.video_views || post.likes || 0
+                        return (
+                          <a key={post.id || i} href={post.url} target="_blank" rel="noreferrer"
+                            className="flex items-center gap-2.5 px-3 py-2.5 hover:bg-[var(--bg-card-2)] transition-colors group">
+                            <span className="mono text-[10px] text-[var(--text-dim)] shrink-0 w-4 text-right">{i + 1}</span>
+                            <span className="text-xs flex-1 truncate text-white/80 min-w-0">{post.caption || '(no caption)'}</span>
+                            <span className="mono text-xs font-semibold tabular-nums shrink-0 text-[#fc3467]">{fmt(metric)}</span>
+                            <span className="mono text-[9px] text-[var(--text-dim)] shrink-0 hidden sm:block">{fmtDateShort(post.created_at || post.timestamp)}</span>
+                            <span className="mono text-[9px] text-[var(--text-dim)] group-hover:text-[#fc3467] shrink-0">↗</span>
+                          </a>
+                        )
+                      })}
+                    </div>
+                    <div className="px-3 py-2 border-t border-[var(--border)]/50 bg-[#fad74f]/5">
+                      <p className="mono text-[9px] text-[#fad74f]">⚠ Showing video views + likes (public). Reach/impressions (e.g. 4.6M) come from Instagram Insights — requires Meta Business API.</p>
+                    </div>
+                  </>
+              }
             </div>
-          )}
+
+            {/* Facebook column */}
+            <div className="card-strong rounded-xl overflow-hidden">
+              <div className="px-4 py-3 border-b border-[var(--border)] flex items-center gap-2" style={{ borderLeftWidth: 3, borderLeftColor: '#00709c', borderLeftStyle: 'solid' }}>
+                <span className="text-lg">📘</span>
+                <span className="font-bold text-sm text-[#00709c]">Facebook</span>
+                <span className="mono text-[9px] uppercase px-1.5 py-0.5 rounded border ml-auto" style={{ color: '#fad74f', borderColor: '#fad74f50', background: '#fad74f10' }}>not connected</span>
+              </div>
+              <div className="px-4 py-6 space-y-2">
+                <p className="text-[11px] text-[var(--text-muted)] leading-relaxed">We post daily on Facebook but cannot pull metrics without the <span className="text-white font-medium">Meta Business API</span>.</p>
+                <p className="text-[11px] text-[var(--text-muted)] leading-relaxed">The same Meta connection that unlocks Facebook also unlocks native Instagram reach — both are blocked until the Business App is approved.</p>
+                <p className="text-[10px] text-[var(--text-dim)] mono mt-2">When Dom is back → developers.facebook.com → Business App access → META_PAGE_ACCESS_TOKEN + META_PAGE_ID</p>
+              </div>
+            </div>
+          </div>
         </section>
 
         <section>
@@ -622,40 +690,7 @@ export default function PulsePage() {
           </section>
         )}
 
-        {(() => {
-          const filteredTopics = clusterTopics(ourPostsInRange)
-          if (filteredTopics.length === 0) return null
-          return (
-            <section>
-              <div className="mb-4 sm:mb-5">
-                <div className="mono text-[10px] uppercase tracking-wider text-[var(--text-dim)] mb-1">06 · topic intelligence · {rangeLabel}</div>
-                <h2 className="text-xl sm:text-2xl font-bold">Trending topics in this range</h2>
-                <p className="text-xs sm:text-sm text-[var(--text-muted)] mt-1">
-                  Clustered from {ourPostsInRange.length} SimpleNursing posts in the selected date range — updates when you change the range.
-                  <span className="ml-2 mono text-[10px] text-[var(--text-dim)]">Source: TikTok + Instagram captions via Apify</span>
-                </p>
-              </div>
-              <div className="card-strong p-5">
-                <div className="space-y-3">
-                  {filteredTopics.map(([topic, score], i) => {
-                    const max = filteredTopics[0][1]
-                    return (
-                      <div key={topic}>
-                        <div className="flex justify-between mb-1.5">
-                          <span className="text-sm font-medium">{topic}</span>
-                          <span className="mono text-[10px] text-[var(--text-dim)]">{fmt(score)} total views in posts about this</span>
-                        </div>
-                        <div className="h-2.5 bg-[var(--bg-card-2)] rounded-full overflow-hidden">
-                          <div className="h-full rounded-full" style={{ width: `${(score / max) * 100}%`, background: i === 0 ? '#fc3467' : i < 3 ? '#fad74f' : '#75c7e6' }} />
-                        </div>
-                      </div>
-                    )
-                  })}
-                </div>
-              </div>
-            </section>
-          )
-        })()}
+
 
         <section>
           <div className="mb-4 sm:mb-5">
