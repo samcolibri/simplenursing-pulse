@@ -282,6 +282,7 @@ function nextMondayLabel() {
 export default function PulsePage() {
   const tt = useStaticData('tiktok')
   const ig = useStaticData('instagram')
+  const fb = useStaticData('facebook')
   const pin = useStaticData('pinterest')
   const yt = useStaticData('youtube')
   const insights = useStaticData('insights')
@@ -337,6 +338,7 @@ export default function PulsePage() {
 
   const ttTop = ttOurs[0]
   const igTop = igOurs[0]
+  const fbOurs = useMemo(() => ourPosts.filter(p => p.platform === 'facebook' && inRange(p.created_at || p.timestamp, dateFrom, dateTo)).sort((a, b) => (b.views || b.likes || 0) - (a.views || a.likes || 0)), [ourPosts, dateFrom, dateTo])
   const applyPreset = (preset) => {
     const today = new Date()
     const iso = (d) => d.toISOString().slice(0, 10)
@@ -464,21 +466,13 @@ export default function PulsePage() {
               posts={igOurs}
               topPost={igTop}
             />
-            <div className="card-strong p-4 sm:p-5 fade-up" style={{ borderColor: '#00709c40' }}>
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-xl">📘</span>
-                  <span className="text-sm font-bold tracking-tight" style={{ color: '#00709c' }}>Facebook</span>
-                </div>
-                <span className="mono text-[9px] uppercase px-1.5 py-0.5 rounded border" style={{ color: '#fad74f', borderColor: '#fad74f50', background: '#fad74f10' }}>not connected</span>
-              </div>
-              <p className="text-[11px] text-[var(--text-muted)] leading-relaxed">
-                Facebook data requires a <span className="text-white font-medium">Meta Business App</span> + Page Access Token — pending approval. We post daily here but cannot pull metrics yet.
-              </p>
-              <p className="text-[10px] text-[var(--text-dim)] mt-2 mono">
-                When Dom is back: developers.facebook.com → request Business app access
-              </p>
-            </div>
+            <PlatformCard
+              platform="facebook"
+              liveFollowers={fb?.followers}
+              liveSource={fb?.recent_posts?.length > 0 ? 'LIVE · Apify' : null}
+              posts={fbOurs}
+              topPost={fbOurs[0]}
+            />
             <PinterestCard pin={pin} from={dateFrom} to={dateTo} />
           </div>
         </section>
@@ -560,13 +554,39 @@ export default function PulsePage() {
               <div className="px-4 py-3 border-b border-[var(--border)] flex items-center gap-2" style={{ borderLeftWidth: 3, borderLeftColor: '#00709c', borderLeftStyle: 'solid' }}>
                 <span className="text-lg">📘</span>
                 <span className="font-bold text-sm text-[#00709c]">Facebook</span>
-                <span className="mono text-[9px] uppercase px-1.5 py-0.5 rounded border ml-auto" style={{ color: '#fad74f', borderColor: '#fad74f50', background: '#fad74f10' }}>not connected</span>
+                {fb?.recent_posts?.length > 0
+                  ? <span className="mono text-[9px] uppercase px-1.5 py-0.5 rounded border ml-auto" style={{ color: '#62d070', borderColor: '#62d070' + '50', background: '#62d070' + '10' }}>LIVE · Apify</span>
+                  : <span className="mono text-[9px] uppercase px-1.5 py-0.5 rounded border ml-auto" style={{ color: '#fad74f', borderColor: '#fad74f50', background: '#fad74f10' }}>not connected</span>
+                }
+                {fb?.recent_posts?.length > 0 && <span className="mono text-[9px] text-[var(--text-dim)] ml-1">{fbOurs.length} posts · by reactions</span>}
               </div>
-              <div className="px-4 py-6 space-y-2">
-                <p className="text-[11px] text-[var(--text-muted)] leading-relaxed">We post daily on Facebook but cannot pull metrics without the <span className="text-white font-medium">Meta Business API</span>.</p>
-                <p className="text-[11px] text-[var(--text-muted)] leading-relaxed">The same Meta connection that unlocks Facebook also unlocks native Instagram reach — both are blocked until the Business App is approved.</p>
-                <p className="text-[10px] text-[var(--text-dim)] mono mt-2">When Dom is back → developers.facebook.com → Business App access → META_PAGE_ACCESS_TOKEN + META_PAGE_ID</p>
-              </div>
+              {(!fb?.recent_posts?.length)
+                ? <div className="px-4 py-6 space-y-2">
+                    <p className="text-[11px] text-[var(--text-muted)] leading-relaxed">Public post metrics — being fetched via Apify. If empty, the page URL may need verifying.</p>
+                    <p className="text-[10px] text-[var(--text-dim)] mono">Native reach/impressions still need Meta Business API (same token that unlocks IG reach).</p>
+                  </div>
+                : <>
+                    <div className="divide-y divide-[var(--border)]/50">
+                      {fbOurs.map((post, i) => {
+                        const metric = post.reactions || post.likes || 0
+                        return (
+                          <a key={post.id || i} href={post.url} target="_blank" rel="noreferrer"
+                            className="flex items-center gap-2.5 px-3 py-2.5 hover:bg-[var(--bg-card-2)] transition-colors group">
+                            <span className="mono text-[10px] text-[var(--text-dim)] shrink-0 w-4 text-right">{i + 1}</span>
+                            <span className="text-xs flex-1 truncate text-white/80 min-w-0">{post.caption || '(no caption)'}</span>
+                            <span className="mono text-xs font-semibold tabular-nums shrink-0 text-[#00709c]">{fmt(metric)}</span>
+                            <span className="mono text-[9px] text-[var(--text-dim)] shrink-0 hidden sm:block">{fmtDateShort(post.created_at || post.timestamp)}</span>
+                            <span className="mono text-[9px] text-[var(--text-dim)] group-hover:text-[#00709c] shrink-0">↗</span>
+                          </a>
+                        )
+                      })}
+                      {fbOurs.length === 0 && <div className="px-4 py-6 text-sm text-[var(--text-muted)] text-center">No Facebook posts in range</div>}
+                    </div>
+                    <div className="px-3 py-2 border-t border-[var(--border)]/50 bg-[#fad74f]/5">
+                      <p className="mono text-[9px] text-[#fad74f]">⚠ Showing reactions + likes (public). Reach/impressions require Meta Business API.</p>
+                    </div>
+                  </>
+              }
             </div>
           </div>
         </section>
@@ -708,6 +728,7 @@ export default function PulsePage() {
                   <th className="text-right px-3 sm:px-5 py-3 text-[#75c7e6] mono text-[10px] uppercase">TikTok</th>
                   <th className="text-right px-3 sm:px-5 py-3 text-[#fc3467] mono text-[10px] uppercase">Instagram</th>
 
+                  <th className="text-right px-3 sm:px-5 py-3 text-[#00709c] mono text-[10px] uppercase">Facebook</th>
                   <th className="text-right px-3 sm:px-5 py-3 text-[#ff0000] mono text-[10px] uppercase">YouTube</th>
                 </tr>
               </thead>
@@ -716,30 +737,35 @@ export default function PulsePage() {
                   <td className="px-3 sm:px-5 py-3 font-medium">Followers (live)</td>
                   <td className="px-3 sm:px-5 py-3 text-right font-semibold text-[#75c7e6]">{fmt(tt?.owned?.followers)}</td>
                   <td className="px-3 sm:px-5 py-3 text-right font-semibold text-[#fc3467]">{fmt(ig?.owned?.followers)}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right font-semibold text-[#00709c]">{fmt(fb?.followers)}</td>
                   <td className="px-3 sm:px-5 py-3 text-right font-semibold text-[#ff0000]">{fmt(yt?.channel?.subscribers)}</td>
                 </tr>
                 <tr>
                   <td className="px-3 sm:px-5 py-3">Posts in range</td>
                   <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(ttOurs.length)}</td>
                   <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(igOurs.length)}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(fbOurs.length)}</td>
                   <td className="px-3 sm:px-5 py-3 text-right">{fmtFull(ytVideosInRange.length)}</td>
                 </tr>
                 <tr>
                   <td className="px-3 sm:px-5 py-3">Total views</td>
                   <td className="px-3 sm:px-5 py-3 text-right">{fmt(ttOurs.reduce((s, x) => s + (x.views || 0), 0))}</td>
                   <td className="px-3 sm:px-5 py-3 text-right">{fmt(igOurs.reduce((s, x) => s + (x.video_views || x.likes || 0), 0))}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right">{fmt(fbOurs.reduce((s, x) => s + (x.reactions || x.likes || 0), 0))}</td>
                   <td className="px-3 sm:px-5 py-3 text-right">{fmt(ytVideosInRange.reduce((s, x) => s + (x.views || 0), 0))}</td>
                 </tr>
                 <tr>
                   <td className="px-3 sm:px-5 py-3">Avg views / post</td>
                   <td className="px-3 sm:px-5 py-3 text-right">{fmt(ttOurs.length ? ttOurs.reduce((s, x) => s + (x.views || 0), 0) / ttOurs.length : null)}</td>
                   <td className="px-3 sm:px-5 py-3 text-right">{fmt(igOurs.length ? igOurs.reduce((s, x) => s + (x.video_views || x.likes || 0), 0) / igOurs.length : null)}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right">{fmt(fbOurs.length ? fbOurs.reduce((s, x) => s + (x.reactions || x.likes || 0), 0) / fbOurs.length : null)}</td>
                   <td className="px-3 sm:px-5 py-3 text-right">{fmt(ytVideosInRange.length ? ytVideosInRange.reduce((s, x) => s + (x.views || 0), 0) / ytVideosInRange.length : null)}</td>
                 </tr>
                 <tr>
                   <td className="px-3 sm:px-5 py-3">Top post views</td>
                   <td className="px-3 sm:px-5 py-3 text-right text-[#75c7e6]">{fmt(ttOurs[0]?.views)}</td>
                   <td className="px-3 sm:px-5 py-3 text-right text-[#fc3467]">{fmt(igOurs[0]?.video_views || igOurs[0]?.likes)}</td>
+                  <td className="px-3 sm:px-5 py-3 text-right text-[#00709c]">{fmt(fbOurs[0]?.reactions || fbOurs[0]?.likes)}</td>
                   <td className="px-3 sm:px-5 py-3 text-right text-[#ff0000]">{fmt(ytVideosInRange.slice().sort((a,b)=>(b.views||0)-(a.views||0))[0]?.views)}</td>
                 </tr>
               </tbody>

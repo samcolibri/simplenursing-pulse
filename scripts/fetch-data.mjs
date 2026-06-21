@@ -31,6 +31,7 @@ const YOUTUBE_CHANNEL_ID = 'UCUxQWmWk1_Hk9iDRKvhH29Q'
 const OWNED = {
   instagram: 'simplenursing.com_',
   tiktok: 'https://www.tiktok.com/@simplenursing',
+  facebook: 'https://www.facebook.com/simplenursing',
 }
 
 const COMPETITORS = {
@@ -457,8 +458,58 @@ async function fetchYouTube() {
   return { videos, channel, fetched_at: new Date().toISOString() }
 }
 
+// ─── Facebook ─────────────────────────────────────────────────────────────────
+// Scrapes public page posts via Apify — no Meta Business API needed.
+// Gets: post text, likes, comments, shares, date, URL.
+// Does NOT get reach/impressions (those need Meta Business API).
+async function fetchFacebook() {
+  if (!APIFY) { warn('Skipping Facebook'); return null }
+  log('Facebook page posts…')
+  try {
+    const items = await apifyRunSync('apify~facebook-pages-scraper', {
+      startUrls: [{ url: OWNED.facebook }],
+      maxPosts: 90,           // ~90 days of daily posts
+      maxPostComments: 0,     // skip comments — we only need post metrics
+      maxReviews: 0,
+      scrapeAbout: false,
+      scrapeReviews: false,
+    }, 300000)
+
+    const posts = []
+    let followers = null
+    for (const item of (items || [])) {
+      // Page-level info
+      if (item.likes != null && followers == null) followers = item.likes
+
+      // Posts array is nested under item.posts
+      for (const p of (item.posts || [])) {
+        const t = p.time ? new Date(p.time * 1000).toISOString() : (p.date || '')
+        if (!isRecent(t)) continue
+        posts.push({
+          id: p.postId || p.url,
+          url: p.url || OWNED.facebook,
+          caption: (p.text || p.postText || '').slice(0, 280),
+          likes: p.likes || 0,
+          comments: p.comments || 0,
+          shares: p.shares || 0,
+          reactions: p.reactions || p.likes || 0,
+          timestamp: t,
+          type: p.type || 'post',
+        })
+      }
+    }
+
+    posts.sort((a, b) => (b.timestamp > a.timestamp ? 1 : -1))
+    log(`Facebook: ${posts.length} posts in last ${DAYS_BACK}d`)
+    return { handle: 'simplenursing', followers, recent_posts: posts, fetched_at: new Date().toISOString() }
+  } catch (e) {
+    warn('Facebook failed:', e.message)
+    return null
+  }
+}
+
 // ─── Build aggregated "what's working" insights from live data ───────────────
-async function buildInsights(tt, ig, ttTrends, igHashtags) {
+async function buildInsights(tt, ig, fb, ttTrends, igHashtags) {
   // Collect all posts, deduplicated by ID
   const seenIds = new Set()
   const allPosts = []
@@ -473,6 +524,7 @@ async function buildInsights(tt, ig, ttTrends, igHashtags) {
   for (const c of (tt?.competitors || [])) for (const p of c.recent_posts) if (isRecent(p.created_at)) addPost({ platform: 'tiktok', isOwned: false, handle: c.handle, ...p, score: velocity(p) })
   if (ig?.owned) for (const p of ig.owned.recent_posts) if (isRecent(p.timestamp)) addPost({ platform: 'instagram', isOwned: true, handle: ig.owned.handle, ...p, score: velocity(p) })
   for (const c of (ig?.competitors || [])) for (const p of c.recent_posts) if (isRecent(p.timestamp)) addPost({ platform: 'instagram', isOwned: false, handle: c.handle, ...p, score: velocity(p) })
+  if (fb?.recent_posts) for (const p of fb.recent_posts) if (isRecent(p.timestamp)) addPost({ platform: 'facebook', isOwned: true, handle: 'simplenursing', ...p, views: p.reactions || p.likes || 0, score: velocity({ ...p, views: p.reactions || p.likes || 0, created_at: p.timestamp }) })
 
   allPosts.sort((a, b) => b.score - a.score)
 
@@ -578,6 +630,7 @@ async function main() {
     ['pinterest', fetchPinterest],
     ['tiktok', fetchTikTok],
     ['instagram', fetchInstagram],
+    ['facebook', fetchFacebook],
     ['tiktok_trends', fetchTikTokTrends],
     ['ig_hashtags', fetchInstagramHashtags],
     ['youtube', fetchYouTube],
@@ -603,7 +656,7 @@ async function main() {
   // Build insights from live data
   let insights = null
   if (datasets.tiktok && datasets.instagram) {
-    insights = await buildInsights(datasets.tiktok, datasets.instagram, datasets.tiktok_trends, datasets.ig_hashtags)
+    insights = await buildInsights(datasets.tiktok, datasets.instagram, datasets.facebook || null, datasets.tiktok_trends, datasets.ig_hashtags)
     await writeJSON('insights', insights)
     results.platforms.insights = { ok: true, viral_posts: insights.top_viral.length, topics: insights.topics.length }
   }
