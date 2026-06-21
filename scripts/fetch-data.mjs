@@ -31,7 +31,7 @@ const YOUTUBE_CHANNEL_ID = 'UCUxQWmWk1_Hk9iDRKvhH29Q'
 const OWNED = {
   instagram: 'simplenursing.com_',
   tiktok: 'https://www.tiktok.com/@simplenursing',
-  facebook: 'https://www.facebook.com/simplenursing',
+  facebook: 'https://www.facebook.com/SimpleNursing/',
 }
 
 const COMPETITORS = {
@@ -466,25 +466,26 @@ async function fetchFacebook() {
   if (!APIFY) { warn('Skipping Facebook'); return null }
   log('Facebook page posts…')
   try {
-    const items = await apifyRunSync('apify~facebook-pages-scraper', {
+    // Pass 1: page metadata (followers count)
+    const metaItems = await apifyRunSync('apify~facebook-pages-scraper', {
       startUrls: [{ url: OWNED.facebook }],
-      maxPosts: 90,           // ~90 days of daily posts
-      maxPostComments: 0,     // skip comments — we only need post metrics
-      maxReviews: 0,
+      maxPosts: 0,
       scrapeAbout: false,
       scrapeReviews: false,
-    }, 300000)
+    }, 120000)
+    const followers = metaItems?.[0]?.followers || metaItems?.[0]?.likes || null
+    log(`  Facebook page: ${followers?.toLocaleString() || '?'} followers`)
 
-    const posts = []
-    let followers = null
-    for (const item of (items || [])) {
-      // Page-level info
-      if (item.likes != null && followers == null) followers = item.likes
-
-      // Posts array is nested under item.posts
-      for (const p of (item.posts || [])) {
-        const t = p.time ? new Date(p.time * 1000).toISOString() : (p.date || '')
-        if (!isRecent(t)) continue
+    // Pass 2: posts — Facebook actively fights scraping so this may be blocked
+    let posts = []
+    try {
+      const postItems = await apifyRunSync('apify~facebook-posts-scraper', {
+        startUrls: [{ url: OWNED.facebook }],
+        resultsLimit: 90,
+      }, 300000)
+      for (const p of (postItems || [])) {
+        const t = p.time || (p.timestamp ? new Date(p.timestamp * 1000).toISOString() : '')
+        if (!t || !isRecent(t)) continue
         posts.push({
           id: p.postId || p.url,
           url: p.url || OWNED.facebook,
@@ -497,10 +498,13 @@ async function fetchFacebook() {
           type: p.type || 'post',
         })
       }
+      posts.sort((a, b) => (b.timestamp > a.timestamp ? 1 : -1))
+    } catch (e) {
+      warn('Facebook posts blocked (expected — Meta anti-scrape):', e.message)
     }
 
-    posts.sort((a, b) => (b.timestamp > a.timestamp ? 1 : -1))
-    log(`Facebook: ${posts.length} posts in last ${DAYS_BACK}d`)
+    log(`Facebook: ${followers?.toLocaleString() || '?'} followers · ${posts.length} posts`)
+    // Always return at least page metadata so the KPI card shows followers
     return { handle: 'simplenursing', followers, recent_posts: posts, fetched_at: new Date().toISOString() }
   } catch (e) {
     warn('Facebook failed:', e.message)

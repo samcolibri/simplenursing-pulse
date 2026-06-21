@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-06-21T12:55:14.490Z",
+  "fetched_at": "2026-06-21T13:08:21.141Z",
   "platforms": {
     "pinterest": {
       "ok": true
@@ -11,7 +11,8 @@
       "ok": true
     },
     "facebook": {
-      "ok": true
+      "ok": false,
+      "reason": "no data"
     },
     "tiktok_trends": {
       "ok": true
